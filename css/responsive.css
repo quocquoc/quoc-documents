@@ -1,0 +1,148 @@
+/* Styles chuyên biệt cho thiết kế đáp ứng */
+
+/* === Tablet (ví dụ: màn hình <= 768px) === */
+@media (max-width: 768px) {
+    :root {
+        --font-size-base: 15px; /* Giảm font cơ bản một chút */
+    }
+
+    /* Header */
+    .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-unit);
+    }
+
+    .site-title {
+        font-size: 1.6rem; /* Giảm kích thước tiêu đề trang */
+    }
+
+    .search-bar-container {
+        width: 100%; /* Ô tìm kiếm chiếm toàn bộ chiều rộng */
+        max-width: none;
+        flex-grow: 1;
+    }
+
+    #search-input {
+        font-size: 0.85rem;
+    }
+
+    /* Lưới tài liệu */
+    .document-list {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* 2 cột, hoặc 1 cột nếu không đủ rộng */
+        gap: calc(var(--spacing-unit) * 2.5); /* 20px */
+    }
+
+
+    .document-thumbnail {
+        width: 100%;
+        height: auto; /* Tự điều chỉnh để giữ tỷ lệ ảnh */
+        object-fit: contain; /* Hiển thị đầy đủ ảnh không cắt */
+    }
+
+    .document-content {
+        padding: calc(var(--spacing-unit) * 1.5); /* 12px */
+    }
+
+    .document-title {
+        font-size: 1.15rem; /* Giảm kích thước tiêu đề card */
+    }
+
+    .document-description {
+        font-size: 0.85rem; /* Giảm kích thước mô tả */
+    }
+
+    .document-meta {
+        font-size: 0.75rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem; /* 24px */
+        margin-bottom: calc(var(--spacing-unit) * 3); /* 24px */
+    }
+
+    /* Footer */
+    .site-footer-main {
+        padding: calc(var(--spacing-unit) * 2.5) 0; /* 20px */
+    }
+}
+
+/* === Mobile (ví dụ: màn hình <= 480px) === */
+@media (max-width: 480px) {
+    :root {
+        --font-size-base: 14px; /* Giảm font cơ bản hơn nữa cho mobile */
+        --container-padding: var(--spacing-unit); /* 8px */
+    }
+
+    /* Header */
+    .site-header {
+        padding: var(--spacing-unit) 0;
+    }
+
+
+    .site-title {
+        font-size: 1.4rem; /* Kích thước tiêu đề trang nhỏ hơn */
+        text-align: center; /* Căn giữa nếu muốn */
+        width: 100%;
+        margin-bottom: var(--spacing-unit);
+    }
+
+    .search-bar-container {
+        /* Đã chiếm 100% từ tablet, có thể giữ nguyên */
+    }
+
+    #search-input {
+        padding: calc(var(--spacing-unit) * 0.6); /* 4.8px */
+    }
+
+    /* Lưới tài liệu */
+    .document-list {
+        grid-template-columns: 1fr; /* Bắt buộc 1 cột */
+        gap: calc(var(--spacing-unit) * 2); /* 16px */
+    }
+
+    /* Card tài liệu */
+    .document-card {
+        /* Card chiếm gần hết chiều rộng màn hình, đã được xử lý bởi 1fr ở trên */
+        /* Đảm bảo vùng chạm đủ lớn */
+        min-height: 44px; /* Touch target */
+    }
+
+    .document-thumbnail {
+        height: auto; /* Tự động điều chỉnh theo tỷ lệ ảnh trên mobile */
+        object-fit: contain; /* Hiển thị toàn bộ ảnh mà không cắt */
+        width: 100%;
+    }
+
+    .document-content {
+        padding: var(--spacing-unit); /* 8px, giảm padding */
+    }
+
+    .document-title {
+        font-size: 1.05rem; /* Tối ưu font tiêu đề card cho mobile */
+    }
+
+    .document-description {
+        font-size: 0.8rem; /* Tối ưu font mô tả card cho mobile */
+        line-height: 1.4; /* Có thể điều chỉnh line-height nếu cần */
+    }
+
+    .document-meta {
+        font-size: 0.7rem;
+    }
+
+    .section-title {
+        font-size: 1.3rem; /* 20.8px */
+        margin-bottom: calc(var(--spacing-unit) * 2.5); /* 20px */
+    }
+
+    /* Footer */
+    .site-footer-main {
+        font-size: 0.8rem;
+        padding: calc(var(--spacing-unit) * 2) 0; /* 16px */
+    }
+
+    .site-footer-main p {
+        margin-bottom: calc(var(--spacing-unit) * 0.25); /* 2px */
+    }
+}

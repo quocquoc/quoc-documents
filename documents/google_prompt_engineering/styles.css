@@ -1,0 +1,71 @@
+/* Styles riêng cho trang nội dung tài liệu 1 */
+body {
+    background-color: #fff; /* Nền trắng cho nội dung tài liệu dễ đọc */
+}
+
+.document-header {
+    background-color: var(--primary-color-light);
+    padding: var(--spacing-unit) 0;
+    margin-bottom: calc(var(--spacing-unit) * 3);
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.document-header h1 {
+    color: var(--primary-color-dark);
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.back-to-library-link {
+    display: inline-block;
+    margin-bottom: var(--spacing-unit);
+    font-size: 0.9rem;
+    color: var(--primary-color-dark);
+}
+
+.document-content-main article {
+    background-color: var(--secondary-color);
+    padding: calc(var(--spacing-unit) * 2);
+    border-radius: var(--border-radius-small);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.document-content-main h2 {
+    color: var(--primary-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: calc(var(--spacing-unit) * 0.5);
+    margin-top: calc(var(--spacing-unit) * 2);
+}
+
+pre {
+    background-color: #f0f0f0;
+    padding: var(--spacing-unit);
+    border-radius: var(--border-radius-small);
+    overflow-x: auto;
+    margin: var(--spacing-unit) 0;
+    border: 1px solid var(--border-color);
+}
+
+code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+}
+
+.document-footer {
+    text-align: center;
+    padding: calc(var(--spacing-unit) * 2) 0;
+    margin-top: calc(var(--spacing-unit) * 3);
+    font-size: 0.85rem;
+    color: var(--text-color-light);
+    border-top: 1px solid var(--border-color);
+}
+
+/* Responsive cho trang tài liệu */
+@media (max-width: 768px) {
+    .document-header h1 {
+        font-size: 1.5rem;
+    }
+    .document-content-main article {
+        padding: var(--spacing-unit);
+    }
+}

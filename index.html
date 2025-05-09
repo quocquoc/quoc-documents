@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quoc's Documents - Thư Viện Tài Liệu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/documents.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-container">
+            <h1 class="site-title">Quoc's Documents</h1>
+            <div class="search-bar-container">
+                <input type="search" id="search-input" placeholder="Tìm kiếm tài liệu...">
+                <button type="button" class="search-button" aria-label="Tìm kiếm">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20px" height="20px">
+                        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="site-main">
+        <section id="document-showcase" class="document-showcase-section">
+            <div class="container">
+                <h2 class="section-title">Tài Liệu Nổi Bật</h2>
+                <div id="document-list-container" class="document-list">
+                    </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer-main">
+        <div class="container">
+            <p>&copy; <span id="current-year"></span> Quoc's Documents. All rights reserved.</p>
+            <p>Việt hoá 🇻🇳 và chia sẻ ❤️ bởi SatoriWave AI</p>
+        </div>
+    </footer>
+
+    <script src="js/documents.js"></script>
+    <script src="js/main.js"></script>
+    </body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nội dung Tài liệu 1 - Hướng dẫn HTML5 Cơ Bản</title>
+    <link rel="stylesheet" href="../../css/main.css"> <link rel="stylesheet" href="styles.css"> </head>
+<body>
+    <header class="document-header">
+        <div class="container">
+            <a href="../../index.html" class="back-to-library-link">&larr; Trở về thư viện</a>
+            <h1>Hướng dẫn HTML5 Cơ Bản</h1>
+        </div>
+    </header>
+
+    <main class="document-content-main">
+        <div class="container">
+            <article>
+                <p>Đây là nội dung chi tiết của tài liệu "Hướng dẫn HTML5 Cơ Bản".</p>
+                <p>Bạn có thể thêm các section, hình ảnh, code block, v.v...</p>
+
+                <section>
+                    <h2>Cấu trúc cơ bản</h2>
+                    <p>Một trang HTML5 thường bắt đầu với <code>&lt;!DOCTYPE html&gt;</code>...</p>
+                    <pre><code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="vi"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Tiêu đề trang&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    Nội dung trang...
+&lt;/body&gt;
+&lt;/html&gt;
+                    </code></pre>
+                </section>
+                </article>
+        </div>
+    </main>
+
+    <footer class="document-footer">
+        <div class="container">
+            <p>&copy; <span id="current-year-doc"></span> Quoc's Documents</p>
+        </div>
+    </footer>
+    <script>
+        document.getElementById('current-year-doc').textContent = new Date().getFullYear();
+    </script>
+    </body>
+</html>

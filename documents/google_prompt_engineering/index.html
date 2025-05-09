@@ -1,0 +1,1999 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Engineering - Hướng dẫn từ Google</title>
+    <style>
+        :root {
+            --primary-color: #4285F4; /* Google Blue */
+            --secondary-color: #f1f3f4; /* Light gray background */
+            --text-color: #202124; /* Dark gray text */
+            --heading-color: #1a0dab; /* Dark blue for headings */
+            --link-color: #1a0dab;
+            --border-color: #dadce0;
+            --code-bg-color: #f8f9fa;
+            --prompt-bg-color: #e8f0fe; /* Lighter blue for prompts */
+            --note-border-color: #fbbc05; /* Google Yellow */
+            --warning-border-color: #ea4335; /* Google Red */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            color: var(--text-color);
+            display: flex;
+        }
+
+        #sidebar {
+            width: 280px;
+            background-color: var(--secondary-color);
+            padding: 20px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            border-right: 1px solid var(--border-color);
+        }
+
+        #sidebar h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            font-size: 1.4em;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        #sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        #sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        #sidebar ul li a {
+            text-decoration: none;
+            color: var(--link-color);
+            font-weight: 500;
+            display: block;
+            padding: 5px 0;
+            transition: color 0.2s ease;
+        }
+         #sidebar ul li a:hover,
+         #sidebar ul li a.active {
+             color: var(--primary-color);
+             font-weight: bold;
+         }
+
+        #sidebar ul ul {
+            padding-left: 20px;
+            margin-top: 5px;
+        }
+
+        #sidebar ul ul li a {
+            font-weight: normal;
+            font-size: 0.95em;
+        }
+
+
+        #main-content {
+            margin-left: 320px; /* Sidebar width + padding */
+            padding: 30px 40px;
+            max-width: 900px;
+            flex-grow: 1;
+        }
+
+        h1, h2, h3, h4 {
+            color: var(--heading-color);
+            margin-bottom: 0.8em;
+            margin-top: 1.5em;
+            font-weight: 600;
+        }
+        h1 { font-size: 2.2em; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-top: 0; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.5em; }
+        h4 { font-size: 1.2em; color: var(--primary-color); }
+
+
+        p {
+            margin-bottom: 1.2em;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-bottom: 1.2em;
+            padding-left: 30px;
+        }
+
+        li {
+            margin-bottom: 0.5em;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Styling for Prompt Examples */
+        .prompt-example-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: var(--prompt-bg-color);
+            border: 1px solid var(--primary-color);
+            font-size: 0.95em;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .prompt-example-table th,
+        .prompt-example-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            text-align: left;
+            vertical-align: top;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace; /* Monospace font for prompts */
+            color: #000; /* Ensure contrast */
+        }
+
+        .prompt-example-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+            font-family: 'Arial', sans-serif; /* Non-monospace for headers */
+        }
+
+        .prompt-example-table td:first-child {
+             font-weight: bold;
+             width: 15%; /* Adjust width for Goal, Prompt etc. */
+             font-family: 'Arial', sans-serif; /* Non-monospace for labels */
+             background-color: #f1f3f4;
+        }
+
+        /* Styling for Code Snippets */
+        pre {
+            background-color: var(--code-bg-color);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+            border-radius: 4px;
+            white-space: pre-wrap;       /* CSS 3 */
+            white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+            white-space: -pre-wrap;      /* Opera 4-6 */
+            white-space: -o-pre-wrap;    /* Opera 7 */
+            word-wrap: break-word;       /* Internet Explorer 5.5+ */
+        }
+
+        code {
+             font-family: inherit;
+        }
+
+        pre code {
+            display: block; /* Ensure code block takes full width of pre */
+        }
+
+        /* Specific class for Python code highlighting (basic) */
+        .language-python .keyword { color: #d93025; font-weight: bold; } /* Google Red */
+        .language-python .string { color: #1e8e3e; } /* Google Green */
+        .language-python .comment { color: #5f6368; font-style: italic; }
+        .language-python .function { color: #1967d2; } /* Google Blue variant */
+        .language-python .number { color: #e37400; } /* Google Orange */
+
+
+        /* Styling for Tables (general) */
+        table:not(.prompt-example-table) {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border: 1px solid var(--border-color);
+        }
+
+        table:not(.prompt-example-table) th,
+        table:not(.prompt-example-table) td {
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        table:not(.prompt-example-table) th {
+            background-color: var(--secondary-color);
+            font-weight: bold;
+        }
+
+        /* Notes and Warnings */
+        .note, .warning {
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 5px solid;
+            background-color: var(--secondary-color);
+            border-radius: 4px;
+        }
+        .note { border-left-color: var(--note-border-color); }
+        .warning { border-left-color: var(--warning-border-color); }
+        .note strong, .warning strong { color: var(--heading-color); }
+
+        figure {
+            margin: 20px 0;
+            text-align: center;
+        }
+        figcaption {
+            font-style: italic;
+            color: #5f6368;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 30px 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            #sidebar {
+                width: 220px;
+            }
+            #main-content {
+                margin-left: 260px; /* Sidebar width + padding */
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            #sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                overflow-y: hidden; /* Disable scroll for static sidebar */
+            }
+            #main-content {
+                margin-left: 0;
+                padding: 20px;
+                max-width: 100%;
+            }
+             #sidebar h2 { display: none; } /* Hide title on mobile */
+             #sidebar ul { display: flex; flex-wrap: wrap; justify-content: center; } /* Horizontal nav */
+             #sidebar ul li { margin: 5px 10px; }
+             #sidebar ul li a { padding: 8px 12px; background-color: #e8eaed; border-radius: 4px; }
+             #sidebar ul ul { display: none; } /* Hide sub-items on simple mobile nav */
+        }
+
+    </style>
+</head>
+<body>
+
+    <aside id="sidebar">
+        <h2>Mục lục</h2>
+        <ul>
+            <li><a href="#introduction">Giới thiệu</a></li>
+            <li><a href="#prompt-engineering-def">Prompt Engineering</a></li>
+            <li><a href="#llm-output-config">Cấu hình đầu ra LLM</a>
+                <ul>
+                    <li><a href="#output-length">Độ dài đầu ra</a></li>
+                    <li><a href="#sampling-controls">Kiểm soát Sampling</a></li>
+                    <li><a href="#temperature">Temperature</a></li>
+                    <li><a href="#topk-topp">Top-K và top-P</a></li>
+                    <li><a href="#putting-it-all-together">Tổng hợp lại</a></li>
+                </ul>
+            </li>
+            <li><a href="#prompting-techniques">Kỹ thuật Prompting</a>
+                 <ul>
+                    <li><a href="#zero-shot">General prompting / Zero-shot</a></li>
+                    <li><a href="#one-few-shot">One-shot & Few-shot</a></li>
+                    <li><a href="#system-context-role">System, Contextual và Role prompting</a></li>
+                    <li><a href="#system-prompting">System prompting</a></li>
+                    <li><a href="#role-prompting">Role prompting</a></li>
+                    <li><a href="#contextual-prompting">Contextual prompting</a></li>
+                    <li><a href="#step-back">Step-back prompting</a></li>
+                    <li><a href="#cot">Chain of Thought (CoT)</a></li>
+                    <li><a href="#self-consistency">Self-consistency</a></li>
+                    <li><a href="#tot">Tree of Thoughts (ToT)</a></li>
+                    <li><a href="#react">ReAct (reason & act)</a></li>
+                    <li><a href="#ape">Automatic Prompt Engineering</a></li>
+                </ul>
+            </li>
+             <li><a href="#code-prompting">Code prompting</a>
+                 <ul>
+                    <li><a href="#prompts-writing-code">Prompts để viết code</a></li>
+                    <li><a href="#prompts-explaining-code">Prompts để giải thích code</a></li>
+                    <li><a href="#prompts-translating-code">Prompts để dịch code</a></li>
+                    <li><a href="#prompts-debugging-code">Prompts để debug và review code</a></li>
+                 </ul>
+             </li>
+             <li><a href="#multimodal-prompting">Multimodal prompting?</a></li>
+            <li><a href="#best-practices">Các Thực Hành Tốt Nhất (Best Practices)</a>
+                <ul>
+                    <li><a href="#provide-examples">Cung cấp ví dụ</a></li>
+                    <li><a href="#design-simplicity">Thiết kế đơn giản</a></li>
+                    <li><a href="#specific-output">Cụ thể về đầu ra</a></li>
+                    <li><a href="#instructions-over-constraints">Sử dụng Hướng dẫn thay vì Ràng buộc</a></li>
+                    <li><a href="#control-token-length">Kiểm soát độ dài token tối đa</a></li>
+                    <li><a href="#use-variables">Sử dụng biến trong prompts</a></li>
+                    <li><a href="#experiment-formats-styles">Thử nghiệm với định dạng đầu vào và văn phong</a></li>
+                    <li><a href="#mix-classes-fewshot">Đối với few-shot prompting phân loại, trộn lẫn các lớp</a></li>
+                    <li><a href="#adapt-updates">Thích ứng với cập nhật mô hình</a></li>
+                    <li><a href="#experiment-output-formats">Thử nghiệm với định dạng đầu ra</a></li>
+                    <li><a href="#json-repair">JSON Repair</a></li>
+                    <li><a href="#working-schemas">Làm việc với Schemas</a></li>
+                    <li><a href="#experiment-together">Thử nghiệm cùng các kỹ sư prompt khác</a></li>
+                    <li><a href="#cot-best-practices">CoT Best practices</a></li>
+                    <li><a href="#document-attempts">Ghi lại các lần thử prompt khác nhau</a></li>
+                </ul>
+            </li>
+            <li><a href="#summary">Tóm tắt</a></li>
+            <li><a href="#endnotes">Ghi chú cuối</a></li>
+        </ul>
+    </aside>
+
+    <main id="main-content">
+        <header>
+             <h1>Prompt Engineering</h1>
+             <p><em>Tác giả: Lee Boonstra (Google)</em></p>
+             <p><em>Nội dung được dịch và trình bày lại từ tài liệu gốc của Google.</em></p>
+        </header>
+        <hr>
+
+        <!-- Introduction -->
+        <section id="introduction">
+            <h2>Giới thiệu</h2>
+            <blockquote>
+                <p>Bạn không cần phải là một nhà khoa học dữ liệu hay kỹ sư học máy – mọi người đều có thể viết prompt.</p>
+            </blockquote>
+            <p>Khi nghĩ về đầu vào và đầu ra của một mô hình ngôn ngữ lớn (LLM), prompt văn bản (đôi khi đi kèm với các phương thức khác như prompt hình ảnh) là đầu vào mà mô hình sử dụng để dự đoán một đầu ra cụ thể. Bạn không cần phải là nhà khoa học dữ liệu hay kỹ sư học máy - mọi người đều có thể viết prompt. Tuy nhiên, việc tạo ra prompt hiệu quả nhất có thể phức tạp. Nhiều khía cạnh của prompt ảnh hưởng đến hiệu quả của nó: mô hình bạn sử dụng, dữ liệu huấn luyện của mô hình, cấu hình mô hình, cách bạn chọn từ ngữ, văn phong và giọng điệu, cấu trúc và ngữ cảnh đều quan trọng. Do đó, kỹ thuật prompt (prompt engineering) là một quá trình lặp đi lặp lại. Các prompt không đầy đủ có thể dẫn đến các phản hồi mơ hồ, không chính xác và có thể cản trở khả năng cung cấp đầu ra có ý nghĩa của mô hình.</p>
+        </section>
+
+        <!-- Prompt Engineering Definition -->
+        <section id="prompt-engineering-def">
+            <h2>Prompt Engineering</h2>
+            <p>Khi bạn trò chuyện với chatbot Gemini,¹ về cơ bản bạn đang viết các prompt, tuy nhiên tài liệu này tập trung vào việc viết prompt cho mô hình Gemini trong Vertex AI hoặc bằng cách sử dụng API, bởi vì bằng cách prompt trực tiếp mô hình, bạn sẽ có quyền truy cập vào cấu hình như temperature, v.v.</p>
+            <p>Tài liệu này thảo luận chi tiết về prompt engineering. Chúng ta sẽ xem xét các kỹ thuật prompting khác nhau để giúp bạn bắt đầu và chia sẻ các mẹo và phương pháp hay nhất để trở thành một chuyên gia prompting. Chúng tôi cũng sẽ thảo luận về một số thách thức bạn có thể gặp phải khi tạo prompt.</p>
+
+            <h3>Định nghĩa Prompt Engineering</h3>
+            <p>Hãy nhớ cách LLM hoạt động; nó là một công cụ dự đoán. Mô hình nhận văn bản tuần tự làm đầu vào và sau đó dự đoán token tiếp theo nên là gì, dựa trên dữ liệu mà nó đã được huấn luyện. LLM được vận hành để thực hiện điều này lặp đi lặp lại, thêm token đã dự đoán trước đó vào cuối văn bản tuần tự để dự đoán token tiếp theo. Dự đoán token tiếp theo dựa trên mối quan hệ giữa những gì có trong các token trước đó và những gì LLM đã thấy trong quá trình huấn luyện của nó.</p>
+            <p>Khi bạn viết một prompt, bạn đang cố gắng thiết lập LLM để dự đoán đúng chuỗi token. Prompt engineering là quá trình thiết kế các prompt chất lượng cao hướng dẫn LLM tạo ra các kết quả đầu ra chính xác. Quá trình này bao gồm việc thử nghiệm để tìm ra prompt tốt nhất, tối ưu hóa độ dài prompt và đánh giá văn phong và cấu trúc của prompt liên quan đến nhiệm vụ. Trong bối cảnh xử lý ngôn ngữ tự nhiên và LLM, prompt là một đầu vào được cung cấp cho mô hình để tạo ra phản hồi hoặc dự đoán.</p>
+        </section>
+
+        <!-- LLM Output Configuration -->
+        <section id="llm-output-config">
+            <h2>Cấu hình đầu ra LLM</h2>
+             <p>Các prompt này có thể được sử dụng để đạt được nhiều loại nhiệm vụ hiểu và tạo sinh khác nhau như tóm tắt văn bản, trích xuất thông tin, hỏi đáp, phân loại văn bản, dịch ngôn ngữ hoặc code, tạo code và tài liệu code hoặc lý luận.</p>
+             <p>Vui lòng tham khảo các hướng dẫn prompting của Google²,³ với các ví dụ prompting đơn giản và hiệu quả.</p>
+             <p>Khi thực hiện prompt engineering, bạn sẽ bắt đầu bằng cách chọn một mô hình. Các prompt có thể cần được tối ưu hóa cho mô hình cụ thể của bạn, bất kể bạn sử dụng mô hình ngôn ngữ Gemini trong Vertex AI, GPT, Claude hay một mô hình nguồn mở như Gemma hoặc LLaMA.</p>
+             <p>Bên cạnh prompt, bạn cũng sẽ cần thử nghiệm với các cấu hình khác nhau của LLM.</p>
+             <p>Khi bạn chọn mô hình của mình, bạn sẽ cần tìm ra cấu hình mô hình. Hầu hết các LLM đi kèm với các tùy chọn cấu hình khác nhau kiểm soát đầu ra của LLM. Prompt engineering hiệu quả đòi hỏi phải đặt các cấu hình này một cách tối ưu cho nhiệm vụ của bạn.</p>
+
+            <h3 id="output-length">Độ dài đầu ra</h3>
+            <p>Một cài đặt cấu hình quan trọng là số lượng token được tạo ra trong một phản hồi. Việc tạo ra nhiều token hơn đòi hỏi nhiều tính toán hơn từ LLM, dẫn đến tiêu thụ năng lượng cao hơn, thời gian phản hồi có thể chậm hơn và chi phí cao hơn.</p>
+            <p>Giảm độ dài đầu ra của LLM không khiến LLM trở nên phong cách hơn hoặc súc tích hơn về mặt văn bản trong đầu ra mà nó tạo ra, nó chỉ khiến LLM ngừng dự đoán thêm token khi đạt đến giới hạn. Nếu nhu cầu của bạn yêu cầu độ dài đầu ra ngắn, bạn cũng có thể cần phải thiết kế prompt của mình để phù hợp.</p>
+            <p>Việc hạn chế độ dài đầu ra đặc biệt quan trọng đối với một số kỹ thuật prompting LLM, như ReAct, nơi LLM sẽ tiếp tục phát ra các token vô dụng sau phản hồi bạn muốn.</p>
+             <p class="warning"><strong>Lưu ý:</strong> Việc tạo ra nhiều token hơn đòi hỏi nhiều tính toán hơn từ LLM, dẫn đến tiêu thụ năng lượng cao hơn và thời gian phản hồi có thể chậm hơn, điều này dẫn đến chi phí cao hơn.</p>
+
+            <h3 id="sampling-controls">Kiểm soát Sampling</h3>
+            <p>LLM không chính thức dự đoán một token duy nhất. Thay vào đó, LLM dự đoán xác suất cho token tiếp theo có thể là gì, với mỗi token trong từ vựng của LLM nhận được một xác suất. Các xác suất token đó sau đó được lấy mẫu (sampled) để xác định token được tạo ra tiếp theo sẽ là gì. Temperature, top-K và top-P là các cài đặt cấu hình phổ biến nhất xác định cách xử lý xác suất token dự đoán để chọn một token đầu ra duy nhất.</p>
+
+            <h4 id="temperature">Temperature</h4>
+            <p>Temperature kiểm soát mức độ ngẫu nhiên trong việc lựa chọn token. Nhiệt độ thấp hơn tốt cho các prompt mong đợi phản hồi xác định hơn, trong khi nhiệt độ cao hơn có thể dẫn đến kết quả đa dạng hoặc bất ngờ hơn. Nhiệt độ 0 (greedy decoding) là xác định: token có xác suất cao nhất luôn được chọn (mặc dù lưu ý rằng nếu hai token có cùng xác suất dự đoán cao nhất, tùy thuộc vào cách xử lý việc hòa nhau, bạn có thể không luôn nhận được cùng một đầu ra với nhiệt độ 0).</p>
+            <p>Nhiệt độ gần mức tối đa có xu hướng tạo ra đầu ra ngẫu nhiên hơn. Và khi nhiệt độ ngày càng cao, tất cả các token trở nên có khả năng như nhau để trở thành token được dự đoán tiếp theo.</p>
+            <p>Kiểm soát nhiệt độ Gemini có thể được hiểu theo cách tương tự như hàm softmax được sử dụng trong học máy. Cài đặt nhiệt độ thấp phản ánh nhiệt độ softmax thấp (T), nhấn mạnh một nhiệt độ ưa thích duy nhất với độ chắc chắn cao. Cài đặt nhiệt độ Gemini cao hơn giống như nhiệt độ softmax cao, làm cho một phạm vi nhiệt độ rộng hơn xung quanh cài đặt đã chọn trở nên chấp nhận được hơn. Sự không chắc chắn gia tăng này phù hợp với các kịch bản mà nhiệt độ cứng nhắc, chính xác có thể không cần thiết, ví dụ như khi thử nghiệm với các kết quả sáng tạo.</p>
+
+            <h4 id="topk-topp">Top-K và top-P</h4>
+            <p>Top-K và top-P (còn được gọi là nucleus sampling)⁴ là hai cài đặt sampling được sử dụng trong LLM để giới hạn token dự đoán tiếp theo đến từ các token có xác suất dự đoán hàng đầu. Giống như temperature, các cài đặt sampling này kiểm soát tính ngẫu nhiên và sự đa dạng của văn bản được tạo ra.</p>
+            <ul>
+                <li><strong>Top-K</strong> sampling chọn K token có khả năng xảy ra cao nhất từ phân phối dự đoán của mô hình. Top-K càng cao, đầu ra của mô hình càng sáng tạo và đa dạng; top-K càng thấp, đầu ra của mô hình càng hạn chế và thực tế. Top-K bằng 1 tương đương với greedy decoding.</li>
+                <li><strong>Top-P</strong> sampling chọn các token hàng đầu có xác suất tích lũy không vượt quá một giá trị nhất định (P). Giá trị P nằm trong khoảng từ 0 (greedy decoding) đến 1 (tất cả các token trong từ vựng của LLM).</li>
+            </ul>
+            <p>Cách tốt nhất để chọn giữa top-K và top-P là thử nghiệm với cả hai phương pháp (hoặc cả hai cùng nhau) và xem phương pháp nào tạo ra kết quả bạn đang tìm kiếm.</p>
+
+            <h3 id="putting-it-all-together">Tổng hợp lại</h3>
+            <p>Việc lựa chọn giữa top-K, top-P, temperature và số lượng token cần tạo phụ thuộc vào ứng dụng cụ thể và kết quả mong muốn, và các cài đặt này đều tác động lẫn nhau. Điều quan trọng là phải đảm bảo bạn hiểu cách mô hình bạn chọn kết hợp các cài đặt sampling khác nhau lại với nhau.</p>
+            <p>Nếu temperature, top-K và top-P đều có sẵn (như trong Vertex Studio), các token đáp ứng cả tiêu chí top-K và top-P là ứng cử viên cho token được dự đoán tiếp theo, và sau đó temperature được áp dụng để lấy mẫu từ các token đã vượt qua tiêu chí top-K và top-P. Nếu chỉ có top-K hoặc top-P, hành vi tương tự nhưng chỉ sử dụng cài đặt top-K hoặc P đó.</p>
+            <p>Nếu temperature không có sẵn, bất kỳ token nào đáp ứng tiêu chí top-K và/hoặc top-P sau đó sẽ được chọn ngẫu nhiên để tạo ra một token dự đoán tiếp theo duy nhất.</p>
+            <p>Ở các cài đặt cực đoan của một giá trị cấu hình sampling, cài đặt sampling đó sẽ hủy bỏ các cài đặt cấu hình khác hoặc trở nên không liên quan.</p>
+            <ul>
+                <li>Nếu bạn đặt temperature thành 0, top-K và top-P trở nên không liên quan – token có xác suất cao nhất trở thành token được dự đoán tiếp theo. Nếu bạn đặt temperature cực cao (trên 1 - thường là vào khoảng 10), temperature trở nên không liên quan và bất kỳ token nào vượt qua tiêu chí top-K và/hoặc top-P sau đó sẽ được lấy mẫu ngẫu nhiên để chọn token dự đoán tiếp theo.</li>
+                <li>Nếu bạn đặt top-K thành 1, temperature và top-P trở nên không liên quan. Chỉ một token vượt qua tiêu chí top-K, và token đó là token được dự đoán tiếp theo. Nếu bạn đặt top-K cực cao, giống như kích thước từ vựng của LLM, bất kỳ token nào có xác suất khác không của việc là token tiếp theo sẽ đáp ứng tiêu chí top-K và không có token nào bị loại bỏ.</li>
+                <li>Nếu bạn đặt top-P thành 0 (hoặc một giá trị rất nhỏ), hầu hết các triển khai sampling LLM sau đó sẽ chỉ xem xét token có xác suất cao nhất để đáp ứng tiêu chí top-P, làm cho temperature và top-K không liên quan. Nếu bạn đặt top-P thành 1, bất kỳ token nào có xác suất khác không của việc là token tiếp theo sẽ đáp ứng tiêu chí top-P, và không có token nào bị loại bỏ.</li>
+            </ul>
+            <p>Như một điểm khởi đầu chung, temperature là 0.2, top-P là 0.95 và top-K là 30 sẽ cho bạn kết quả tương đối mạch lạc có thể sáng tạo nhưng không quá mức. Nếu bạn muốn kết quả đặc biệt sáng tạo, hãy thử bắt đầu với temperature là 0.9, top-P là 0.99 và top-K là 40. Và nếu bạn muốn kết quả ít sáng tạo hơn, hãy thử bắt đầu với temperature là 0.1, top-P là 0.9 và top-K là 20. Cuối cùng, nếu nhiệm vụ của bạn luôn có một câu trả lời đúng duy nhất (ví dụ: trả lời một bài toán), hãy bắt đầu với temperature là 0.</p>
+            <p class="note"><strong>LƯU Ý:</strong> Với nhiều tự do hơn (temperature, top-K, top-P và token đầu ra cao hơn), LLM có thể tạo ra văn bản ít liên quan hơn.</p>
+            <p class="warning"><strong>CẢNH BÁO:</strong> Bạn đã bao giờ thấy một phản hồi kết thúc bằng một lượng lớn các từ đệm chưa? Điều này còn được gọi là "lỗi vòng lặp lặp lại" (repetition loop bug), là một vấn đề phổ biến trong các Mô hình Ngôn ngữ Lớn, nơi mô hình bị mắc kẹt trong một chu kỳ, lặp đi lặp lại cùng một từ (đệm), cụm từ hoặc cấu trúc câu, thường bị làm trầm trọng thêm bởi cài đặt temperature và top-k/top-p không phù hợp. Điều này có thể xảy ra ở cả cài đặt nhiệt độ thấp và cao, mặc dù vì những lý do khác nhau. Ở nhiệt độ thấp, mô hình trở nên quá xác định, bám chặt vào đường dẫn xác suất cao nhất, có thể dẫn đến vòng lặp nếu đường dẫn đó truy cập lại văn bản đã tạo trước đó. Ngược lại, ở nhiệt độ cao, đầu ra của mô hình trở nên quá ngẫu nhiên, làm tăng xác suất một từ hoặc cụm từ được chọn ngẫu nhiên sẽ, tình cờ, dẫn trở lại trạng thái trước đó, tạo ra vòng lặp do số lượng lớn các tùy chọn có sẵn. Trong cả hai trường hợp, quá trình sampling của mô hình bị "mắc kẹt", dẫn đến đầu ra đơn điệu và vô ích cho đến khi cửa sổ đầu ra được lấp đầy. Giải quyết vấn đề này thường đòi hỏi phải điều chỉnh cẩn thận các giá trị temperature và top-k/top-p để tìm sự cân bằng tối ưu giữa tính xác định và tính ngẫu nhiên.</p>
+        </section>
+
+        <!-- Prompting Techniques -->
+        <section id="prompting-techniques">
+            <h2>Kỹ thuật Prompting</h2>
+            <p>LLM được điều chỉnh để tuân theo các hướng dẫn và được đào tạo trên lượng lớn dữ liệu để chúng có thể hiểu một prompt và tạo ra câu trả lời. Nhưng LLM không hoàn hảo; văn bản prompt của bạn càng rõ ràng, LLM càng dễ dự đoán văn bản có khả năng xảy ra tiếp theo. Ngoài ra, các kỹ thuật cụ thể tận dụng cách LLM được đào tạo và cách LLM hoạt động sẽ giúp bạn nhận được kết quả phù hợp từ LLM.</p>
+            <p>Bây giờ chúng ta đã hiểu prompt engineering là gì và cần những gì, hãy đi sâu vào một số ví dụ về các kỹ thuật prompting quan trọng nhất.</p>
+
+            <h3 id="zero-shot">General prompting / Zero-shot</h3>
+            <p>Prompt zero-shot⁵ là loại prompt đơn giản nhất. Nó chỉ cung cấp mô tả về một nhiệm vụ và một số văn bản để LLM bắt đầu. Đầu vào này có thể là bất cứ thứ gì: một câu hỏi, phần bắt đầu của một câu chuyện hoặc các hướng dẫn. Tên zero-shot có nghĩa là 'không có ví dụ'.</p>
+            <p>Hãy sử dụng Vertex AI Studio (cho Ngôn ngữ) trong Vertex AI,⁶ nơi cung cấp một sân chơi để kiểm tra các prompt. Trong Bảng 1, bạn sẽ thấy một ví dụ về prompt zero-shot để phân loại đánh giá phim.</p>
+            <p>Định dạng bảng được sử dụng dưới đây là một cách tuyệt vời để ghi lại các prompt. Các prompt của bạn có thể sẽ trải qua nhiều lần lặp lại trước khi chúng kết thúc trong codebase, vì vậy điều quan trọng là phải theo dõi công việc prompt engineering của bạn một cách kỷ luật, có cấu trúc. Thông tin thêm về định dạng bảng này, tầm quan trọng của việc theo dõi công việc prompt engineering và quy trình phát triển prompt nằm trong phần Best Practices sau trong chương này (“Ghi lại các lần thử prompt khác nhau”).</p>
+            <p>Nhiệt độ mô hình nên được đặt thành một số thấp, vì không cần sự sáng tạo và chúng tôi sử dụng các giá trị top-K và top-P mặc định của gemini-pro, điều này vô hiệu hóa hiệu quả cả hai cài đặt (xem 'Cấu hình đầu ra LLM' ở trên). Hãy chú ý đến đầu ra được tạo ra. Các từ <em>disturbing</em> và <em>masterpiece</em> sẽ làm cho việc dự đoán phức tạp hơn một chút, vì cả hai từ đều được sử dụng trong cùng một câu.</p>
+
+            <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="4">Bảng 1. Ví dụ về zero-shot prompting</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td colspan="3">1_1_movie_classification</td>
+                    </tr>
+                    <tr>
+                        <td>Goal</td>
+                        <td colspan="3">Classify movie reviews as positive, neutral or negative.</td>
+                    </tr>
+                    <tr>
+                        <td>Model</td>
+                        <td colspan="3">gemini-pro</td>
+                    </tr>
+                    <tr>
+                        <td>Temperature</td>
+                        <td>0.1</td>
+                        <td>Token Limit</td>
+                        <td>5</td>
+                    </tr>
+                     <tr>
+                        <td>Top-K</td>
+                        <td>N/A</td>
+                        <td>Top-P</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>Prompt</td>
+                        <td colspan="3"><pre><code>Classify movie reviews as POSITIVE, NEUTRAL or NEGATIVE.
+Review: "Her" is a disturbing study revealing the direction
+humanity is headed if AI is allowed to keep evolving,
+unchecked. I wish there were more movies like this masterpiece.
+Sentiment:</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td colspan="3"><pre><code>POSITIVE</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Khi zero-shot không hoạt động, bạn có thể cung cấp các minh chứng hoặc ví dụ trong prompt, dẫn đến prompting “one-shot” và “few-shot”.</p>
+
+            <h3 id="one-few-shot">One-shot & Few-shot</h3>
+            <p>Khi tạo prompt cho các mô hình AI, việc cung cấp ví dụ rất hữu ích. Những ví dụ này có thể giúp mô hình hiểu những gì bạn đang yêu cầu. Các ví dụ đặc biệt hữu ích khi bạn muốn hướng mô hình đến một cấu trúc hoặc mẫu đầu ra nhất định.</p>
+            <p>Prompt <strong>one-shot</strong>, cung cấp một ví dụ duy nhất, do đó có tên là one-shot. Ý tưởng là mô hình có một ví dụ mà nó có thể bắt chước để hoàn thành tốt nhất nhiệm vụ.</p>
+            <p>Prompt <strong>few-shot</strong>⁷ cung cấp nhiều ví dụ cho mô hình. Cách tiếp cận này cho mô hình thấy một mẫu mà nó cần tuân theo. Ý tưởng tương tự như one-shot, nhưng nhiều ví dụ về mẫu mong muốn làm tăng cơ hội mô hình tuân theo mẫu đó.</p>
+            <p>Số lượng ví dụ bạn cần cho few-shot prompting phụ thuộc vào một vài yếu tố, bao gồm độ phức tạp của nhiệm vụ, chất lượng của các ví dụ và khả năng của mô hình AI tạo sinh (gen AI) bạn đang sử dụng. Theo nguyên tắc chung, bạn nên sử dụng ít nhất ba đến năm ví dụ cho few-shot prompting. Tuy nhiên, bạn có thể cần sử dụng nhiều ví dụ hơn cho các tác vụ phức tạp hơn, hoặc bạn có thể cần sử dụng ít hơn do giới hạn độ dài đầu vào của mô hình.</p>
+            <p>Bảng 2 cho thấy một ví dụ về prompt few-shot, hãy sử dụng cùng cài đặt cấu hình mô hình gemini-pro như trước, ngoại trừ việc tăng giới hạn token để đáp ứng nhu cầu phản hồi dài hơn.</p>
+
+            <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="4">Bảng 2. Ví dụ về few-shot prompting</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                    <tr>
+                        <td>Goal</td>
+                        <td colspan="3">Parse pizza orders to JSON</td>
+                    </tr>
+                    <tr>
+                        <td>Model</td>
+                        <td colspan="3">gemini-pro</td>
+                    </tr>
+                    <tr>
+                        <td>Temperature</td>
+                        <td>0.1</td>
+                        <td>Token Limit</td>
+                        <td>250</td>
+                    </tr>
+                     <tr>
+                        <td>Top-K</td>
+                        <td>N/A</td>
+                        <td>Top-P</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>Prompt</td>
+                        <td colspan="3"><pre><code>Parse a customer's pizza order into valid JSON:
+
+EXAMPLE:
+I want a small pizza with cheese, tomato sauce, and pepperoni.
+JSON Response:
+{
+  "size": "small",
+  "type": "normal",
+  "ingredients": [["cheese", "tomato sauce", "peperoni"]]
+}
+
+EXAMPLE:
+Can I get a large pizza with tomato sauce, basil and mozzarella
+{
+  "size": "large",
+  "type": "normal",
+  "ingredients": [["tomato sauce", "bazel", "mozzarella"]]
+}
+
+Now, I would like a large pizza, with the first half cheese and
+mozzarella. And the other tomato sauce, ham and pineapple.
+
+JSON Response:</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td colspan="3"><pre><code>{
+  "size": "large",
+  "type": "half-half",
+  "ingredients": [["cheese", "mozzarella"], ["tomato sauce", "ham", "pineapple"]]
+}</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Khi bạn chọn ví dụ cho prompt của mình, hãy sử dụng các ví dụ có liên quan đến nhiệm vụ bạn muốn thực hiện. Các ví dụ nên đa dạng, chất lượng cao và được viết tốt. Một lỗi nhỏ có thể làm mô hình bối rối và sẽ dẫn đến đầu ra không mong muốn.</p>
+            <p>Nếu bạn đang cố gắng tạo ra đầu ra mạnh mẽ đối với nhiều loại đầu vào khác nhau, thì điều quan trọng là phải bao gồm các trường hợp biên (edge cases) trong ví dụ của bạn. Trường hợp biên là các đầu vào bất thường hoặc không mong muốn, nhưng mô hình vẫn có thể xử lý được.</p>
+
+            <h3 id="system-context-role">System, Contextual và Role prompting</h3>
+            <p>System, contextual và role prompting đều là các kỹ thuật được sử dụng để hướng dẫn cách LLM tạo văn bản, nhưng chúng tập trung vào các khía cạnh khác nhau:</p>
+            <ul>
+                <li><strong>System prompting</strong> đặt bối cảnh và mục đích tổng thể cho mô hình ngôn ngữ. Nó xác định 'bức tranh lớn' về những gì mô hình nên làm, như dịch một ngôn ngữ, phân loại đánh giá, v.v.</li>
+                <li><strong>Contextual prompting</strong> cung cấp các chi tiết cụ thể hoặc thông tin nền tảng liên quan đến cuộc trò chuyện hoặc nhiệm vụ hiện tại. Nó giúp mô hình hiểu được các sắc thái của những gì đang được yêu cầu và điều chỉnh phản hồi cho phù hợp.</li>
+                <li><strong>Role prompting</strong> gán một nhân vật hoặc danh tính cụ thể cho mô hình ngôn ngữ để áp dụng. Điều này giúp mô hình tạo ra các phản hồi nhất quán với vai trò được giao và kiến thức cũng như hành vi liên quan của nó.</li>
+            </ul>
+            <p>Có thể có sự chồng chéo đáng kể giữa system, contextual và role prompting. Ví dụ: một prompt gán vai trò cho hệ thống cũng có thể có ngữ cảnh.</p>
+            <p>Tuy nhiên, mỗi loại prompt phục vụ một mục đích chính hơi khác nhau:</p>
+            <ul>
+                <li><strong>System prompt:</strong> Xác định khả năng cơ bản và mục đích bao trùm của mô hình.</li>
+                <li><strong>Contextual prompt:</strong> Cung cấp thông tin tức thời, cụ thể cho nhiệm vụ để hướng dẫn phản hồi. Nó rất cụ thể cho nhiệm vụ hoặc đầu vào hiện tại, vốn là động.</li>
+                <li><strong>Role prompt:</strong> Định hình phong cách và giọng điệu đầu ra của mô hình. Nó thêm một lớp đặc tả và cá tính.</li>
+            </ul>
+
+            <h4 id="system-prompting">System prompting</h4>
+            <p>Việc phân biệt giữa system, contextual và role prompts cung cấp một khuôn khổ để thiết kế các prompt với ý định rõ ràng, cho phép kết hợp linh hoạt và giúp phân tích dễ dàng hơn cách mỗi loại prompt ảnh hưởng đến đầu ra của mô hình ngôn ngữ.</p>
+            <p>Hãy đi sâu vào ba loại prompt này.</p>
+            <p>Bảng 3 chứa một system prompt, nơi tôi chỉ định thông tin bổ sung về cách trả về đầu ra. Tôi đã tăng temperature để có mức độ sáng tạo cao hơn và tôi đã chỉ định giới hạn token cao hơn. Tuy nhiên, do hướng dẫn rõ ràng của tôi về cách trả về đầu ra, mô hình đã không trả về văn bản thừa.</p>
+
+            <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="4">Bảng 3. Ví dụ về system prompting</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                    <tr>
+                        <td>Goal</td>
+                        <td colspan="3">Classify movie reviews as positive, neutral or negative.</td>
+                    </tr>
+                    <tr>
+                        <td>Model</td>
+                        <td colspan="3">gemini-pro</td>
+                    </tr>
+                    <tr>
+                        <td>Temperature</td>
+                        <td>1</td>
+                        <td>Token Limit</td>
+                        <td>5</td>
+                    </tr>
+                     <tr>
+                        <td>Top-K</td>
+                        <td>40</td>
+                        <td>Top-P</td>
+                        <td>0.8</td>
+                    </tr>
+                    <tr>
+                        <td>Prompt</td>
+                        <td colspan="3"><pre><code>Classify movie reviews as positive, neutral or negative. Only
+return the label in uppercase.
+Review: "Her" is a disturbing study revealing the direction
+humanity is headed if AI is allowed to keep evolving,
+unchecked. It's so disturbing I couldn't watch it.
+Sentiment:</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td colspan="3"><pre><code>NEGATIVE</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>System prompts có thể hữu ích để tạo đầu ra đáp ứng các yêu cầu cụ thể. Tên 'system prompt' thực sự là viết tắt của 'cung cấp một nhiệm vụ bổ sung cho hệ thống'. Ví dụ: bạn có thể sử dụng system prompt để tạo đoạn mã tương thích với một ngôn ngữ lập trình cụ thể hoặc bạn có thể sử dụng system prompt để trả về một cấu trúc nhất định. Hãy xem Bảng 4, nơi tôi trả về đầu ra ở định dạng JSON.</p>
+
+             <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="4">Bảng 4. Ví dụ về system prompting với định dạng JSON</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                    <tr>
+                        <td>Goal</td>
+                        <td colspan="3">Classify movie reviews as positive, neutral or negative, return JSON.</td>
+                    </tr>
+                    <tr>
+                        <td>Model</td>
+                        <td colspan="3">gemini-pro</td>
+                    </tr>
+                    <tr>
+                        <td>Temperature</td>
+                        <td>1</td>
+                        <td>Token Limit</td>
+                        <td>1024</td>
+                    </tr>
+                     <tr>
+                        <td>Top-K</td>
+                        <td>40</td>
+                        <td>Top-P</td>
+                        <td>0.8</td>
+                    </tr>
+                    <tr>
+                        <td>Prompt</td>
+                        <td colspan="3"><pre><code>Classify movie reviews as positive, neutral or negative. Return
+valid JSON:
+
+Review: "Her" is a disturbing study revealing the direction
+humanity is headed if AI is allowed to keep evolving,
+unchecked. It's so disturbing I couldn't watch it.
+
+Schema:
+MOVIE:
+{
+  "sentiment": String "POSITIVE" | "NEGATIVE" | "NEUTRAL",
+  "name": String
+}
+MOVIE REVIEWS:
+{
+ "movie_reviews": [MOVIE]
+}
+
+JSON Response:</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td colspan="3"><pre><code>{
+  "movie_reviews": [
+    {
+      "sentiment": "NEGATIVE",
+      "name": "Her"
+    }
+  ]
+}</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4 id="role-prompting">Role prompting</h4>
+             <p>Có một số lợi ích khi trả về đối tượng JSON từ một prompt trích xuất dữ liệu. Trong một ứng dụng thực tế, tôi không cần tạo định dạng JSON này theo cách thủ công, tôi đã có thể trả về dữ liệu theo thứ tự đã sắp xếp (rất tiện dụng khi làm việc với các đối tượng datetime), nhưng quan trọng nhất, bằng cách yêu cầu định dạng JSON, nó buộc mô hình tạo ra một cấu trúc và hạn chế ảo giác (hallucinations).</p>
+             <p>System prompts cũng có thể thực sự hữu ích cho sự an toàn và độc tính. Để kiểm soát đầu ra, chỉ cần thêm một dòng bổ sung vào prompt của bạn như: ‘Bạn nên tôn trọng trong câu trả lời của mình.’.</p>
+            <p>Role prompting là một kỹ thuật trong prompt engineering liên quan đến việc gán một vai trò cụ thể cho mô hình gen AI. Điều này có thể giúp mô hình tạo ra đầu ra phù hợp và nhiều thông tin hơn, vì mô hình có thể tạo ra các phản hồi của mình theo vai trò cụ thể mà nó đã được giao.</p>
+            <p>Ví dụ: bạn có thể role prompt một mô hình gen AI để trở thành biên tập viên sách, giáo viên mẫu giáo hoặc diễn giả truyền cảm hứng. Khi mô hình đã được giao một vai trò, bạn có thể đưa ra các prompt cụ thể cho vai trò đó. Ví dụ: bạn có thể prompt một giáo viên tạo giáo án mà sau đó họ có thể xem lại. Hãy xem Bảng 5, nơi mô hình đóng vai trò là hướng dẫn viên du lịch.</p>
+
+            <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="4">Bảng 5. Ví dụ về role prompting</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                    <tr>
+                        <td>Goal</td>
+                        <td colspan="3">Act as travel guide and provide 3 travel suggestions</td>
+                    </tr>
+                    <tr>
+                        <td>Model</td>
+                        <td colspan="3">gemini-pro</td>
+                    </tr>
+                    <tr>
+                        <td>Temperature</td>
+                        <td>1</td>
+                        <td>Token Limit</td>
+                        <td>1024</td>
+                    </tr>
+                     <tr>
+                        <td>Top-K</td>
+                        <td>40</td>
+                        <td>Top-P</td>
+                        <td>0.8</td>
+                    </tr>
+                    <tr>
+                        <td>Prompt</td>
+                        <td colspan="3"><pre><code>I want you to act as a travel guide. I will write to you
+about my location and you will suggest 3 places to visit near
+me. In some cases, I will also give you the type of places I
+will visit.
+My suggestion: "I am in Amsterdam and I want to visit
+only museums."
+Travel Suggestions:</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td colspan="3"><pre><code>1. Rijksmuseum: World-renowned museum, known for Dutch masterpieces
+   like Rembrandt's "The Night Watch." Don't miss the incredible collection of
+   paintings and artifacts showcasing Dutch art and history.
+
+2. Van Gogh Museum: Immerse yourself in the captivating works of Vincent
+   van Gogh. The museum houses the largest collection of his paintings and
+   drawings, including "The Starry Night" and "Sunflowers."
+
+3. Stedelijk Museum Amsterdam: Discover modern and contemporary art
+   from around the world. The museum's collection includes works by Picasso,
+   Kandinsky, and Rietveld, housed in a striking modern building.</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Ví dụ trên cho thấy một ví dụ về việc đóng vai trò của một đại lý du lịch. Khi bạn thay đổi vai trò thành giáo viên địa lý, bạn sẽ nhận thấy rằng bạn sẽ nhận được một phản hồi khác.</p>
+            <p>Việc xác định một góc nhìn vai trò cho mô hình AI cung cấp cho nó một bản thiết kế về giọng điệu, phong cách và chuyên môn tập trung mà bạn đang tìm kiếm để cải thiện chất lượng, mức độ liên quan và hiệu quả của đầu ra của bạn.</p>
+            <p>Dưới đây là một số phong cách bạn có thể chọn mà tôi thấy hiệu quả:</p>
+            <p>Đối đầu (Confrontational), Mô tả (Descriptive), Trực tiếp (Direct), Trang trọng (Formal), Hài hước (Humorous), Có ảnh hưởng (Influential), Không trang trọng (Informal), Truyền cảm hứng (Inspirational), Thuyết phục (Persuasive)</p>
+            <p>Hãy thay đổi prompt của chúng ta trong Bảng 6 để bao gồm phong cách hài hước và truyền cảm hứng.</p>
+
+             <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="4">Bảng 6. Ví dụ về role prompting với giọng điệu và phong cách hài hước</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                     <tr>
+                        <td>Prompt</td>
+                        <td colspan="3"><pre><code>I want you to act as a travel guide. I will write to you about
+my location and you will suggest 3 places to visit near me in
+a humorous style.
+My suggestion: "I am in Manhattan."
+Travel Suggestions:</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td colspan="3"><pre><code>1. Behold the Empire State of Mind: Ascend to the dizzying heights of the Empire
+   State Building and bask in the glory of Manhattan's skyline. Prepare to feel like
+   King Kong atop the Big Apple, minus the giant ape-sized banana.
+
+2. Get Artsy-Fartsy at MoMA: Unleash your inner art aficionado at the Museum
+   of Modern Art (MoMA). Gaze upon masterpieces that will boggle your
+   mind and make you question whether your stick-figure drawings have any
+   artistic merit.
+
+3. Shop 'Til You Drop on Fifth Avenue: Indulge in some retail therapy on the
+   iconic Fifth Avenue. Brace yourself for sticker shock as you window-shop (or
+   actually shop) at designer boutiques that will make your wallet cry. But hey,
+   you're in Manhattan, so you might as well embrace the fabulousness!</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <h4 id="contextual-prompting">Contextual prompting</h4>
+            <p>Bằng cách cung cấp các contextual prompts, bạn có thể giúp đảm bảo rằng các tương tác AI của bạn diễn ra liền mạch và hiệu quả nhất có thể. Mô hình sẽ có thể hiểu yêu cầu của bạn nhanh hơn và có thể tạo ra các phản hồi chính xác và phù hợp hơn, như bạn có thể thấy trong ví dụ của Bảng 7.</p>
+
+             <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="4">Bảng 7. Ví dụ về contextual prompting</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                    <tr>
+                        <td>Goal</td>
+                        <td colspan="3">Suggest articles for a blog about retro games</td>
+                    </tr>
+                    <tr>
+                        <td>Model</td>
+                        <td colspan="3">gemini-pro</td>
+                    </tr>
+                    <tr>
+                        <td>Temperature</td>
+                        <td>1</td>
+                        <td>Token Limit</td>
+                        <td>1024</td>
+                    </tr>
+                     <tr>
+                        <td>Top-K</td>
+                        <td>40</td>
+                        <td>Top-P</td>
+                        <td>0.8</td>
+                    </tr>
+                    <tr>
+                        <td>Prompt</td>
+                        <td colspan="3"><pre><code>Context: You are writing for a blog about retro 80's arcade
+video games.
+
+Suggest 3 topics to write an article about with a few lines of
+description of what this article should contain.</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td colspan="3"><pre><code>1. **The Evolution of Arcade Cabinet Design:**
+   This article would explore the evolution of arcade cabinet designs, from the
+   early wood and metal cabinets of the 1970s to the sleek, neon-lit designs of
+   the 1980s and beyond.
+
+2. **Blast From The Past: Iconic Arcade Games of The 80's:**
+   This article would feature a glimpse into the history, impact, and legacy
+   of some of the most iconic and influential arcade games of the 1980s,
+   highlighting their innovations, popular mechanics, and enduring charm.
+
+3. **The Rise and Retro Revival of Pixel Art:**
+   This article would delve into the evolution of pixel art as a defining visual
+   style of early arcade games, tracing its roots, exploring its techniques, and
+   discussing the resurgence of pixel art in modern games and digital art.</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 id="step-back">Step-back prompting</h3>
+            <p>Step-back⁸ prompting là một kỹ thuật để cải thiện hiệu suất bằng cách prompt LLM trước tiên xem xét một câu hỏi chung liên quan đến nhiệm vụ cụ thể đang thực hiện, và sau đó đưa câu trả lời cho câu hỏi chung đó vào một prompt tiếp theo cho nhiệm vụ cụ thể. 'Bước lùi' này cho phép LLM kích hoạt kiến thức nền tảng và quy trình lý luận liên quan trước khi cố gắng giải quyết vấn đề cụ thể.</p>
+            <p>Bằng cách xem xét các nguyên tắc rộng hơn và cơ bản, LLM có thể tạo ra các phản hồi chính xác và sâu sắc hơn. Step-back prompting khuyến khích LLM suy nghĩ chín chắn và áp dụng kiến thức của chúng theo những cách mới và sáng tạo. Nó thay đổi prompt cuối cùng thực hiện nhiệm vụ bằng cách sử dụng nhiều kiến thức hơn trong các tham số của LLM so với những gì sẽ xảy ra nếu LLM được prompt trực tiếp.</p>
+            <p>Nó có thể giúp giảm thiểu các thành kiến trong phản hồi của LLM, bằng cách tập trung vào các nguyên tắc chung thay vì các chi tiết cụ thể, step-back prompting.</p>
+            <p>Hãy xem xét các ví dụ này để hiểu cách step-back prompting có thể cải thiện kết quả. Trước tiên, hãy xem lại một prompt truyền thống (Bảng 8) trước khi chúng ta so sánh nó với một step back prompt (Bảng 9):</p>
+
+             <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="4">Bảng 8. Prompt truyền thống trước khi so sánh với step back prompt</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                    <tr>
+                        <td>Goal</td>
+                        <td colspan="3">Write a storyline for a level of a first-person shooter video game.</td>
+                    </tr>
+                    <tr>
+                        <td>Model</td>
+                        <td colspan="3">gemini-pro</td>
+                    </tr>
+                    <tr>
+                        <td>Temperature</td>
+                        <td>1</td>
+                        <td>Token Limit</td>
+                        <td>1024</td>
+                    </tr>
+                     <tr>
+                        <td>Top-K</td>
+                        <td>40</td>
+                        <td>Top-P</td>
+                        <td>0.8</td>
+                    </tr>
+                    <tr>
+                        <td>Prompt</td>
+                        <td colspan="3"><pre><code>Write a one paragraph storyline for a new level of a first-
+person shooter video game that is challenging and engaging.</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td colspan="3"><pre><code>The level begins with the player's squad being ambushed in a dense urban area
+by a relentless enemy faction. Players must fight their way through a maze of
+back alleys and dilapidated buildings, utilizing stealth and precision to eliminate
+enemy forces and avoid detection. The player must use their environment to their
+advantage, setting traps, utilizing cover, and making calculated moves to survive.
+Along the way, they uncover intel suggesting the enemy is planning a devastating
+attack, and the player must race against time to gather evidence and relay it back
+to their headquarters before the enemy can carry out their plans.</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Khi bạn đặt temperature thành 1, bạn có thể nhận được đủ loại bài viết sáng tạo cho một cốt truyện, nhưng nó cũng khá ngẫu nhiên và chung chung. Vì vậy, hãy lùi lại một bước:</p>
+
+            <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="4">Bảng 9. Ví dụ về prompting for self consistency (Bước lùi)</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                     <tr>
+                        <td>Prompt</td>
+                        <td colspan="3"><pre><code>Based on popular first-person shooter action games, what are
+5 fictional key settings that contribute to a challenging and
+engaging level storyline in a first-person shooter video game?</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td colspan="3"><pre><code>1. **Abandoned Military Base**: A sprawling, post-apocalyptic military complex
+   crawling with mutated soldiers and rogue robots, ideal for challenging
+   firearm combat.
+2. **Cyberpunk City**: A neon-lit, futuristic urban environment with towering
+   skyscrapers and dense alleyways, featuring cybernetically enhanced enemies
+   and hacking mechanics.
+3. **Alien Spaceship**: A vast alien vessel stranded on Earth, with eerie
+   corridors, zero-gravity sections, and extraterrestrial creatures to encounter.
+4. **Zombie-Infested Town**: A desolate town overrun by hordes of aggressive
+   zombies, featuring intense close-quarters combat and puzzle-solving to find
+   safe passage.
+5. **Underwater Research Facility**: A deep-sea laboratory flooded with water,
+   filled with mutated aquatic creatures, and requiring stealth and underwater
+   exploration skills to survive.</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Vâng, những chủ đề đó có vẻ phù hợp với một trò chơi video góc nhìn thứ nhất. Hãy quay lại prompt ban đầu, nhưng lần này chúng ta bao gồm câu trả lời của bước lùi làm ngữ cảnh và xem nó sẽ trả về gì.</p>
+
+            <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="4">Bảng 10. Ví dụ về prompting for self consistency (Kết hợp ngữ cảnh)</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                     <tr>
+                        <td>Prompt</td>
+                        <td colspan="3"><pre><code>Context: 5 engaging themes for a first person shooter video game:
+1. **Abandoned Military Base**: A sprawling, post-apocalyptic
+   military complex crawling with mutated soldiers and rogue
+   robots, ideal for challenging firearm combat.
+2. **Cyberpunk City**: A neon-lit, futuristic urban environment
+   with towering skyscrapers and dense alleyways, featuring
+   cybernetically enhanced enemies and hacking mechanics.
+3. **Alien Spaceship**: A vast alien vessel stranded on
+   Earth, with eerie corridors, zero-gravity sections, and
+   extraterrestrial creatures to encounter.
+4. **Zombie-Infested Town**: A desolate town overrun by hordes of
+   aggressive zombies, featuring intense close-quarters combat and
+   puzzle-solving to find safe passage.
+5. **Underwater Research Facility**: A deep-sea laboratory flooded
+   with water, filled with mutated aquatic creatures, and requiring
+   stealth and underwater exploration skills to survive.
+
+Take one of the themes and write a one paragraph storyline
+for a new level of a first-person shooter video game that is
+challenging and engaging.</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td colspan="3"><pre><code>In the heart of a murky abyss, lies a dilapidated underwater research facility,
+standing as a testament to human ambition and its disastrous consequences.
+Shrouded in darkness, pulsating with the hum of malfunctioning machinery, and
+haunted by the echoes of drowned souls, the facility is now a breeding ground for
+a nightmare borne from the deep sea. The player, an elite marine equipped with
+advanced diving gear and experimental weaponry, is tasked with venturing into
+this aquatic realm of terror. Armed with resilience and resourcefulness, they must
+navigate treacherous corridors, solve cryptic puzzles, and confront gruesome sea
+monstrosities that lurk in the depths. From grappling with the crushing pressure
+of the deep sea to outsmarting cunning aquatic predators, every moment in this
+uncharted underworld tests the limits of human endurance and courage.</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+             <p>Trông giống như một trò chơi video thú vị! Bằng cách sử dụng kỹ thuật step back prompting, bạn có thể tăng độ chính xác của các prompt của mình.</p>
+
+
+            <h3 id="cot">Chain of Thought (CoT)</h3>
+            <p>Chain of Thought (CoT)⁹ prompting là một kỹ thuật để cải thiện khả năng lý luận của LLM bằng cách tạo ra các bước lý luận trung gian. Điều này giúp LLM tạo ra các câu trả lời chính xác hơn. Bạn có thể kết hợp nó với few-shot prompting để có kết quả tốt hơn trong các tác vụ phức tạp hơn đòi hỏi lý luận trước khi trả lời vì đó là một thách thức với zero-shot chain of thought.</p>
+            <p>CoT có rất nhiều lợi thế. Trước hết, nó ít tốn công sức trong khi rất hiệu quả và hoạt động tốt với các LLM có sẵn (vì vậy không cần tinh chỉnh - finetune). Bạn cũng có được khả năng diễn giải với CoT prompting, vì bạn có thể học hỏi từ các phản hồi của LLM và xem các bước lý luận đã được tuân theo. Nếu có sự cố, bạn sẽ có thể xác định nó. Chain of thought dường như cải thiện tính mạnh mẽ khi di chuyển giữa các phiên bản LLM khác nhau. Điều đó có nghĩa là hiệu suất của prompt của bạn sẽ ít bị trôi dạt giữa các LLM khác nhau hơn so với khi prompt của bạn không sử dụng chuỗi lý luận. Tất nhiên cũng có những nhược điểm, nhưng chúng hơi trực quan.</p>
+            <p>Phản hồi của LLM bao gồm lý luận chain of thought, có nghĩa là nhiều token đầu ra hơn, có nghĩa là các dự đoán tốn nhiều tiền hơn và mất nhiều thời gian hơn.</p>
+            <p>Để giải thích ví dụ sau trong Bảng 11, trước tiên hãy thử tạo một prompt không sử dụng CoT prompting để giới thiệu những sai sót của một mô hình ngôn ngữ lớn.</p>
+
+            <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="2">Bảng 11. Ví dụ về prompt cố gắng giải một bài toán</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                     <tr>
+                        <td>Prompt</td>
+                        <td><pre><code>When I was 3 years old, my partner was 3 times my age. Now, I
+am 20 years old. How old is my partner?</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td><pre><code>63 years old</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Ối. Đó rõ ràng là câu trả lời sai. Thực tế, LLM thường gặp khó khăn với các nhiệm vụ toán học và có thể cung cấp câu trả lời không chính xác – ngay cả đối với một nhiệm vụ đơn giản như nhân hai số. Điều này là do chúng được đào tạo trên khối lượng lớn văn bản và toán học có thể yêu cầu một cách tiếp cận khác. Vì vậy, hãy xem liệu các bước lý luận trung gian có cải thiện đầu ra hay không.</p>
+
+             <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="2">Bảng 12. Ví dụ về Chain of Thought prompting</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                     <tr>
+                        <td>Prompt</td>
+                        <td><pre><code>When I was 3 years old, my partner was 3 times my age. Now,
+I am 20 years old. How old is my partner? Let's think step
+by step.</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td><pre><code>1. Let's assume my current age is "x" years.
+2. When I was 3 years old, my age was 3 years.
+3. My partner's age at that time was 3 times my age, which means my partner's
+   age was 3 * 3 = 9 years.
+4. Now, I am 20 years old, which means my age has increased by 20 - 3 = 17
+   years since I was 3 years old.
+5. Since my partner's age was 9 years when I was 3 years old, and my age has
+   increased by 17 years, my partner's age must have also increased by 17 years.
+6. Therefore, my partner's current age is 9 + 17 = 26 years.
+
+So, my partner is 26 years old.</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+             <p>Được rồi, bây giờ câu trả lời cuối cùng đã đúng. Đó là bởi vì chúng tôi đã hướng dẫn rõ ràng LLM giải thích từng bước thay vì chỉ trả về một câu trả lời. Thật thú vị khi thấy rằng mô hình cộng thêm 17 năm tăng lên. Trong đầu tôi sẽ lấy chênh lệch số năm giữa bạn đời và tôi và cộng chúng lại. (20+(9-3)). Hãy giúp mô hình suy nghĩ giống tôi hơn một chút.</p>
+             <p>Bảng 12 là một ví dụ về 'zero-shot' Chain of thought. Chain of thought prompting có thể rất mạnh mẽ khi kết hợp với single-shot hoặc few-shot, như những gì bạn có thể thấy trong Bảng 13:</p>
+
+             <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="2">Bảng 13. Ví dụ về chain of thought prompting với single-shot</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                     <tr>
+                        <td>Prompt</td>
+                        <td><pre><code>Q: When my brother was 2 years old, I was double his age. Now
+I am 40 years old. How old is my brother? Let's think step
+by step.
+A: When my brother was 2 years, I was 2 * 2 = 4 years old.
+That's an age difference of 2 years and I am older. Now I am 40
+years old, so my brother is 40 - 2 = 38 years old. The answer
+is 38.
+
+Q: When I was 3 years old, my partner was 3 times my age. Now,
+I am 20 years old. How old is my partner? Let's think step
+by step.
+A:</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td><pre><code>When I was 3 years old, my partner was 3 * 3 = 9 years old. That's an age
+difference of 6 years and my partner is older. Now I am 20 years old, so my
+partner is 20 + 6 = 26 years old. The answer is 26.</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Chain of thought có thể hữu ích cho các trường hợp sử dụng khác nhau. Hãy nghĩ đến việc tạo mã, để chia nhỏ yêu cầu thành một vài bước và ánh xạ chúng tới các dòng mã cụ thể. Hoặc để tạo dữ liệu tổng hợp khi bạn có một loại hạt giống nào đó như “Sản phẩm có tên là XYZ, hãy viết mô tả hướng dẫn mô hình thông qua các giả định bạn sẽ đưa ra dựa trên tiêu đề sản phẩm đã cho.” Nói chung, bất kỳ nhiệm vụ nào có thể được giải quyết bằng cách 'nói qua' đều là một ứng cử viên tốt cho chain of thought. Nếu bạn có thể giải thích các bước để giải quyết vấn đề, hãy thử chain of thought.</p>
+            <p>Vui lòng tham khảo sổ tay¹⁰ được lưu trữ trong kho lưu trữ Github của GoogleCloudPlatform sẽ đi sâu hơn vào CoT prompting:</p>
+
+            <h3 id="self-consistency">Self-consistency</h3>
+            <p>Trong phần thực hành tốt nhất của chương này, chúng ta sẽ tìm hiểu một số thực hành tốt nhất dành riêng cho Chain of thought prompting.</p>
+            <p>Mặc dù các mô hình ngôn ngữ lớn đã cho thấy thành công ấn tượng trong các nhiệm vụ NLP khác nhau, khả năng lý luận của chúng thường được coi là một hạn chế không thể khắc phục chỉ bằng cách tăng kích thước mô hình. Như chúng ta đã học trong phần Chain of Thought prompting trước đó, mô hình có thể được prompt để tạo ra các bước lý luận giống như con người giải quyết vấn đề. Tuy nhiên, CoT sử dụng chiến lược 'greedy decoding' đơn giản, hạn chế hiệu quả của nó. Self-consistency¹¹ kết hợp sampling và bỏ phiếu đa số (majority voting) để tạo ra các đường lý luận đa dạng và chọn câu trả lời nhất quán nhất. Nó cải thiện độ chính xác và sự mạch lạc của các phản hồi do LLM tạo ra.</p>
+            <p>Self-consistency đưa ra khả năng có khả năng xảy ra giả xác suất (pseudo-probability likelihood) của một câu trả lời là đúng, nhưng rõ ràng là có chi phí cao.</p>
+            <p>Nó tuân theo các bước sau:</p>
+            <ol>
+                <li>Tạo các đường lý luận đa dạng: LLM được cung cấp cùng một prompt nhiều lần. Cài đặt nhiệt độ cao khuyến khích mô hình tạo ra các đường lý luận và góc nhìn khác nhau về vấn đề.</li>
+                <li>Trích xuất câu trả lời từ mỗi phản hồi được tạo ra.</li>
+                <li>Chọn câu trả lời phổ biến nhất.</li>
+            </ol>
+            <p>Hãy xem xét một ví dụ về hệ thống phân loại email, phân loại email là QUAN TRỌNG hoặc KHÔNG QUAN TRỌNG. Một prompt chain of thought zero-shot sẽ được gửi đến LLM nhiều lần, để xem liệu các phản hồi có khác nhau sau mỗi lần gửi hay không. Lưu ý giọng điệu thân thiện, lựa chọn từ ngữ và sự mỉa mai đã được sử dụng trong email. Tất cả những điều này có thể đánh lừa LLM.</p>
+
+             <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="2">Bảng 14. Ví dụ về prompting for self consistency</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                     <tr>
+                        <td>Prompt</td>
+                        <td><pre><code>EMAIL:
+...
+Hi,
+I have seen you use Wordpress for your website. A great open
+source content management system. I have used it in the past
+too. It comes with lots of great user plugins. And it's pretty
+easy to set up.
+
+I did notice a bug in the contact form, which happens when
+you select the name field. See the attached screenshot of me
+entering text in the name field. Notice the JavaScript alert
+box that I inv0k3d.
+
+But for the rest it's a great website. I enjoy reading it. Feel
+free to leave the bug in the website, because it gives me more
+interesting things to read.
+
+Cheers,
+Harry the Hacker.
+...
+Classify the above email as IMPORTANT or NOT IMPORTANT. Let's
+think step by step and explain why.</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output<br>Attempt 1</td>
+                        <td><pre><code>**Step 1: Identify the purpose of the email.**
+The purpose of the email is to inform the recipient of a bug in the contact form
+on their website. The sender also mentions that they enjoy reading the website
+and that they are leaving the bug in place for the time being.
+
+**Step 2: Assess the potential impact of the bug.**
+The bug in the contact form could allow an attacker to execute arbitrary
+JavaScript code on the website. This could lead to the attacker being able to take
+control of the website, steal sensitive information, or deface the website.
+
+**Step 3: Consider the credibility of the sender.**
+The sender of the email claims to be a hacker named Harry. However, there is no
+way to verify the sender's identity. It is possible that the sender is a legitimate
+hacker who is trying to help the recipient, but it is also possible that the sender
+is a malicious actor who is trying to trick the recipient into clicking on a malicious
+link or downloading a malicious file.
+
+**Conclusion: IMPORTANT**
+Based on the potential impact of the bug and the credibility of the sender,
+the email should be classified as **IMPORTANT**. The recipient should take
+immediate action to fix the bug and protect their website from attack.</code></pre></td>
+                    </tr>
+                     <tr>
+                        <td>Output<br>Attempt 2</td>
+                        <td><pre><code>**Explanation:**
+1. **Lack of urgency:** The email does not convey any sense of urgency or
+   time-sensitivity. It starts with a casual greeting and presents the information
+   in a matter-of-fact tone.
+2. **Non-critical bug report:** The bug reported in the contact form is
+   described as interesting but not critical. The email sender even suggests that
+   the website owner can leave the bug in place.
+3. **Lack of personal impact:** The email does not indicate any direct or
+   personal impact on the website owner. It simply mentions that the sender
+   enjoys reading the website.
+4. **Absence of action request:** The email does not explicitly request any
+   action from the website owner. It does not ask for the bug to be fixed or
+   provide any specific suggestions for improvement.
+5. **Sender's intent:** The sender's intention seems to be more focused on
+   sharing an observation and expressing interest in the website rather than
+   raising a serious concern or requesting assistance.
+
+**Conclusion: NOT IMPORTANT**</code></pre></td>
+                    </tr>
+                     <tr>
+                        <td>Output<br>Attempt 3</td>
+                        <td><pre><code>**Step 1: Identify the purpose of the email.**
+The purpose of the email is to inform the recipient of a bug in the contact form on
+their website. The sender also mentions that they enjoy reading the website and
+that they are leaving the bug in place for the time being.
+
+**Step 2: Assess the potential impact of the bug.**
+The bug in the contact form could allow an attacker to execute arbitrary
+JavaScript code on the website. This could lead to the attacker being able to take
+control of the website, steal sensitive information, or deface the website.
+
+**Step 3: Consider the credibility of the sender.**
+The sender of the email claims to be a hacker named Harry. However, there is no
+way to verify the sender's identity. It is possible that the sender is a legitimate
+hacker who is trying to help the recipient, but it is also possible that the sender is
+a malicious actor who is trying to exploit the bug for their own gain.
+
+**Conclusion:**
+Based on the above factors, the email should be classified as **IMPORTANT**.
+The bug in the contact form is a serious security risk, and the sender's credibility
+is unknown. The recipient should take immediate action to fix the bug and</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+             <p>Bạn có thể sử dụng prompt trên và thử xem liệu nó có trả về một phân loại nhất quán hay không. Tùy thuộc vào mô hình bạn đang sử dụng và cấu hình nhiệt độ, nó có thể trả về "IMPORTANT" hoặc "NOT IMPORTANT".</p>
+             <p>Bằng cách tạo ra nhiều Chain of Thoughts và lấy câu trả lời xuất hiện phổ biến nhất (“IMPORTANT”), chúng ta có thể nhận được câu trả lời đúng một cách nhất quán hơn từ LLM.</p>
+             <p>Ví dụ này cho thấy cách self-consistency prompting có thể được sử dụng để cải thiện độ chính xác của phản hồi của LLM bằng cách xem xét nhiều góc nhìn và chọn câu trả lời nhất quán nhất.</p>
+
+            <h3 id="tot">Tree of Thoughts (ToT)</h3>
+            <p>Bây giờ chúng ta đã quen thuộc với chain of thought và self-consistency prompting, hãy xem lại Tree of Thoughts (ToT).¹² Nó tổng quát hóa khái niệm CoT prompting vì nó cho phép LLM khám phá đồng thời nhiều đường lý luận khác nhau, thay vì chỉ tuân theo một chuỗi suy nghĩ tuyến tính duy nhất. Điều này được mô tả trong Hình 1.</p>
+            <figure>
+                <!-- Placeholder for Figure 1 description -->
+                 <p>[Mô tả Hình 1: Hình ảnh hiển thị hai sơ đồ cạnh nhau. Sơ đồ bên trái minh họa Chain of Thought prompting: một chuỗi các hộp tuyến tính từ 'Input' đến 'Output', mỗi hộp đại diện cho một bước suy nghĩ. Sơ đồ bên phải minh họa Tree of Thoughts prompting: bắt đầu từ 'Input', nó phân nhánh thành nhiều đường dẫn suy nghĩ (các hộp màu xanh lá cây và hồng), một số đường dẫn tiếp tục phân nhánh, tạo thành cấu trúc cây, cuối cùng dẫn đến 'Output'. Một chú thích 'Thought' chỉ vào một trong các hộp.]</p>
+                <figcaption>Hình 1. Hình ảnh hóa chain of thought prompting ở bên trái so với Tree of Thoughts prompting ở bên phải</figcaption>
+            </figure>
+            <p>Cách tiếp cận này làm cho ToT đặc biệt phù hợp với các nhiệm vụ phức tạp đòi hỏi sự khám phá. Nó hoạt động bằng cách duy trì một cây suy nghĩ, trong đó mỗi suy nghĩ đại diện cho một chuỗi ngôn ngữ mạch lạc đóng vai trò là một bước trung gian để giải quyết vấn đề. Sau đó, mô hình có thể khám phá các đường lý luận khác nhau bằng cách phân nhánh từ các nút khác nhau trong cây.</p>
+            <p>Có một sổ tay tuyệt vời, đi sâu hơn một chút vào chi tiết cho thấy Tree of Thought (ToT) dựa trên bài báo ‘Large Language Model Guided Tree-of-Thought’.</p>
+
+            <h3 id="react">ReAct (reason & act)</h3>
+            <p>Reason and act (ReAct) [10]¹³ prompting là một mô hình cho phép LLM giải quyết các nhiệm vụ phức tạp bằng cách sử dụng lý luận ngôn ngữ tự nhiên kết hợp với các công cụ bên ngoài (tìm kiếm, trình thông dịch mã, v.v.) cho phép LLM thực hiện các hành động nhất định, chẳng hạn như tương tác với các API bên ngoài để truy xuất thông tin, đây là bước đầu tiên hướng tới mô hình hóa tác tử (agent modeling).</p>
+            <p>ReAct bắt chước cách con người hoạt động trong thế giới thực, khi chúng ta lý luận bằng lời nói và có thể thực hiện các hành động để thu thập thông tin. ReAct hoạt động tốt so với các phương pháp prompt engineering khác trong nhiều lĩnh vực khác nhau.</p>
+            <p>ReAct prompting hoạt động bằng cách kết hợp lý luận và hành động thành một vòng lặp suy nghĩ-hành động (thought-action loop). LLM đầu tiên lý luận về vấn đề và tạo ra một kế hoạch hành động. Sau đó, nó thực hiện các hành động trong kế hoạch và quan sát kết quả. LLM sau đó sử dụng các quan sát để cập nhật lý luận của mình và tạo ra một kế hoạch hành động mới. Quá trình này tiếp tục cho đến khi LLM đạt được giải pháp cho vấn đề.</p>
+            <p>Để thấy điều này trong thực tế, bạn cần viết một số mã. Trong Đoạn mã 1, tôi đang sử dụng framework langchain cho Python, cùng với VertexAI (google-cloud-aiplatform) và các gói pip google-search-results.</p>
+            <p class="note"><strong>Lưu ý:</strong> Để chạy mẫu này, bạn phải tạo khóa API SerpAPI (miễn phí) từ <a href="https://serpapi.com/manage-api-key" target="_blank" rel="noopener noreferrer">https://serpapi.com/manage-api-key</a> và đặt biến môi trường <code>SERPAPI_API_KEY</code>.</p>
+            <p>Tiếp theo, hãy viết một số mã Python, với nhiệm vụ cho LLM tìm ra: Bố của các thành viên ban nhạc Metallica nổi tiếng có bao nhiêu đứa con.</p>
+            <h4>Đoạn mã 1. Tạo một ReAct Agent với LangChain và VertexAI</h4>
+            <pre><code class="language-python"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> load_tools
+<span class="keyword">from</span> langchain.agents <span class="keyword">import</span> initialize_agent
+<span class="keyword">from</span> langchain.agents <span class="keyword">import</span> AgentType
+<span class="keyword">from</span> langchain.llms <span class="keyword">import</span> VertexAI <span class="comment"># Corrected import</span>
+
+prompt = <span class="string">"How many kids do the band members of Metallica have?"</span>
+
+llm = VertexAI(temperature=<span class="number">0.1</span>) <span class="comment"># Assuming temperature is a valid param</span>
+tools = load_tools([<span class="string">"serpapi"</span>], llm=llm)
+
+agent = initialize_agent(tools, llm,
+                         agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=<span class="keyword">True</span>)
+agent.run(prompt)</code></pre>
+             <p>Đoạn mã 2 cho thấy kết quả. Lưu ý rằng ReAct thực hiện một chuỗi năm tìm kiếm. Thực tế, LLM đang quét các kết quả tìm kiếm của Google để tìm ra tên ban nhạc. Sau đó, nó liệt kê các kết quả dưới dạng quan sát và xâu chuỗi suy nghĩ cho tìm kiếm tiếp theo.</p>
+             <h4>Đoạn mã 2. Thực thi ReAct Agent trong terminal</h4>
+            <pre><code>&gt; Entering new AgentExecutor chain...
+Metallica has 4 members.
+Action: Search
+Action Input: How many kids does James Hetfield have?
+Observation: three children
+Thought: 1/4 Metallica band members have 3 children
+Action: Search
+Action Input: How many kids does Lars Ulrich have?
+Observation: 3
+Thought: 2/4 Metallica band members have 6 children
+Action: Search
+Action Input: How many kids does Kirk Hammett have?
+Observation: Hammett has been married to his second wife Lani since 1998.
+They have two sons, Angel (b. September 29, 2006) and Vincenzo (b. June
+28, 2008).
+Thought: 3/4 Metallica band members have 8 children
+Action: Search
+Action Input: How many kids does Robert Trujillo have?
+Observation: 2
+Thought: 4/4 Metallica band members have 10 children
+Final Answer: 10</code></pre>
+             <p>Đoạn mã 2 tìm ra rằng ban nhạc Metallica có bốn thành viên. Sau đó, nó tìm kiếm từng thành viên ban nhạc để yêu cầu tổng số con và cộng tổng lại. Cuối cùng, nó trả về tổng số con là câu trả lời cuối cùng.</p>
+             <p>ReAct prompting trong thực tế đòi hỏi sự hiểu biết rằng bạn liên tục phải gửi lại các prompt/phản hồi trước đó (và thực hiện cắt tỉa nội dung được tạo thêm) cũng như thiết lập mô hình với các ví dụ/hướng dẫn thích hợp. Vui lòng tham khảo sổ tay¹⁴ được lưu trữ trong kho lưu trữ Github của GoogleCloudPlatform, đi sâu hơn một chút vào chi tiết hiển thị đầu vào và đầu ra LLM thực tế với một ví dụ phức tạp hơn.</p>
+
+            <h3 id="ape">Automatic Prompt Engineering (APE)</h3>
+            <p>Tại thời điểm này, bạn có thể nhận ra rằng việc viết một prompt có thể phức tạp. Sẽ không tuyệt sao nếu tự động hóa việc này (viết một prompt để viết các prompt)? Chà, có một phương pháp: Automatic Prompt Engineering (APE). Phương pháp¹⁵ này không chỉ làm giảm nhu cầu đầu vào của con người mà còn nâng cao hiệu suất của mô hình trong các nhiệm vụ khác nhau.</p>
+            <p>Bạn sẽ prompt một mô hình để tạo thêm các prompt. Đánh giá chúng, có thể thay đổi những cái tốt. Và lặp lại.</p>
+            <p>Ví dụ: bạn có thể sử dụng automatic prompt engineering sẽ giúp đào tạo chatbot cho cửa hàng trực tuyến bán áo thun hàng hóa. Chúng tôi muốn tìm ra tất cả các cách khác nhau mà khách hàng có thể diễn đạt đơn đặt hàng của họ để mua một chiếc áo thun hàng hóa của ban nhạc.</p>
+            <ol>
+                <li>Viết prompt sẽ tạo ra các biến thể đầu ra. Trong ví dụ này, tôi đang sử dụng gemini-pro để tạo 10 hướng dẫn. Xem Bảng 15:</li>
+            </ol>
+             <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="2">Bảng 15. Sử dụng LLM để tạo prompts</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                     <tr>
+                        <td>Prompt</td>
+                        <td><pre><code>We have a band merchandise t-shirt webshop, and to train a
+chatbot we need various ways to order: "One Metallica t-shirt
+size S". Generate 10 variants, with the same semantics but keep
+the same meaning.</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td><pre><code>1. I'd like to purchase a Metallica t-shirt in size small.
+2. Can I order a small-sized Metallica t-shirt?
+3. I'd like to buy one Metallica t-shirt in small.
+4. One Metallica shirt, size small, please.
+5. I want one Metallica t-shirt in size small.
+6. I'd like to place an order for one Metallica t-shirt in small.
+7. Small Metallica t-shirt, one please.
+8. I'm looking for one Metallica t-shirt in small.
+9. Can you get me one Metallica t-shirt in small?
+10. One Metallica small t-shirt, please.</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+            <ol start="2">
+                <li>Đánh giá tất cả các ứng cử viên hướng dẫn bằng cách chấm điểm các ứng cử viên dựa trên một số liệu đã chọn, Ví dụ: bạn có thể sử dụng. BLEU (Bilingual Evaluation Understudy) hoặc ROUGE (Recall-Oriented Understudy for Gisting Evaluation).</li>
+                <li>Chọn ứng cử viên hướng dẫn có điểm đánh giá cao nhất. Ứng cử viên này sẽ là prompt cuối cùng bạn có thể sử dụng trong ứng dụng phần mềm hoặc chatbot của mình. Bạn cũng có thể tinh chỉnh prompt đã chọn và đánh giá lại.</li>
+            </ol>
+        </section>
+
+        <!-- Code Prompting -->
+        <section id="code-prompting">
+            <h2>Code prompting</h2>
+            <p>Gemini chủ yếu tập trung vào các prompt dựa trên văn bản, cũng bao gồm các prompt viết để trả về mã. Hãy truy cập Vertex AI Studio và kiểm tra các prompt này để xem một số ví dụ về mã hóa.</p>
+
+            <h3 id="prompts-writing-code">Prompts để viết code</h3>
+            <p>Gemini cũng có thể là một nhà phát triển và giúp bạn viết mã bằng bất kỳ ngôn ngữ lập trình nào bạn chọn. Là một nhà phát triển, điều này có thể giúp bạn tăng tốc quá trình viết mã.</p>
+            <p>Hãy tưởng tượng một thư mục trên máy của bạn với hàng trăm tệp cần được đổi tên. Việc đổi tên từng tệp sẽ mất rất nhiều thời gian. Bạn biết một chút về Bash và có thể viết một tập lệnh để tự động hóa việc này, nhưng điều đó cũng có thể mất một lúc. Vì vậy, hãy viết một prompt. Bạn có thể viết prompt trong chatbot tiêu dùng công cộng Gemini hoặc nếu bạn quan tâm hơn đến tính bảo mật, bạn có thể viết các prompt này trong tài khoản Google Cloud của mình và mở Vertex AI Studio. Ưu điểm của Vertex AI Studio là bạn có thể định cấu hình nhiệt độ, v.v.</p>
+
+            <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="4">Bảng 16. Sử dụng Gemini để lập trình code</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td colspan="3">1_bash_rename_files_in_folder</td>
+                    </tr>
+                    <tr>
+                        <td>Goal</td>
+                        <td colspan="3">Write a prompt to write code in Bash to rename files in a folder.</td>
+                    </tr>
+                    <tr>
+                        <td>Model</td>
+                        <td colspan="3">gemini-pro</td>
+                    </tr>
+                    <tr>
+                        <td>Temperature</td>
+                        <td>0.1</td>
+                        <td>Token Limit</td>
+                        <td>1024</td>
+                    </tr>
+                     <tr>
+                        <td>Top-K</td>
+                        <td>N/A</td>
+                        <td>Top-P</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>Prompt</td>
+                        <td colspan="3"><pre><code>Write a code snippet in Bash, which asks for a folder name.
+Then it takes the contents of the folder and renames all the
+files inside by prepending the name draft to the file name.</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td colspan="3"><pre><code class="language-bash">#!/bin/bash
+
+# Ask for the folder name
+echo "Enter the folder name: "
+read folder_name
+
+# Check if the folder exists
+if [ ! -d "$folder_name" ]; then
+  echo "Folder does not exist."
+  exit 1
+fi
+
+# Get the list of files in the folder
+files=( "$folder_name"/* )
+
+# Rename each file by prepending "draft" to the file name
+for file in "${files[@]}"; do
+  # Get the base name of the file
+  base_name=$(basename "$file")
+  # Construct the new file name
+  new_file_name="draft_$base_name"
+  # Construct the full path for the new file name
+  new_file_path="$folder_name/$new_file_name"
+  # Rename the file
+  mv "$file" "$new_file_path"
+done
+
+echo "Files renamed successfully."
+</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Đối với tôi, đó có vẻ là mã tốt - nó thậm chí còn được ghi chú! Tuy nhiên, vì LLM không thể lý luận và lặp lại dữ liệu huấn luyện, điều cần thiết là phải đọc và kiểm tra mã của bạn trước.</p>
+            <p>Khoảnh khắc tất cả chúng ta đang chờ đợi, nó có thực sự hoạt động không?</p>
+            <p>Hãy thử nó trước với một thư mục kiểm tra chỉ có một vài tệp trong đó, cần được đổi tên từ <code>filename.txt</code> thành <code>draft_filename.txt</code>.</p>
+            <ol>
+                <li>Sao chép đầu ra từ Bảng 16 (không có trình bao bọc văn bản <code>```bash</code>) và dán nó vào một tệp mới có tên: "rename_files.sh".</li>
+                <li>Mở cửa sổ terminal và nhập: <code>. rename_files.sh</code>. Nó sẽ yêu cầu nhập tên thư mục, ví dụ: <strong>test</strong>. và nhấn enter.</li>
+                <li>Tập lệnh dường như chạy tốt. Bạn sẽ thấy thông báo: <code>Files renamed successfully.</code> Khi bạn nhìn vào thư mục kiểm tra, hãy lưu ý rằng tất cả các tệp đã được đổi tên hoàn hảo thành <code>draft_filename.txt</code>.</li>
+            </ol>
+            <p>Nó đã hoạt động!</p>
+
+            <h3 id="prompts-explaining-code">Prompts để giải thích code</h3>
+            <p>Là một nhà phát triển khi bạn làm việc theo nhóm, bạn phải đọc mã của người khác. Gemini cũng có thể giúp bạn việc này. Hãy lấy đầu ra mã từ Bảng 16, xóa các nhận xét và yêu cầu mô hình ngôn ngữ lớn giải thích những gì đang xảy ra, Xem Bảng 17:</p>
+
+            <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="4">Bảng 17. Prompt để giải thích code</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td colspan="3">1_bash_explain_the_code</td>
+                    </tr>
+                    <tr>
+                        <td>Goal</td>
+                        <td colspan="3">Write a prompt to explain Bash code</td>
+                    </tr>
+                    <tr>
+                        <td>Model</td>
+                        <td colspan="3">gemini-pro</td>
+                    </tr>
+                    <tr>
+                        <td>Temperature</td>
+                        <td>0.1</td>
+                        <td>Token Limit</td>
+                        <td>1024</td>
+                    </tr>
+                     <tr>
+                        <td>Top-K</td>
+                        <td>N/A</td>
+                        <td>Top-P</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>Prompt</td>
+                        <td colspan="3"><pre><code class="language-bash">Explain to me the below Bash code:
+
+#!/bin/bash
+
+echo "Enter the folder name: "
+read folder_name
+
+if [ ! -d "$folder_name" ]; then
+  echo "Folder does not exist."
+  exit 1
+fi
+
+files=( "$folder_name"/* )
+
+for file in "${files[@]}"; do
+  base_name=$(basename "$file")
+  new_file_name="draft_$base_name"
+  new_file_path="$folder_name/$new_file_name"
+  mv "$file" "$new_file_path"
+done
+
+echo "Files renamed successfully."
+</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td colspan="3"><pre><code>This Bash script performs the following tasks:
+
+1.  **User Input**:
+    *   It prompts the user to enter a folder name using the \`echo\` and \`read\` commands. The entered folder name is stored in the 'folder_name\` variable.
+
+2.  **Folder Existence Check**:
+    *   It checks if the folder with the specified name exists using the \`[ ! -d "$folder_name" ]\` condition. If the folder does not exist, it displays an error message ("Folder does not exist.”) and exits the script with an exit code of 1.
+
+3.  **File Listing**:
+    *   It lists all the files inside the specified folder using the 'files=("$folder_name"/*)\` command. This creates an array called 'files' containing the paths to all the files in the folder.
+
+4.  **File Renaming**:
+    *   It iterates through each file in the 'files\` array using a 'for' loop.
+    *   For each file, it gets the base name (filename without the directory path) using \`basename "$file"\`.
+    *   It creates a new file name by prepending "draft_" to the base name: \`new_file_name="draft_$base_name"\`.
+    *   It constructs the full path for the new file name within the original folder: \`new_file_path="$folder_name/$new_file_name"\`.
+    *   It then renames the file using the \`mv "$file" "$new_file_path"\` command, which moves (renames) the original file to the new file path.
+
+5.  **Success Message**:
+    *   After renaming all the files, it displays a success message (“Files renamed successfully.") to indicate that the renaming operation was successful.</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 id="prompts-translating-code">Prompts để dịch code</h3>
+            <p>Mã bash từ Bảng 16 dường như hoạt động tốt. Tuy nhiên, tập lệnh này thực sự có thể được sử dụng lại khi nó sẽ nhắc tôi nhập tên tệp, lý tưởng nhất là nó sẽ hoạt động như một ứng dụng riêng biệt với giao diện người dùng (UI). Để bắt đầu, Python sẽ là ngôn ngữ tốt hơn cho ứng dụng (web) so với Bash. LLM có thể giúp dịch mã từ ngôn ngữ này sang ngôn ngữ khác. Xem ví dụ trong Bảng 18:</p>
+
+             <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="4">Bảng 18. Prompt để dịch code từ Bash sang Python</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td colspan="3">1_python_rename_files</td>
+                    </tr>
+                    <tr>
+                        <td>Goal</td>
+                        <td colspan="3">Write a prompt to translate Bash code to Python</td>
+                    </tr>
+                    <tr>
+                        <td>Model</td>
+                        <td colspan="3">gemini-pro</td>
+                    </tr>
+                    <tr>
+                        <td>Temperature</td>
+                        <td>0.1</td>
+                        <td>Token Limit</td>
+                        <td>1024</td>
+                    </tr>
+                     <tr>
+                        <td>Top-K</td>
+                        <td>N/A</td>
+                        <td>Top-P</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>Prompt</td>
+                        <td colspan="3"><pre><code class="language-bash">Translate the below Bash code to a Python snippet.
+
+#!/bin/bash
+
+echo "Enter the folder name: "
+read folder_name
+
+if [ ! -d "$folder_name" ]; then
+  echo "Folder does not exist."
+  exit 1
+fi
+
+files=( "$folder_name"/* )
+
+for file in "${files[@]}"; do
+  base_name=$(basename "$file")
+  new_file_name="draft_$base_name"
+  new_file_path="$folder_name/$new_file_name"
+  mv "$file" "$new_file_path"
+done
+
+echo "Files renamed successfully."
+</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td colspan="3"><pre><code class="language-python"><span class="keyword">import</span> os
+<span class="keyword">import</span> shutil
+
+<span class="comment"># Get the folder name from the user</span>
+folder_name = input(<span class="string">"Enter the folder name: "</span>)
+
+<span class="comment"># Check if the folder exists</span>
+<span class="keyword">if</span> <span class="keyword">not</span> os.path.isdir(folder_name):
+  print(<span class="string">"Folder does not exist."</span>)
+  exit(<span class="number">1</span>)
+
+<span class="comment"># Get a list of all files in the folder</span>
+files = os.listdir(folder_name)
+
+<span class="comment"># Iterate over the files</span>
+<span class="keyword">for</span> file <span class="keyword">in</span> files:
+  <span class="comment"># Create the original file path</span>
+  original_path = os.path.join(folder_name, file)
+
+  <span class="comment"># Ensure it's a file (and not a directory) before renaming</span>
+  <span class="keyword">if</span> os.path.isfile(original_path):
+    <span class="comment"># Create a new file name with the prefix "draft_"</span>
+    new_file_name = f<span class="string">"draft_{file}"</span>
+    <span class="comment"># Create the new file path</span>
+    new_path = os.path.join(folder_name, new_file_name)
+
+    <span class="comment"># Move the file to the new name</span>
+    shutil.move(original_path, new_path)
+
+<span class="comment"># Print a success message</span>
+print(<span class="string">"Files renamed successfully."</span>)
+</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Đọc và xem lại mã. Sao chép đầu ra từ prompt và dán nó vào một tệp mới: <code>file_renamer.py</code>. Kiểm tra mã bằng cách mở cửa sổ Terminal và thực thi lệnh sau <code>python file_renamer.py</code>.</p>
+            <p class="note"><strong>LƯU Ý:</strong> Khi prompting mã (Python) trong Language Studio trong Vertex AI, bạn sẽ phải nhấp vào nút 'Markdown'. Nếu không, bạn sẽ nhận được văn bản thuần túy bị thiếu thụt đầu dòng thích hợp của các dòng, điều này rất quan trọng để chạy mã Python.</p>
+
+            <h3 id="prompts-debugging-code">Prompts để debug và review code</h3>
+            <p>Hãy tự viết một số chỉnh sửa cho mã của Bảng 18. Nó sẽ nhắc người dùng nhập tiền tố tên tệp và viết tiền tố này bằng chữ hoa. Xem mã ví dụ trong Đoạn mã 3, nhưng thật tệ. Bây giờ nó trả về lỗi Python!</p>
+             <h4>Đoạn mã 3. Một tập lệnh Python bị lỗi</h4>
+             <pre><code class="language-python"><span class="keyword">import</span> os
+<span class="keyword">import</span> shutil
+
+folder_name = input(<span class="string">"Enter the folder name: "</span>)
+prefix = input(<span class="string">"Enter the string to prepend to the filename: "</span>)
+text = toUpperCase(prefix) <span class="comment"># Error is here</span>
+
+<span class="keyword">if</span> <span class="keyword">not</span> os.path.isdir(folder_name):
+    print(<span class="string">"Folder does not exist."</span>)
+    exit(<span class="number">1</span>)
+
+files = os.listdir(folder_name)
+
+<span class="keyword">for</span> file <span class="keyword">in</span> files:
+    original_path = os.path.join(folder_name, file)
+    <span class="keyword">if</span> os.path.isfile(original_path):
+        new_filename = f<span class="string">"{text}_{file}"</span> <span class="comment"># Uses the potentially undefined 'text'</span>
+        new_path = os.path.join(folder_name, new_filename) # Corrected os.path.joi to os.path.join
+        shutil.move(original_path, new_path)
+
+print(<span class="string">"Files renamed successfully."</span>)</code></pre>
+            <p>Ối! Trông giống như một lỗi:</p>
+            <h4>Đoạn mã 4. Tôi đã làm hỏng mã Python</h4>
+            <pre><code>The below Python code gives an error:
+
+Traceback (most recent call last):
+  File "/Users/leeboonstra/Documents/test_folder/rename_files.py", line 7,
+in &lt;module&gt;
+    text = toUpperCase(prefix)
+NameError: name 'toUpperCase' is not defined</code></pre>
+            <p>Hãy xem liệu chúng ta có thể yêu cầu mô hình ngôn ngữ lớn gỡ lỗi và xem xét mã hay không. Hãy xem Bảng 19:</p>
+
+             <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="4">Bảng 19. Prompt để debug và review code Python</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td colspan="3">1_python_debug_code</td>
+                    </tr>
+                    <tr>
+                        <td>Goal</td>
+                        <td colspan="3">Write a prompt to debug and review Python code.</td>
+                    </tr>
+                    <tr>
+                        <td>Model</td>
+                        <td colspan="3">gemini-pro</td>
+                    </tr>
+                    <tr>
+                        <td>Temperature</td>
+                        <td>0.1</td>
+                        <td>Token Limit</td>
+                        <td>1024</td>
+                    </tr>
+                     <tr>
+                        <td>Top-K</td>
+                        <td>N/A</td>
+                        <td>Top-P</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>Prompt</td>
+                        <td colspan="3"><pre><code class="language-python">The below Python code gives an error:
+
+Traceback (most recent call last):
+  File "/Users/leeboonstra/Documents/test_folder/rename_files.py", line 7,
+in &lt;module&gt;
+    text = toUpperCase(prefix)
+NameError: name 'toUpperCase' is not defined
+
+Debug what's wrong and explain how I can improve the code.
+
+import os
+import shutil
+
+# Get the folder name from the user
+folder_name = input("Enter the folder name: ")
+prefix = input("Enter the string to prepend to the filename: ")
+text = toUpperCase(prefix)
+
+# Check if the folder exists
+if not os.path.isdir(folder_name):
+    print("Folder does not exist.")
+    exit(1)
+
+# Get a list of all files in the folder
+files = os.listdir(folder_name)
+
+# Iterate over the files
+for file in files:
+    original_path = os.path.join(folder_name, file)
+    if os.path.isfile(original_path):
+        # Create a new file name with the prefix
+        new_filename = f"{text}_{file}"
+        # Corrected typo here: os.path.joi -> os.path.join
+        new_path = os.path.join(folder_name, new_filename)
+        # Move the file to the new name
+        shutil.move(original_path, new_path)
+
+# Print a success message
+print("Files renamed successfully.")
+
+</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td colspan="3"><pre><code class="language-python">The error `NameError: name 'toUpperCase' is not defined` occurs because you're trying to call a function named `toUpperCase`, which doesn't exist by default in Python. Python uses the `.upper()` method for strings to convert them to uppercase.
+
+Here's the corrected code and explanations for improvements:
+
+**Corrected Code:**
+
+import os
+import shutil
+
+# Get the folder name from the user
+folder_name = input("Enter the folder name: ")
+prefix = input("Enter the string to prepend to the filename: ")
+# Correct usage of string method .upper()
+text = prefix.upper()
+
+# Check if the folder exists
+if not os.path.isdir(folder_name):
+    print("Folder does not exist.")
+    exit(1)
+
+# Get a list of all files in the folder
+files = os.listdir(folder_name)
+
+print(f"Found files: {files}") # Added for debugging/visibility
+
+# Iterate over the files
+for file in files:
+    original_path = os.path.join(folder_name, file)
+
+    # Make sure it's a file and not a directory
+    if os.path.isfile(original_path):
+        # Preserve the original file extension
+        name_part, extension = os.path.splitext(file)
+        # Create a new file name with the uppercase prefix and original extension
+        new_filename = f"{text}_{name_part}{extension}"
+        new_path = os.path.join(folder_name, new_filename)
+
+        # Add error handling for the move operation
+        try:
+            print(f"Renaming '{file}' to '{new_filename}'") # Added for visibility
+            shutil.move(original_path, new_path)
+        except Exception as e:
+            print(f"ERROR: Could not rename file '{file}'. Reason: {e}")
+
+# Print a success message
+print("File renaming process completed.")
+
+
+**Explanation of Improvements:**
+
+1.  **Corrected Case Conversion:** Changed `toUpperCase(prefix)` to `prefix.upper()`. This is the standard Python way to convert a string to uppercase.
+2.  **Preserving File Extensions:** The original code would rename `image.jpg` to `PREFIX_image.jpg`, losing the extension info in the new name construction logic. The improved code uses `os.path.splitext()` to separate the filename and extension, then reconstructs the new name correctly as `PREFIX_image.jpg`. This is crucial for file usability.
+3.  **Error Handling for `shutil.move`:** File operations can fail (e.g., permissions issues, file locked). Wrapping the `shutil.move` call in a `try...except` block makes the script more robust. It will now print an error message if a specific file cannot be renamed and continue with the next file, instead of crashing.
+4.  **Handling Directories:** The original code didn't explicitly check if an item in `files` was a file or a directory. `os.path.isfile(original_path)` ensures only files are processed, preventing errors if the target folder contains subdirectories.
+5.  **Added Print Statements:** Included `print` statements inside the loop and before processing files to give the user more feedback on what the script is doing, which is helpful for debugging and understanding progress.
+6.  **Corrected `os.path.join` typo:** Fixed the `os.path.joi` typo in the original provided code snippet (although this wasn't the cause of the specific `NameError`).
+
+These improvements make the code more robust, user-friendly, and correct according to standard Python practices.
+</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Thật tuyệt. Nó không chỉ cho tôi biết cách giải quyết vấn đề, mà còn tìm ra rằng mã của tôi có nhiều lỗi hơn và cách giải quyết chúng. Phần cuối cùng của prompt đã đưa ra các đề xuất để cải thiện mã nói chung.</p>
+
+        </section>
+
+         <!-- Multimodal Prompting -->
+        <section id="multimodal-prompting">
+            <h2>Còn về multimodal prompting?</h2>
+            <p>Prompting cho mã vẫn sử dụng cùng một mô hình ngôn ngữ lớn thông thường. Multimodal prompting là một mối quan tâm riêng biệt, nó đề cập đến một kỹ thuật trong đó bạn sử dụng nhiều định dạng đầu vào để hướng dẫn một mô hình ngôn ngữ lớn, thay vì chỉ dựa vào văn bản. Điều này có thể bao gồm sự kết hợp của văn bản, hình ảnh, âm thanh, mã hoặc thậm chí các định dạng khác, tùy thuộc vào khả năng của mô hình và nhiệm vụ đang thực hiện.</p>
+        </section>
+
+        <!-- Best Practices -->
+        <section id="best-practices">
+            <h2>Các Thực Hành Tốt Nhất (Best Practices)</h2>
+            <p>Tìm ra prompt phù hợp đòi hỏi phải thử nghiệm. Language Studio trong Vertex AI là một nơi hoàn hảo để thử nghiệm các prompt của bạn, với khả năng kiểm tra trên các mô hình khác nhau.</p>
+            <p>Sử dụng các phương pháp hay nhất sau đây để trở thành một chuyên gia trong prompt engineering.</p>
+
+            <h3 id="provide-examples">Cung cấp ví dụ</h3>
+            <p>Thực hành tốt nhất quan trọng nhất là cung cấp các ví dụ (one shot / few shot) trong một prompt. Điều này rất hiệu quả vì nó hoạt động như một công cụ giảng dạy mạnh mẽ. Những ví dụ này giới thiệu các đầu ra mong muốn hoặc các phản hồi tương tự, cho phép mô hình học hỏi từ chúng và điều chỉnh việc tạo ra của chính nó cho phù hợp. Nó giống như việc cung cấp cho mô hình một điểm tham chiếu hoặc mục tiêu để hướng tới, cải thiện độ chính xác, phong cách và giọng điệu của phản hồi để phù hợp hơn với mong đợi của bạn.</p>
+
+            <h3 id="design-simplicity">Thiết kế đơn giản</h3>
+            <p>Các prompt nên ngắn gọn, rõ ràng và dễ hiểu cho cả bạn và mô hình. Theo nguyên tắc chung, nếu nó đã khó hiểu đối với bạn thì có khả năng nó cũng sẽ khó hiểu đối với mô hình. Cố gắng không sử dụng ngôn ngữ phức tạp và không cung cấp thông tin không cần thiết.</p>
+            <p>Ví dụ:</p>
+            <p><strong>TRƯỚC KHI VIẾT LẠI:</strong></p>
+            <blockquote>Tôi đang đến thăm New York ngay bây giờ, và tôi muốn nghe thêm về các địa điểm tuyệt vời. Tôi đi cùng hai đứa trẻ 3 tuổi. Chúng ta nên đi đâu trong kỳ nghỉ của mình?</blockquote>
+            <p><strong>SAU KHI VIẾT LẠI:</strong></p>
+             <blockquote>Hãy đóng vai hướng dẫn viên du lịch cho khách du lịch. Mô tả những địa điểm tuyệt vời để tham quan ở New York Manhattan với một đứa trẻ 3 tuổi.</blockquote>
+            <p>Hãy thử sử dụng các động từ mô tả hành động. Dưới đây là một tập hợp các ví dụ:</p>
+            <p>Act (Đóng vai), Analyze (Phân tích), Categorize (Phân loại), Classify (Phân loại), Contrast (Tương phản), Compare (So sánh), Create (Tạo), Describe (Mô tả), Define (Định nghĩa), Evaluate (Đánh giá), Extract (Trích xuất), Find (Tìm), Generate (Tạo), Identify (Xác định), List (Liệt kê), Measure (Đo lường), Organize (Tổ chức), Parse (Phân tích cú pháp), Pick (Chọn), Predict (Dự đoán), Provide (Cung cấp), Rank (Xếp hạng), Recommend (Đề xuất), Return (Trả về), Retrieve (Truy xuất), Rewrite (Viết lại), Select (Chọn), Show (Hiển thị), Sort (Sắp xếp), Summarize (Tóm tắt), Translate (Dịch), Write (Viết).</p>
+
+            <h3 id="specific-output">Cụ thể về đầu ra</h3>
+            <p>Hãy cụ thể về đầu ra mong muốn. Một hướng dẫn ngắn gọn có thể không hướng dẫn đủ cho LLM hoặc có thể quá chung chung. Việc cung cấp các chi tiết cụ thể trong prompt (thông qua system hoặc context prompting) có thể giúp mô hình tập trung vào những gì liên quan, cải thiện độ chính xác tổng thể.</p>
+             <p>Ví dụ:</p>
+             <p><strong>NÊN LÀM:</strong></p>
+             <blockquote>Tạo một bài đăng blog 3 đoạn về 5 máy chơi game video hàng đầu. Bài đăng blog nên chứa thông tin và hấp dẫn, và nên được viết theo phong cách trò chuyện.</blockquote>
+             <p><strong>KHÔNG NÊN LÀM:</strong></p>
+             <blockquote>Tạo một bài đăng blog về máy chơi game video.</blockquote>
+
+            <h3 id="instructions-over-constraints">Sử dụng Hướng dẫn thay vì Ràng buộc</h3>
+            <p>Hướng dẫn và ràng buộc được sử dụng trong prompting để hướng dẫn đầu ra của LLM.</p>
+            <ul>
+                <li>Một <strong>hướng dẫn</strong> cung cấp các chỉ dẫn rõ ràng về định dạng, phong cách hoặc nội dung mong muốn của phản hồi. Nó hướng dẫn mô hình về những gì mô hình nên làm hoặc tạo ra.</li>
+                <li>Một <strong>ràng buộc</strong> là một tập hợp các giới hạn hoặc ranh giới đối với phản hồi. Nó giới hạn những gì mô hình không nên làm hoặc tránh.</li>
+            </ul>
+            <p>Nghiên cứu ngày càng tăng cho thấy rằng việc tập trung vào các hướng dẫn tích cực trong prompting có thể hiệu quả hơn là phụ thuộc nhiều vào các ràng buộc. Cách tiếp cận này phù hợp với cách con người thích các hướng dẫn tích cực hơn là danh sách những việc không nên làm.</p>
+            <p>Hướng dẫn truyền đạt trực tiếp kết quả mong muốn, trong khi ràng buộc có thể khiến mô hình đoán về những gì được phép. Nó mang lại sự linh hoạt và khuyến khích sự sáng tạo trong các ranh giới đã xác định, trong khi các ràng buộc có thể hạn chế tiềm năng của mô hình. Ngoài ra, một danh sách các ràng buộc có thể xung đột với nhau.</p>
+            <p>Ràng buộc vẫn có giá trị nhưng trong một số tình huống nhất định. Để ngăn mô hình tạo ra nội dung có hại hoặc thiên vị hoặc khi cần định dạng hoặc phong cách đầu ra nghiêm ngặt.</p>
+            <p>Nếu có thể, hãy sử dụng các hướng dẫn tích cực: thay vì nói cho mô hình biết không nên làm gì, hãy nói cho nó biết nên làm gì thay thế. Điều này có thể tránh nhầm lẫn và cải thiện độ chính xác của đầu ra.</p>
+            <p><strong>NÊN LÀM:</strong></p>
+            <blockquote>Tạo một bài đăng blog 1 đoạn về 5 máy chơi game video hàng đầu. Chỉ thảo luận về máy chơi game, công ty sản xuất, năm và tổng doanh số.</blockquote>
+            <p><strong>KHÔNG NÊN LÀM:</strong></p>
+             <blockquote>Tạo một bài đăng blog 1 đoạn về 5 máy chơi game video hàng đầu. Không liệt kê tên trò chơi video.</blockquote>
+            <p>Là một phương pháp hay nhất, hãy bắt đầu bằng cách ưu tiên các hướng dẫn, nêu rõ những gì bạn muốn mô hình làm và chỉ sử dụng các ràng buộc khi cần thiết cho sự an toàn, rõ ràng hoặc các yêu cầu cụ thể. Thử nghiệm và lặp lại để kiểm tra các kết hợp khác nhau của hướng dẫn và ràng buộc để tìm ra những gì hoạt động tốt nhất cho các nhiệm vụ cụ thể của bạn và ghi lại chúng.</p>
+
+            <h3 id="control-token-length">Kiểm soát độ dài token tối đa</h3>
+            <p>Để kiểm soát độ dài của phản hồi LLM được tạo ra, bạn có thể đặt giới hạn token tối đa trong cấu hình hoặc yêu cầu rõ ràng độ dài cụ thể trong prompt của mình. Ví dụ:</p>
+            <blockquote>"Giải thích vật lý lượng tử trong một tin nhắn dài bằng tweet."</blockquote>
+
+            <h3 id="use-variables">Sử dụng biến trong prompts</h3>
+            <p>Để sử dụng lại các prompt và làm cho chúng năng động hơn, hãy sử dụng các biến trong prompt, có thể thay đổi cho các đầu vào khác nhau. Ví dụ: như được hiển thị trong Bảng 20, một prompt cung cấp thông tin về một thành phố. Thay vì mã hóa cứng tên thành phố trong prompt, hãy sử dụng một biến. Các biến có thể giúp bạn tiết kiệm thời gian và công sức bằng cách cho phép bạn tránh lặp lại chính mình. Nếu bạn cần sử dụng cùng một phần thông tin trong nhiều prompt, bạn có thể lưu trữ nó trong một biến và sau đó tham chiếu biến đó trong mỗi prompt. Điều này rất có ý nghĩa khi tích hợp các prompt vào các ứng dụng của riêng bạn.</p>
+
+            <table class="prompt-example-table">
+                 <thead>
+                    <tr>
+                        <th colspan="2">Bảng 20. Sử dụng biến trong prompts</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                     <tr>
+                        <td>Prompt</td>
+                        <td><pre><code>VARIABLES
+{city} = "Amsterdam"
+
+PROMPT
+You are a travel guide. Tell me a fact about the city: {city}</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Output</td>
+                        <td><pre><code>Amsterdam is a beautiful city full of canals, bridges, and narrow streets. It's a
+great place to visit for its rich history, culture, and nightlife.</code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 id="experiment-formats-styles">Thử nghiệm với định dạng đầu vào và văn phong</h3>
+            <p>Các mô hình khác nhau, cấu hình mô hình, định dạng prompt, lựa chọn từ ngữ và các lần gửi có thể mang lại kết quả khác nhau. Do đó, điều quan trọng là phải thử nghiệm với các thuộc tính prompt như phong cách, lựa chọn từ ngữ và loại prompt (zero shot, few shot, system prompt).</p>
+            <p>Ví dụ: một prompt với mục tiêu tạo văn bản về máy chơi game video mang tính cách mạng Sega Dreamcast, có thể được xây dựng dưới dạng câu hỏi, câu lệnh hoặc hướng dẫn, dẫn đến các kết quả đầu ra khác nhau:</p>
+            <ul>
+                <li><strong>Câu hỏi:</strong> Sega Dreamcast là gì và tại sao nó lại là một máy chơi game mang tính cách mạng như vậy?</li>
+                <li><strong>Câu lệnh:</strong> Sega Dreamcast là một máy chơi game video thế hệ thứ sáu do Sega phát hành năm 1999. Nó...</li>
+                <li><strong>Hướng dẫn:</strong> Viết một đoạn duy nhất mô tả máy chơi game Sega Dreamcast và giải thích tại sao nó lại mang tính cách mạng như vậy.</li>
+            </ul>
+
+            <h3 id="mix-classes-fewshot">Đối với few-shot prompting phân loại, trộn lẫn các lớp</h3>
+            <p>Nói chung, thứ tự của các ví dụ few-shots của bạn không quan trọng lắm. Tuy nhiên, khi thực hiện các nhiệm vụ phân loại, hãy đảm bảo bạn trộn lẫn các lớp phản hồi có thể có trong các ví dụ few shot. Điều này là do bạn có thể bị overfitting với thứ tự cụ thể của các ví dụ. Bằng cách trộn lẫn các lớp phản hồi có thể có, bạn có thể đảm bảo rằng mô hình đang học cách xác định các đặc điểm chính của từng lớp, thay vì chỉ ghi nhớ thứ tự của các ví dụ. Điều này sẽ dẫn đến hiệu suất mạnh mẽ và tổng quát hóa tốt hơn trên dữ liệu chưa thấy.</p>
+            <p>Một nguyên tắc nhỏ là bắt đầu với 6 ví dụ few shot và bắt đầu kiểm tra độ chính xác từ đó.</p>
+
+            <h3 id="adapt-updates">Thích ứng với cập nhật mô hình</h3>
+            <p>Điều quan trọng là bạn phải cập nhật những thay đổi về kiến trúc mô hình, dữ liệu được thêm vào và các khả năng. Hãy thử các phiên bản mô hình mới hơn và điều chỉnh các prompt của bạn để tận dụng tốt hơn các tính năng mô hình mới. Các công cụ như Vertex AI Studio rất tuyệt vời để lưu trữ, kiểm tra và ghi lại các phiên bản khác nhau của prompt của bạn.</p>
+
+            <h3 id="experiment-output-formats">Thử nghiệm với định dạng đầu ra</h3>
+            <p>Bên cạnh định dạng đầu vào prompt, hãy xem xét thử nghiệm với định dạng đầu ra. Đối với các nhiệm vụ không sáng tạo như trích xuất, chọn, phân tích cú pháp, sắp xếp thứ tự, xếp hạng hoặc phân loại dữ liệu, hãy thử trả về đầu ra của bạn ở định dạng có cấu trúc như JSON hoặc XML.</p>
+            <p>Có một số lợi ích khi trả về đối tượng JSON từ một prompt trích xuất dữ liệu. Trong một ứng dụng thực tế, tôi không cần tạo định dạng JSON này theo cách thủ công, tôi đã có thể trả về dữ liệu theo thứ tự đã sắp xếp (rất tiện dụng khi làm việc với các đối tượng datetime), nhưng quan trọng nhất, bằng cách yêu cầu định dạng JSON, nó buộc mô hình tạo ra một cấu trúc và hạn chế ảo giác.</p>
+            <p>Tóm lại, lợi ích của việc sử dụng JSON cho đầu ra của bạn:</p>
+            <ul>
+                <li>Luôn trả về theo cùng một phong cách</li>
+                <li>Tập trung vào dữ liệu bạn muốn nhận</li>
+                <li>Ít cơ hội bị ảo giác hơn</li>
+                <li>Làm cho nó nhận biết được mối quan hệ</li>
+                <li>Bạn nhận được các kiểu dữ liệu</li>
+                <li>Bạn có thể sắp xếp nó</li>
+            </ul>
+
+            <h3 id="json-repair">JSON Repair</h3>
+            <p>Bảng 4 trong phần few-shot prompting cho thấy một ví dụ về cách trả về đầu ra có cấu trúc.</p>
+            <p>Mặc dù trả về dữ liệu ở định dạng JSON mang lại nhiều lợi thế, nhưng nó không phải là không có nhược điểm. Bản chất có cấu trúc của JSON, mặc dù có lợi cho việc phân tích cú pháp và sử dụng trong các ứng dụng, đòi hỏi nhiều token hơn đáng kể so với văn bản thuần túy, dẫn đến tăng thời gian xử lý và chi phí cao hơn. Hơn nữa, tính dài dòng của JSON có thể dễ dàng tiêu tốn toàn bộ cửa sổ đầu ra, trở nên đặc biệt có vấn đề khi việc tạo bị cắt đột ngột do giới hạn token. Việc cắt ngắn này thường dẫn đến JSON không hợp lệ, thiếu dấu ngoặc nhọn hoặc dấu ngoặc vuông đóng quan trọng, khiến đầu ra không thể sử dụng được. May mắn thay, các công cụ như thư viện <a href="https://github.com/mangiucugna/json_repair" target="_blank" rel="noopener noreferrer">json-repair</a> (có sẵn trên PyPI) có thể vô giá trong những tình huống này. Thư viện này cố gắng sửa chữa một cách thông minh các đối tượng JSON không đầy đủ hoặc bị lỗi định dạng, làm cho nó trở thành một đồng minh quan trọng khi làm việc với JSON do LLM tạo ra, đặc biệt là khi xử lý các vấn đề cắt ngắn tiềm ẩn.</p>
+
+            <h3 id="working-schemas">Làm việc với Schemas</h3>
+            <p>Sử dụng JSON có cấu trúc làm đầu ra là một giải pháp tuyệt vời, như chúng ta đã thấy nhiều lần trong tài liệu này. Nhưng còn đầu vào thì sao? Mặc dù JSON rất tuyệt vời để cấu trúc đầu ra mà LLM tạo ra, nó cũng có thể cực kỳ hữu ích để cấu trúc đầu vào bạn cung cấp. Đây là lúc JSON Schemas phát huy tác dụng. JSON Schema xác định cấu trúc và kiểu dữ liệu mong đợi của đầu vào JSON của bạn. Bằng cách cung cấp một schema, bạn cung cấp cho LLM một bản thiết kế rõ ràng về dữ liệu mà nó nên mong đợi, giúp nó tập trung sự chú ý vào thông tin liên quan và giảm nguy cơ diễn giải sai đầu vào. Hơn nữa, schemas có thể giúp thiết lập mối quan hệ giữa các phần dữ liệu khác nhau và thậm chí làm cho LLM "nhận biết thời gian" bằng cách bao gồm các trường ngày hoặc dấu thời gian với các định dạng cụ thể.</p>
+            <p>Đây là một ví dụ đơn giản:</p>
+            <p>Giả sử bạn muốn sử dụng LLM để tạo mô tả cho các sản phẩm trong danh mục thương mại điện tử. Thay vì chỉ cung cấp mô tả văn bản dạng tự do của sản phẩm, bạn có thể sử dụng JSON schema để xác định các thuộc tính của sản phẩm:</p>
+             <h4>Đoạn mã 5. Định nghĩa schema đầu ra có cấu trúc</h4>
+            <pre><code class="language-json">{
+  "type": "object",
+  "properties": {
+    "name": { "type": "string", "description": "Product name" },
+    "category": { "type": "string", "description": "Product category" },
+    "price": { "type": "number", "format": "float", "description": "Product price" },
+    "features": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Key features of the product"
+    },
+    "release_date": { "type": "string", "format": "date", "description": "Date the product was released"}
+  },
+  "required": ["name", "category", "price"] <span class="comment">// Example: Optional 'required' field</span>
+}</code></pre>
+            <p>Sau đó, bạn có thể cung cấp dữ liệu sản phẩm thực tế dưới dạng đối tượng JSON tuân thủ schema này:</p>
+             <h4>Đoạn mã 6. Đầu ra có cấu trúc từ LLM</h4>
+            <pre><code class="language-json">{
+  "name": "Wireless Headphones",
+  "category": "Electronics",
+  "price": 99.99,
+  "features": ["Noise cancellation", "Bluetooth 5.0", "20-hour battery life"],
+  "release_date": "2023-10-27"
+}</code></pre>
+            <p>Bằng cách xử lý trước dữ liệu của bạn và thay vì cung cấp toàn bộ tài liệu chỉ cung cấp cả schema và dữ liệu, bạn cung cấp cho LLM sự hiểu biết rõ ràng về các thuộc tính của sản phẩm, bao gồm cả ngày phát hành, làm cho nó có nhiều khả năng tạo ra mô tả chính xác và phù hợp hơn. Cách tiếp cận đầu vào có cấu trúc này, hướng sự chú ý của LLM đến các trường liên quan, đặc biệt có giá trị khi làm việc với khối lượng lớn dữ liệu hoặc khi tích hợp LLM vào các ứng dụng phức tạp.</p>
+
+            <h3 id="experiment-together">Thử nghiệm cùng các kỹ sư prompt khác</h3>
+            <p>Nếu bạn đang ở trong tình huống phải cố gắng đưa ra một prompt tốt, bạn có thể muốn tìm nhiều người để thực hiện một nỗ lực. Khi mọi người tuân theo các phương pháp hay nhất (như được liệt kê trong chương này), bạn sẽ thấy sự khác biệt về hiệu suất giữa tất cả các lần thử prompt khác nhau.</p>
+
+            <h3 id="cot-best-practices">CoT Best practices</h3>
+            <p>Đối với CoT prompting, việc đặt câu trả lời sau lý luận là bắt buộc vì việc tạo ra lý luận thay đổi các token mà mô hình nhận được khi nó dự đoán câu trả lời cuối cùng.</p>
+            <p>Với CoT và self-consistency, bạn cần có khả năng trích xuất câu trả lời cuối cùng từ prompt của mình, tách biệt khỏi lý luận.</p>
+            <p>Đối với CoT prompting, đặt temperature thành 0.</p>
+            <p>Chain of thought prompting dựa trên greedy decoding, dự đoán từ tiếp theo trong một chuỗi dựa trên xác suất cao nhất được gán bởi mô hình ngôn ngữ. Nói chung, khi sử dụng lý luận, để đưa ra câu trả lời cuối cùng, có khả năng chỉ có một câu trả lời đúng duy nhất. Do đó, nhiệt độ phải luôn được đặt thành 0.</p>
+
+            <h3 id="document-attempts">Ghi lại các lần thử prompt khác nhau</h3>
+            <p>Mẹo cuối cùng đã được đề cập trước đó trong chương này, nhưng chúng tôi không thể nhấn mạnh đủ tầm quan trọng của nó: ghi lại các lần thử prompt của bạn một cách chi tiết đầy đủ để bạn có thể học hỏi theo thời gian những gì đã diễn ra tốt đẹp và những gì không.</p>
+            <p>Đầu ra prompt có thể khác nhau giữa các mô hình, giữa các cài đặt sampling và thậm chí giữa các phiên bản khác nhau của cùng một mô hình. Hơn nữa, ngay cả trên các prompt giống hệt nhau cho cùng một mô hình, sự khác biệt nhỏ trong định dạng câu đầu ra và lựa chọn từ ngữ có thể xảy ra. (Ví dụ: như đã đề cập trước đó, nếu hai token có cùng xác suất dự đoán, việc hòa nhau có thể bị phá vỡ một cách ngẫu nhiên. Điều này sau đó có thể ảnh hưởng đến các token được dự đoán tiếp theo.).</p>
+            <p>Chúng tôi khuyên bạn nên tạo Google Sheet với Bảng 21 làm mẫu. Ưu điểm của phương pháp này là bạn có một bản ghi đầy đủ khi bạn chắc chắn phải xem lại công việc prompting của mình - hoặc để tiếp tục nó trong tương lai (bạn sẽ ngạc nhiên về mức độ bạn có thể quên chỉ sau một thời gian ngắn), để kiểm tra hiệu suất prompt trên các phiên bản khác nhau của mô hình và để giúp gỡ lỗi các lỗi trong tương lai.</p>
+            <p>Ngoài các trường trong bảng này, cũng hữu ích khi theo dõi phiên bản của prompt (lần lặp), một trường để ghi lại xem kết quả là OK/NOT OK/SOMETIMES OK và một trường để ghi lại phản hồi. Nếu bạn đủ may mắn để sử dụng Vertex AI Studio, hãy lưu các prompt của bạn (sử dụng cùng tên và phiên bản như được liệt kê trong tài liệu của bạn) và theo dõi siêu liên kết đến prompt đã lưu trong bảng. Bằng cách này, bạn luôn chỉ cách một cú nhấp chuột để chạy lại các prompt của mình.</p>
+            <p>Khi làm việc trên hệ thống tạo tăng cường truy xuất (retrieval augmented generation - RAG), bạn cũng nên nắm bắt các khía cạnh cụ thể của hệ thống RAG ảnh hưởng đến nội dung nào đã được chèn vào prompt, bao gồm truy vấn, cài đặt chunk, đầu ra chunk và thông tin khác.</p>
+            <p>Khi bạn cảm thấy prompt gần như hoàn hảo, hãy đưa nó vào codebase dự án của bạn. Và trong codebase, hãy lưu các prompt trong một tệp riêng biệt với mã, để dễ bảo trì hơn. Cuối cùng, lý tưởng nhất là các prompt của bạn là một phần của hệ thống vận hành và với tư cách là một kỹ sư prompt, bạn nên dựa vào các bài kiểm tra tự động và quy trình đánh giá để hiểu mức độ tổng quát hóa của prompt của bạn đối với một nhiệm vụ.</p>
+            <p>Prompt engineering là một quá trình lặp đi lặp lại. Tạo và kiểm tra các prompt khác nhau, phân tích và ghi lại kết quả. Tinh chỉnh prompt của bạn dựa trên hiệu suất của mô hình. Tiếp tục thử nghiệm cho đến khi bạn đạt được đầu ra mong muốn. Khi bạn thay đổi mô hình hoặc cấu hình mô hình, hãy quay lại và tiếp tục thử nghiệm với các prompt đã sử dụng trước đó.</p>
+
+            <h4>Bảng 21. Mẫu để ghi lại các prompts</h4>
+             <table>
+                 <thead>
+                    <tr><th>Trường</th><th>Mô tả</th><th>Ví dụ</th></tr>
+                 </thead>
+                 <tbody>
+                    <tr><td>Name</td><td>[tên và phiên bản của prompt của bạn]</td><td><code>classify_review_v3</code></td></tr>
+                    <tr><td>Goal</td><td>[Giải thích một câu về mục tiêu của lần thử này]</td><td>Phân loại đánh giá phim là tích cực/tiêu cực.</td></tr>
+                    <tr><td>Model</td><td>[tên và phiên bản của mô hình đã sử dụng]</td><td><code>gemini-pro-1.0</code></td></tr>
+                    <tr><td>Temperature</td><td>[giá trị từ 0 - 1]</td><td><code>0.2</code></td></tr>
+                    <tr><td>Token Limit</td><td>[số]</td><td><code>100</code></td></tr>
+                    <tr><td>Top-K</td><td>[số]</td><td><code>40</code></td></tr>
+                    <tr><td>Top-P</td><td>[số]</td><td><code>0.95</code></td></tr>
+                    <tr><td>Prompt</td><td>[Viết toàn bộ prompt đầy đủ]</td><td><code>Classify: "This movie was great!" -></code></td></tr>
+                    <tr><td>Output</td><td>[Viết ra đầu ra hoặc nhiều đầu ra]</td><td><code>POSITIVE</code></td></tr>
+                    <tr><td>Result</td><td>[OK / NOT OK / SOMETIMES OK]</td><td><code>OK</code></td></tr>
+                    <tr><td>Feedback</td><td>[Ghi chú về kết quả]</td><td>Hoạt động tốt cho các câu đơn giản.</td></tr>
+                    <tr><td>Link (Optional)</td><td>[Siêu liên kết đến prompt đã lưu trong Vertex AI Studio]</td><td><code>https://...</code></td></tr>
+                </tbody>
+            </table>
+
+        </section>
+
+        <!-- Summary -->
+        <section id="summary">
+            <h2>Tóm tắt</h2>
+            <p>Tài liệu này thảo luận về prompt engineering. Chúng ta đã học các kỹ thuật prompting khác nhau, chẳng hạn như:</p>
+            <ul>
+                <li>Zero prompting</li>
+                <li>Few shot prompting</li>
+                <li>System prompting</li>
+                <li>Role prompting</li>
+                <li>Contextual prompting</li>
+                <li>Step-back prompting</li>
+                <li>Chain of thought</li>
+                <li>Self consistency</li>
+                <li>Tree of thoughts</li>
+                <li>ReAct</li>
+            </ul>
+            <p>Chúng tôi thậm chí đã xem xét các cách bạn có thể tự động hóa các prompt của mình.</p>
+            <p>Sau đó, tài liệu thảo luận về những thách thức của gen AI như các vấn đề có thể xảy ra khi các prompt của bạn không đủ. Chúng tôi đã kết thúc với các phương pháp hay nhất về cách trở thành một kỹ sư prompt tốt hơn.</p>
+        </section>
+
+        <!-- Endnotes -->
+        <section id="endnotes">
+            <h2>Ghi chú cuối</h2>
+            <ol>
+                <li>Google, 2023, Gemini by Google. Available at: <a href="https://gemini.google.com" target="_blank" rel="noopener noreferrer">https://gemini.google.com</a>.</li>
+                <li>Google, 2024, Gemini for Google Workspace Prompt Guide. Available at: <a href="https://inthecloud.withgoogle.com/gemini-for-google-workspace-prompt-guide/dl-cd.html" target="_blank" rel="noopener noreferrer">https://inthecloud.withgoogle.com/gemini-for-google-workspace-prompt-guide/dl-cd.html</a>.</li>
+                <li>Google Cloud, 2023, Introduction to Prompting. Available at: <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/introduction-prompt-design" target="_blank" rel="noopener noreferrer">https://cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/introduction-prompt-design</a>.</li>
+                <li>Google Cloud, 2023, Text Model Request Body: Top-P & top-K sampling methods. Available at: <a href="https://cloud.google.com/vertex-ai/docs/generative-ai/model-reference/text#request_body" target="_blank" rel="noopener noreferrer">https://cloud.google.com/vertex-ai/docs/generative-ai/model-reference/text#request_body</a>.</li>
+                <li>Wei, J., et al., 2023, Zero Shot - Fine Tuned language models are zero shot learners. Available at: <a href="https://arxiv.org/pdf/2109.01652.pdf" target="_blank" rel="noopener noreferrer">https://arxiv.org/pdf/2109.01652.pdf</a>.</li>
+                <li>Google Cloud, 2023, Google Cloud Model Garden. Available at: <a href="https://cloud.google.com/model-garden" target="_blank" rel="noopener noreferrer">https://cloud.google.com/model-garden</a>.</li>
+                <li>Brown, T., et al., 2023, Few Shot - Language Models are Few Shot learners. Available at: <a href="https://arxiv.org/pdf/2005.14165.pdf" target="_blank" rel="noopener noreferrer">https://arxiv.org/pdf/2005.14165.pdf</a>.</li>
+                <li>Zheng, L., et al., 2023, Take a Step Back: Evoking Reasoning via Abstraction in Large Language Models. Available at: <a href="https://openreview.net/pdf?id=3bq3jsvcQ1" target="_blank" rel="noopener noreferrer">https://openreview.net/pdf?id=3bq3jsvcQ1</a></li>
+                <li>Wei, J., et al., 2023, Chain of Thought Prompting. Available at: <a href="https://arxiv.org/pdf/2201.11903.pdf" target="_blank" rel="noopener noreferrer">https://arxiv.org/pdf/2201.11903.pdf</a>.</li>
+                <li>Google Cloud Platform, 2023, Chain of Thought and React. Available at: <a href="https://github.com/GoogleCloudPlatform/generative-ai/blob/main/language/prompts/examples/chain_of_thought_react.ipynb" target="_blank" rel="noopener noreferrer">https://github.com/GoogleCloudPlatform/generative-ai/blob/main/language/prompts/examples/chain_of_thought_react.ipynb</a>.</li>
+                <li>Wang, X., et al., 2023, Self Consistency Improves Chain of Thought reasoning in language models. Available at: <a href="https://arxiv.org/pdf/2203.11171.pdf" target="_blank" rel="noopener noreferrer">https://arxiv.org/pdf/2203.11171.pdf</a>.</li>
+                <li>Yao, S., et al., 2023, Tree of Thoughts: Deliberate Problem Solving with Large Language Models. Available at: <a href="https://arxiv.org/pdf/2305.10601.pdf" target="_blank" rel="noopener noreferrer">https://arxiv.org/pdf/2305.10601.pdf</a>.</li>
+                <li>Yao, S., et al., 2023, ReAct: Synergizing Reasoning and Acting in Language Models. Available at: <a href="https://arxiv.org/pdf/2210.03629.pdf" target="_blank" rel="noopener noreferrer">https://arxiv.org/pdf/2210.03629.pdf</a>.</li>
+                <li>Google Cloud Platform, 2023, Advance Prompting: Chain of Thought and React. Available at: <a href="https://github.com/GoogleCloudPlatform/applied-ai-engineering-samples/blob/main/genai-on-vertex-ai/advanced_prompting_training/cot_react.ipynb" target="_blank" rel="noopener noreferrer">https://github.com/GoogleCloudPlatform/applied-ai-engineering-samples/blob/main/genai-on-vertex-ai/advanced_prompting_training/cot_react.ipynb</a>.</li>
+                <li>Zhou, C., et al., 2023, Automatic Prompt Engineering - Large Language Models are Human-Level Prompt Engineers. Available at: <a href="https://arxiv.org/pdf/2211.01910.pdf" target="_blank" rel="noopener noreferrer">https://arxiv.org/pdf/2211.01910.pdf</a>.</li>
+            </ol>
+        </section>
+
+        <footer>
+            <hr>
+            <p style="text-align: center; font-size: 0.9em; color: #5f6368;">Nội dung dựa trên tài liệu "Prompt Engineering" của Google (Tác giả: Lee Boonstra). Được dịch và trình bày cho mục đích học tập.</p>
+        </footer>
+
+    </main>
+
+    <script>
+        // Simple script to highlight active nav link based on scroll position (optional enhancement)
+        const sections = document.querySelectorAll('#main-content section[id]');
+        const navLi = document.querySelectorAll('#sidebar ul li a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                // Adjust offset as needed, e.g., based on header height if you have a fixed header
+                const offset = 100;
+                if (pageYOffset >= sectionTop - offset) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLi.forEach(a => {
+                a.classList.remove('active');
+                if (a.getAttribute('href') === `#${current}`) {
+                    a.classList.add('active');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

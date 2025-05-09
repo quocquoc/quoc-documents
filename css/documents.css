@@ -1,0 +1,85 @@
+/* Styles cho danh sách và card tài liệu */
+
+.document-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); /* Mặc định cho desktop (larger cards) */
+    gap: calc(var(--spacing-unit) * 3); /* 24px */
+}
+
+.document-card {
+    background-color: var(--card-background);
+    border-radius: var(--border-radius-medium);
+    box-shadow: 0 4px 8px var(--shadow-color);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    opacity: 0; /* Cho hiệu ứng xuất hiện */
+    transform: translateY(20px); /* Cho hiệu ứng xuất hiện */
+    animation: fadeInCard 0.5s ease forwards;
+    cursor: pointer;
+}
+
+.document-card:hover,
+.document-card:focus-within { /* :focus-within cho phép focus vào các phần tử bên trong card */
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.document-card a {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Đảm bảo link chiếm toàn bộ card */
+}
+
+.document-thumbnail {
+    width: 100%;
+    height: auto; /* Tự động điều chỉnh theo tỷ lệ ảnh */
+    /* object-fit removed to display full image without cropping */
+    border-bottom: 1px solid var(--border-color);
+}
+
+.document-content {
+    padding: calc(var(--spacing-unit) * 3); /* 24px (increased) */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Để content chiếm không gian còn lại */
+}
+
+.document-title {
+    font-size: 1.5rem; /* 24px (increased) */
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: calc(var(--spacing-unit) * 1); /* 8px */
+}
+
+.document-description {
+    font-size: 1rem; /* 16px (increased) */
+    color: var(--text-color-light);
+    margin-bottom: calc(var(--spacing-unit) * 1.5); /* 12px */
+    flex-grow: 1; /* Đẩy ngày tháng xuống dưới nếu mô tả ngắn */
+    line-height: 1.5;
+}
+
+.document-meta {
+    font-size: 0.8rem; /* 12.8px */
+    color: #757575; /* Màu xám nhạt hơn */
+    margin-top: auto; /* Đẩy xuống cuối card */
+    padding-top: var(--spacing-unit);
+    border-top: 1px dashed var(--border-color);
+}
+
+/* Keyframes cho hiệu ứng xuất hiện card */
+@keyframes fadeInCard {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Để các card xuất hiện lần lượt */
+.document-card {
+    animation-delay: calc(var(--card-index) * 100ms);
+}
