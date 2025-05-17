@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Bài viết về Xây dựng tác tử AI hiệu quả từ Anthropic, dịch sang tiếng Việt.">
+    <title>Xây dựng Tác tử AI Hiệu quả | Kỹ thuật tại Anthropic</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Thêm Favicon nếu có -->
+    <!-- <link rel="icon" href="favicon.ico" type="image/x-icon"> -->
+    <!-- Google Fonts (Ví dụ: Noto Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <header>
+        <!-- PHẦN HERO CŨ (Bao gồm hero-images) đã được XÓA KHỎI ĐÂY -->
+        <!-- Hero mới chỉ còn tiêu đề và phụ đề -->
+        <div class="hero container">
+            <h1>Xây dựng tác tử hiệu quả</h1>
+            <p class="subtitle">Chúng tôi đã làm việc với hàng chục nhóm xây dựng tác tử LLM trong nhiều ngành. Luôn
+                luôn, các triển khai thành công nhất sử dụng các mẫu đơn giản, có thể kết hợp thay vì các framework phức
+                tạp.</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <article>
+            <section id="intro">
+                <p>Tài liệu gốc tại: <a href="https://www.anthropic.com/engineering/building-effective-agents">https://www.anthropic.com/engineering/building-effective-agents</a></p>
+                <p class="publish-date">Xuất bản ngày 19 tháng 12, 2024</p>
+                <p>Trong năm qua, chúng tôi đã làm việc với hàng chục nhóm xây dựng các tác tử mô hình ngôn ngữ lớn
+                    (LLM) trong nhiều ngành. Luôn luôn, các triển khai thành công nhất không sử dụng các framework phức
+                    tạp hay thư viện chuyên dụng. Thay vào đó, họ xây dựng bằng các mẫu đơn giản, có thể kết hợp.</p>
+                <p>Trong bài viết này, chúng tôi chia sẻ những gì đã học được từ việc làm việc với khách hàng và tự xây
+                    dựng tác tử, đồng thời đưa ra lời khuyên thực tế cho các nhà phát triển về việc xây dựng tác tử hiệu
+                    quả.</p>
+            </section>
+
+            <hr>
+
+            <section id="what-are-agents">
+                <h2>Tác tử là gì?</h2>
+                <p>"Tác tử" (Agent) có thể được định nghĩa theo nhiều cách. Một số khách hàng định nghĩa tác tử là các
+                    hệ thống hoàn toàn tự trị hoạt động độc lập trong thời gian dài, sử dụng nhiều công cụ khác nhau để
+                    hoàn thành các nhiệm vụ phức tạp. Những người khác sử dụng thuật ngữ này để mô tả các triển khai có
+                    tính quy định hơn, tuân theo các luồng công việc được xác định trước. Tại Anthropic, chúng tôi phân
+                    loại tất cả các biến thể này là <strong>hệ thống có tính tác tử (agentic systems)</strong>, nhưng
+                    chỉ ra một sự khác biệt kiến trúc quan trọng giữa <strong>luồng công việc (workflows)</strong> và
+                    <strong>tác tử (agents)</strong>:
+                </p>
+                <ul>
+                    <li><strong>Luồng công việc</strong> là các hệ thống nơi LLM và các công cụ được điều phối thông qua
+                        các đường dẫn mã được xác định trước.</li>
+                    <li><strong>Tác tử</strong>, mặt khác, là các hệ thống nơi LLM tự động điều hướng các quy trình và
+                        việc sử dụng công cụ của riêng chúng, duy trì quyền kiểm soát cách chúng hoàn thành nhiệm vụ.
+                    </li>
+                </ul>
+                <p>Dưới đây, chúng tôi sẽ khám phá chi tiết cả hai loại hệ thống có tính tác tử. Trong Phụ lục 1 ("Tác
+                    tử trong thực tế"), chúng tôi mô tả hai lĩnh vực mà khách hàng đã tìm thấy giá trị đặc biệt trong
+                    việc sử dụng các loại hệ thống này.</p>
+            </section>
+
+            <hr>
+
+            <section id="when-to-use-agents">
+                <h2>Khi nào (và khi nào không) nên sử dụng tác tử</h2>
+                <p>Khi xây dựng ứng dụng với LLM, chúng tôi khuyên bạn nên tìm giải pháp đơn giản nhất có thể và chỉ
+                    tăng độ phức tạp khi cần thiết. Điều này có thể có nghĩa là hoàn toàn không xây dựng hệ thống có
+                    tính tác tử. Các hệ thống này thường đánh đổi độ trễ và chi phí để lấy hiệu suất nhiệm vụ tốt hơn,
+                    và bạn nên xem xét khi nào sự đánh đổi này có ý nghĩa.</p>
+                <p>Khi cần độ phức tạp cao hơn, luồng công việc cung cấp khả năng dự đoán và nhất quán cho các nhiệm vụ
+                    được xác định rõ, trong khi tác tử là lựa chọn tốt hơn khi cần sự linh hoạt và ra quyết định dựa
+                    trên mô hình ở quy mô lớn. Tuy nhiên, đối với nhiều ứng dụng, việc tối ưu hóa các lệnh gọi LLM đơn
+                    lẻ bằng truy xuất và các ví dụ trong ngữ cảnh thường là đủ.</p>
+            </section>
+
+            <hr>
+
+            <section id="frameworks">
+                <h2>Khi nào và làm thế nào để sử dụng framework</h2>
+                <p>Có nhiều framework giúp việc triển khai các hệ thống có tính tác tử trở nên dễ dàng hơn, bao gồm:</p>
+                <ul>
+                    <li><a href="https://langchain.com/langgraph" target="_blank"
+                            rel="noopener noreferrer">LangGraph</a> từ LangChain;</li>
+                    <li>Framework <a href="https://aws.amazon.com/bedrock/agents/" target="_blank"
+                            rel="noopener noreferrer">AI Agent của Amazon Bedrock</a>;</li>
+                    <li><a href="https://rivet.ironcladapp.com/" target="_blank" rel="noopener noreferrer">Rivet</a>,
+                        một trình xây dựng luồng công việc LLM GUI kéo và thả; và</li>
+                    <li><a href="https://vellum.ai/" target="_blank" rel="noopener noreferrer">Vellum</a>, một công cụ
+                        GUI khác để xây dựng và thử nghiệm các luồng công việc phức tạp.</li>
+                </ul>
+                <p>Các framework này giúp dễ dàng bắt đầu bằng cách đơn giản hóa các tác vụ cấp thấp tiêu chuẩn như gọi
+                    LLM, xác định và phân tích cú pháp công cụ, và chuỗi các lệnh gọi lại với nhau. Tuy nhiên, chúng
+                    thường tạo ra các lớp trừu tượng bổ sung có thể che khuất các prompt và phản hồi cơ bản, khiến chúng
+                    khó gỡ lỗi hơn. Chúng cũng có thể khiến bạn dễ dàng thêm sự phức tạp khi một thiết lập đơn giản hơn
+                    là đủ.</p>
+                <p>Chúng tôi đề nghị các nhà phát triển bắt đầu bằng cách sử dụng trực tiếp API LLM: nhiều mẫu có thể
+                    được triển khai chỉ trong vài dòng mã. Nếu bạn sử dụng framework, hãy đảm bảo bạn hiểu mã nguồn cơ
+                    bản. Những giả định không chính xác về những gì bên dưới lớp vỏ là một nguồn lỗi phổ biến của khách
+                    hàng.</p>
+                <p>Xem <a href="https://docs.anthropic.com/claude/docs/patterns-cookbook" target="_blank"
+                        rel="noopener noreferrer">sổ tay công thức (cookbook)</a> của chúng tôi để biết một số triển
+                    khai mẫu.</p>
+            </section>
+
+            <hr>
+
+            <section id="building-blocks">
+                <h2>Khối xây dựng, luồng công việc và tác tử</h2>
+                <p>Trong phần này, chúng ta sẽ khám phá các mẫu phổ biến cho các hệ thống có tính tác tử mà chúng tôi đã
+                    thấy trong sản xuất. Chúng ta sẽ bắt đầu với khối xây dựng nền tảng của mình—LLM tăng cường—và tăng
+                    dần độ phức tạp, từ các luồng công việc thành phần đơn giản đến các tác tử tự trị.</p>
+
+                <h3>Khối xây dựng: LLM tăng cường (The augmented LLM)</h3>
+                <p>Khối xây dựng cơ bản của các hệ thống có tính tác tử là một LLM được tăng cường với các bổ sung như
+                    truy xuất (retrieval), công cụ (tools) và bộ nhớ (memory). Các mô hình hiện tại của chúng tôi có thể
+                    chủ động sử dụng các khả năng này—tạo ra các truy vấn tìm kiếm của riêng chúng, chọn các công cụ
+                    thích hợp và xác định thông tin nào cần giữ lại.</p>
+
+                <figure>
+                    <img src="images/theAugmentedLLM.jpg" alt="Sơ đồ LLM tăng cường với Truy xuất, Công cụ và Bộ nhớ">
+                    <figcaption>LLM tăng cường</figcaption>
+                </figure>
+
+                <p>Chúng tôi khuyên bạn nên tập trung vào hai khía cạnh chính của việc triển khai: điều chỉnh các khả
+                    năng này cho trường hợp sử dụng cụ thể của bạn và đảm bảo chúng cung cấp một giao diện dễ dàng, được
+                    tài liệu hóa tốt cho LLM của bạn. Mặc dù có nhiều cách để triển khai các bổ sung này, một cách tiếp
+                    cận là thông qua <a href="https://docs.anthropic.com/claude/docs/tool-use" target="_blank"
+                        rel="noopener noreferrer">Giao thức Ngữ cảnh Mô hình (Model Context Protocol)</a> được phát hành
+                    gần đây của chúng tôi, cho phép các nhà phát triển tích hợp với một hệ sinh thái đang phát triển của
+                    các công cụ bên thứ ba với một <a
+                        href="https://docs.anthropic.com/claude/docs/tool-use#client-side-tool-use" target="_blank"
+                        rel="noopener noreferrer">triển khai client đơn giản</a>.</p>
+                <p>Trong phần còn lại của bài viết này, chúng tôi sẽ giả định mỗi lệnh gọi LLM đều có quyền truy cập vào
+                    các khả năng tăng cường này.</p>
+
+                <h3>Luồng công việc: Chuỗi Prompt (Prompt chaining)</h3>
+                <p>Chuỗi prompt phân tách một nhiệm vụ thành một chuỗi các bước, trong đó mỗi lệnh gọi LLM xử lý đầu ra
+                    của lệnh gọi trước đó. Bạn có thể thêm các kiểm tra bằng mã (xem "gate" trong sơ đồ bên dưới) vào
+                    bất kỳ bước trung gian nào để đảm bảo quy trình vẫn đi đúng hướng.</p>
+
+                <figure>
+                    <img src="images/The prompt chaining workflow.jpg" alt="Sơ đồ luồng công việc Chuỗi Prompt">
+                    <figcaption>Luồng công việc chuỗi prompt</figcaption>
+                </figure>
+
+                <p><strong>Khi nào nên sử dụng luồng công việc này:</strong> Luồng công việc này lý tưởng cho các tình
+                    huống mà nhiệm vụ có thể được phân tách dễ dàng và rõ ràng thành các nhiệm vụ con cố định. Mục tiêu
+                    chính là đánh đổi độ trễ để lấy độ chính xác cao hơn, bằng cách làm cho mỗi lệnh gọi LLM trở thành
+                    một nhiệm vụ dễ dàng hơn.</p>
+                <p><strong>Ví dụ về nơi chuỗi prompt hữu ích:</strong></p>
+                <ul>
+                    <li>Tạo bản sao Marketing, sau đó dịch nó sang một ngôn ngữ khác.</li>
+                    <li>Viết dàn ý của một tài liệu, kiểm tra xem dàn ý có đáp ứng các tiêu chí nhất định hay không, sau
+                        đó viết tài liệu dựa trên dàn ý.</li>
+                </ul>
+
+                <h3>Luồng công việc: Định tuyến (Routing)</h3>
+                <p>Định tuyến phân loại một đầu vào và hướng nó đến một nhiệm vụ theo dõi chuyên biệt. Luồng công việc
+                    này cho phép tách biệt các mối quan tâm và xây dựng các prompt chuyên biệt hơn. Nếu không có luồng
+                    công việc này, việc tối ưu hóa cho một loại đầu vào có thể làm tổn hại đến hiệu suất trên các đầu
+                    vào khác.</p>
+
+                <figure>
+                    <img src="images/The routing workflow.jpg" alt="Sơ đồ luồng công việc Định tuyến">
+                    <figcaption>Luồng công việc định tuyến</figcaption>
+                </figure>
+
+                <p><strong>Khi nào nên sử dụng luồng công việc này:</strong> Định tuyến hoạt động tốt cho các tác vụ
+                    phức tạp có các danh mục riêng biệt được xử lý tốt hơn một cách riêng biệt và việc phân loại có thể
+                    được xử lý chính xác, bằng LLM hoặc bằng mô hình/thuật toán phân loại truyền thống hơn.</p>
+                <p><strong>Ví dụ về nơi định tuyến hữu ích:</strong></p>
+                <ul>
+                    <li>Chuyển hướng các loại truy vấn dịch vụ khách hàng khác nhau (câu hỏi chung, yêu cầu hoàn tiền,
+                        hỗ trợ kỹ thuật) vào các quy trình, prompt và công cụ hạ nguồn khác nhau.</li>
+                    <li>Định tuyến các câu hỏi dễ/thông thường đến các mô hình nhỏ hơn như Claude 3.5 Haiku và các câu
+                        hỏi khó/bất thường đến các mô hình có khả năng hơn như Claude 3.5 Sonnet để tối ưu hóa chi phí
+                        và tốc độ.</li>
+                </ul>
+
+                <h3>Luồng công việc: Song song hóa (Parallelization)</h3>
+                <p>LLM đôi khi có thể hoạt động đồng thời trên một nhiệm vụ và có kết quả đầu ra được tổng hợp bằng mã.
+                    Luồng công việc này, song song hóa, biểu hiện ở hai biến thể chính:</p>
+                <ul>
+                    <li><strong>Phân đoạn (Sectioning):</strong> Chia một nhiệm vụ thành các nhiệm vụ con độc lập chạy
+                        song song.</li>
+                    <li><strong>Bỏ phiếu (Voting):</strong> Chạy cùng một nhiệm vụ nhiều lần để nhận được các kết quả
+                        đầu ra đa dạng.</li>
+                </ul>
+
+                <figure>
+                    <img src="images/The parallelization workflow.jpg" alt="Sơ đồ luồng công việc Song song hóa">
+                    <figcaption>Luồng công việc song song hóa</figcaption>
+                </figure>
+
+                <p><strong>Khi nào nên sử dụng luồng công việc này:</strong> Song song hóa hiệu quả khi các nhiệm vụ con
+                    được chia nhỏ có thể được song song hóa để tăng tốc độ, hoặc khi cần nhiều góc nhìn hoặc nỗ lực để
+                    có kết quả tự tin hơn. Đối với các nhiệm vụ phức tạp với nhiều yếu tố cần xem xét, LLM thường hoạt
+                    động tốt hơn khi mỗi yếu tố được xử lý bởi một lệnh gọi LLM riêng biệt, cho phép tập trung chú ý vào
+                    từng khía cạnh cụ thể.</p>
+                <p><strong>Ví dụ về nơi song song hóa hữu ích:</strong></p>
+                <ul>
+                    <li><strong>Phân đoạn:</strong>
+                        <ul>
+                            <li>Triển khai các rào cản (guardrails) nơi một phiên bản mô hình xử lý truy vấn của người
+                                dùng trong khi một phiên bản khác sàng lọc chúng về nội dung hoặc yêu cầu không phù hợp.
+                                Điều này có xu hướng hoạt động tốt hơn so với việc cùng một lệnh gọi LLM xử lý cả rào
+                                cản và phản hồi cốt lõi.</li>
+                            <li>Tự động hóa các đánh giá (evals) để đánh giá hiệu suất LLM, trong đó mỗi lệnh gọi LLM
+                                đánh giá một khía cạnh khác nhau về hiệu suất của mô hình trên một prompt nhất định.
+                            </li>
+                        </ul>
+                    </li>
+                    <li><strong>Bỏ phiếu:</strong>
+                        <ul>
+                            <li>Xem xét một đoạn mã để tìm lỗ hổng bảo mật, trong đó một số prompt khác nhau xem xét và
+                                gắn cờ mã nếu chúng tìm thấy sự cố.</li>
+                            <li>Đánh giá xem một phần nội dung nhất định có không phù hợp hay không, với nhiều prompt
+                                đánh giá các khía cạnh khác nhau hoặc yêu cầu các ngưỡng bỏ phiếu khác nhau để cân bằng
+                                giữa dương tính giả và âm tính giả.</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>Luồng công việc: Điều phối viên-Nhân viên (Orchestrator-workers)</h3>
+                <p>Trong luồng công việc điều phối viên-nhân viên, một LLM trung tâm tự động chia nhỏ các nhiệm vụ, ủy
+                    thác chúng cho các LLM nhân viên và tổng hợp kết quả của chúng.</p>
+
+                <figure>
+                    <img src="images/The orchestrator-workers workflow.jpg"
+                        alt="Sơ đồ luồng công việc Điều phối viên-Nhân viên">
+                    <figcaption>Luồng công việc điều phối viên-nhân viên</figcaption>
+                </figure>
+
+                <p><strong>Khi nào nên sử dụng luồng công việc này:</strong> Luồng công việc này rất phù hợp cho các tác
+                    vụ phức tạp mà bạn không thể dự đoán các nhiệm vụ con cần thiết (ví dụ: trong lập trình, số lượng
+                    tệp cần thay đổi và bản chất của thay đổi trong mỗi tệp có thể phụ thuộc vào nhiệm vụ). Mặc dù tương
+                    tự về mặt cấu trúc, sự khác biệt chính so với song song hóa là tính linh hoạt của nó—các nhiệm vụ
+                    con không được xác định trước, mà được xác định bởi điều phối viên dựa trên đầu vào cụ thể.</p>
+                <p><strong>Ví dụ về nơi điều phối viên-nhân viên hữu ích:</strong></p>
+                <ul>
+                    <li>Các sản phẩm lập trình thực hiện các thay đổi phức tạp cho nhiều tệp mỗi lần.</li>
+                    <li>Các nhiệm vụ tìm kiếm liên quan đến việc thu thập và phân tích thông tin từ nhiều nguồn để tìm
+                        thông tin liên quan có thể có.</li>
+                </ul>
+
+                <h3>Luồng công việc: Người đánh giá-Người tối ưu (Evaluator-optimizer)</h3>
+                <p>Trong luồng công việc người đánh giá-người tối ưu, một lệnh gọi LLM tạo ra phản hồi trong khi một
+                    lệnh gọi khác cung cấp đánh giá và phản hồi theo vòng lặp.</p>
+
+                <figure>
+                    <img src="images/The evaluator-optimizer workflow.jpg"
+                        alt="Sơ đồ luồng công việc Người đánh giá-Người tối ưu">
+                    <figcaption>Luồng công việc người đánh giá-người tối ưu</figcaption>
+                </figure>
+
+                <p><strong>Khi nào nên sử dụng luồng công việc này:</strong> Luồng công việc này đặc biệt hiệu quả khi
+                    chúng ta có tiêu chí đánh giá rõ ràng và khi việc tinh chỉnh lặp đi lặp lại mang lại giá trị đo
+                    lường được. Hai dấu hiệu phù hợp là, thứ nhất, phản hồi của LLM có thể được cải thiện rõ rệt khi con
+                    người trình bày phản hồi của họ; và thứ hai, LLM có thể cung cấp phản hồi như vậy. Điều này tương tự
+                    như quy trình viết lặp đi lặp lại mà một người viết có thể trải qua khi tạo ra một tài liệu hoàn
+                    chỉnh.</p>
+                <p><strong>Ví dụ về nơi người đánh giá-người tối ưu hữu ích:</strong></p>
+                <ul>
+                    <li>Dịch thuật văn học nơi có những sắc thái mà LLM dịch giả ban đầu có thể không nắm bắt được,
+                        nhưng LLM người đánh giá có thể cung cấp những lời phê bình hữu ích.</li>
+                    <li>Các nhiệm vụ tìm kiếm phức tạp yêu cầu nhiều vòng tìm kiếm và phân tích để thu thập thông tin
+                        toàn diện, trong đó người đánh giá quyết định xem có cần tìm kiếm thêm hay không.</li>
+                </ul>
+            </section>
+
+            <hr>
+
+            <section id="autonomous-agents">
+                <h2>Tác tử (Agents)</h2>
+                <p>Các tác tử đang nổi lên trong sản xuất khi LLM trưởng thành trong các khả năng chính—hiểu đầu vào
+                    phức tạp, tham gia vào lý luận và lập kế hoạch, sử dụng công cụ một cách đáng tin cậy và phục hồi
+                    sau lỗi. Tác tử bắt đầu công việc của chúng bằng một lệnh hoặc thảo luận tương tác với người dùng.
+                    Khi nhiệm vụ rõ ràng, tác tử lập kế hoạch và hoạt động độc lập, có khả năng quay lại với con người
+                    để biết thêm thông tin hoặc phán đoán. Trong quá trình thực thi, điều quan trọng là tác tử phải thu
+                    được "sự thật cơ bản" (ground truth) từ môi trường ở mỗi bước (chẳng hạn như kết quả gọi công cụ
+                    hoặc thực thi mã) để đánh giá tiến trình của nó. Tác tử sau đó có thể tạm dừng để nhận phản hồi của
+                    con người tại các điểm kiểm tra hoặc khi gặp phải trình chặn. Nhiệm vụ thường kết thúc khi hoàn
+                    thành, nhưng cũng phổ biến là bao gồm các điều kiện dừng (chẳng hạn như số lần lặp tối đa) để duy
+                    trì kiểm soát.</p>
+                <p>Tác tử có thể xử lý các nhiệm vụ phức tạp, nhưng việc triển khai chúng thường đơn giản. Chúng thường
+                    chỉ là các LLM sử dụng công cụ dựa trên phản hồi môi trường trong một vòng lặp. Do đó, điều quan
+                    trọng là phải thiết kế bộ công cụ và tài liệu của chúng một cách rõ ràng và chu đáo. Chúng tôi mở
+                    rộng về các phương pháp hay nhất để phát triển công cụ trong Phụ lục 2 ("Kỹ thuật Prompt cho Công cụ
+                    của bạn").</p>
+
+                <figure>
+                    <img src="images/Autonomous agent.jpg" alt="Sơ đồ vòng lặp tác tử tự trị">
+                    <figcaption>Tác tử tự trị</figcaption>
+                </figure>
+
+                <p><strong>Khi nào nên sử dụng tác tử:</strong> Tác tử có thể được sử dụng cho các vấn đề mở mà khó hoặc
+                    không thể dự đoán số bước cần thiết và bạn không thể mã hóa cứng một đường dẫn cố định. LLM có khả
+                    năng sẽ hoạt động trong nhiều lượt, và bạn phải có một mức độ tin cậy nhất định vào việc ra quyết
+                    định của nó. Tính tự chủ của tác tử làm cho chúng trở nên lý tưởng để mở rộng quy mô nhiệm vụ trong
+                    các môi trường đáng tin cậy.</p>
+                <p>Bản chất tự trị của tác tử có nghĩa là chi phí cao hơn và tiềm ẩn lỗi kép. Chúng tôi khuyên bạn nên
+                    thử nghiệm rộng rãi trong môi trường hộp cát (sandboxed), cùng với các rào cản thích hợp.</p>
+                <p><strong>Ví dụ về nơi tác tử hữu ích:</strong></p>
+                <p>Các ví dụ sau đây là từ các triển khai của chính chúng tôi:</p>
+                <ul>
+                    <li>Một Tác tử lập trình để giải quyết các nhiệm vụ <a href="https://swebench.com/" target="_blank"
+                            rel="noopener noreferrer">SWE-bench</a>, bao gồm các chỉnh sửa cho nhiều tệp dựa trên mô tả
+                        nhiệm vụ;</li>
+                    <li>Triển khai tham chiếu <a href="https://github.com/anthropics/anthropic-tools/tree/main/computer"
+                            target="_blank" rel="noopener noreferrer">"sử dụng máy tính" (computer use)</a> của chúng
+                        tôi, nơi Claude sử dụng máy tính để hoàn thành nhiệm vụ.</li>
+                </ul>
+
+                <figure>
+                    <img src="images/High-level flow of a coding agent.jpg"
+                        alt="Sơ đồ luồng cấp cao của một tác tử lập trình">
+                    <figcaption>Luồng cấp cao của một tác tử lập trình</figcaption>
+                </figure>
+            </section>
+
+            <hr>
+
+            <section id="combining-patterns">
+                <h2>Kết hợp và tùy chỉnh các mẫu này</h2>
+                <p>Những khối xây dựng này không mang tính quy định. Chúng là những mẫu phổ biến mà các nhà phát triển
+                    có thể định hình và kết hợp để phù hợp với các trường hợp sử dụng khác nhau. Chìa khóa thành công,
+                    như với bất kỳ tính năng LLM nào, là đo lường hiệu suất và lặp lại trên các triển khai. Xin nhắc
+                    lại: bạn chỉ nên xem xét việc thêm độ phức tạp <em>chỉ khi</em> nó cải thiện kết quả một cách rõ
+                    ràng.</p>
+            </section>
+
+            <hr>
+
+            <section id="summary">
+                <h2>Tóm tắt</h2>
+                <p>Thành công trong không gian LLM không phải là xây dựng hệ thống phức tạp nhất. Đó là về việc xây dựng
+                    hệ thống <em>phù hợp</em> cho nhu cầu của bạn. Bắt đầu với các prompt đơn giản, tối ưu hóa chúng
+                    bằng đánh giá toàn diện và chỉ thêm các hệ thống có tính tác tử đa bước khi các giải pháp đơn giản
+                    hơn không đáp ứng được.</p>
+                <p>Khi triển khai tác tử, chúng tôi cố gắng tuân theo ba nguyên tắc cốt lõi:</p>
+                <ol>
+                    <li><strong>Duy trì sự đơn giản</strong> trong thiết kế tác tử của bạn.</li>
+                    <li><strong>Ưu tiên tính minh bạch</strong> bằng cách hiển thị rõ ràng các bước lập kế hoạch của tác
+                        tử.</li>
+                    <li><strong>Tạo giao diện tác tử-máy tính (ACI)</strong> của bạn một cách cẩn thận thông qua tài
+                        liệu và thử nghiệm công cụ kỹ lưỡng.</li>
+                </ol>
+                <p>Các framework có thể giúp bạn bắt đầu nhanh chóng, nhưng đừng ngần ngại giảm các lớp trừu tượng và
+                    xây dựng với các thành phần cơ bản khi bạn chuyển sang sản xuất. Bằng cách tuân theo các nguyên tắc
+                    này, bạn có thể tạo ra các tác tử không chỉ mạnh mẽ mà còn đáng tin cậy, có thể bảo trì và được
+                    người dùng tin cậy.</p>
+            </section>
+
+            <section id="acknowledgements">
+                <h3>Lời cảm ơn</h3>
+                <p>Viết bởi Erik Schluntz và Barry Zhang. Công trình này dựa trên kinh nghiệm xây dựng tác tử của chúng
+                    tôi tại Anthropic và những hiểu biết quý giá được chia sẻ bởi khách hàng của chúng tôi, mà chúng tôi
+                    vô cùng biết ơn.</p>
+            </section>
+
+            <hr>
+
+            <aside>
+                <section id="appendix1">
+                    <h2>Phụ lục 1: Tác tử trong thực tế</h2>
+                    <p>Công việc của chúng tôi với khách hàng đã tiết lộ hai ứng dụng đặc biệt hứa hẹn cho các tác tử AI
+                        chứng minh giá trị thực tế của các mẫu đã thảo luận ở trên. Cả hai ứng dụng đều minh họa cách
+                        tác tử tăng thêm giá trị nhất cho các nhiệm vụ đòi hỏi cả hội thoại và hành động, có tiêu chí
+                        thành công rõ ràng, cho phép các vòng lặp phản hồi và tích hợp sự giám sát có ý nghĩa của con
+                        người.</p>
+
+                    <h3>A. Hỗ trợ khách hàng</h3>
+                    <p>Hỗ trợ khách hàng kết hợp giao diện chatbot quen thuộc với các khả năng nâng cao thông qua tích
+                        hợp công cụ. Đây là một sự phù hợp tự nhiên cho các tác tử có tính mở hơn vì:</p>
+                    <ul>
+                        <li>Tương tác hỗ trợ tự nhiên tuân theo luồng hội thoại trong khi yêu cầu quyền truy cập vào
+                            thông tin và hành động bên ngoài;</li>
+                        <li>Công cụ có thể được tích hợp để lấy dữ liệu khách hàng, lịch sử đơn hàng và các bài viết cơ
+                            sở kiến thức;</li>
+                        <li>Các hành động như phát hành hoàn tiền hoặc cập nhật phiếu yêu cầu có thể được xử lý bằng mã;
+                            và</li>
+                        <li>Thành công có thể được đo lường rõ ràng thông qua các giải pháp do người dùng xác định.</li>
+                    </ul>
+                    <p>Một số công ty đã chứng minh tính khả thi của phương pháp này thông qua các mô hình định giá dựa
+                        trên việc sử dụng chỉ tính phí cho các giải pháp thành công, thể hiện sự tự tin vào hiệu quả của
+                        tác tử của họ.</p>
+
+                    <h3>B. Tác tử lập trình</h3>
+                    <p>Không gian phát triển phần mềm đã cho thấy tiềm năng đáng kể cho các tính năng LLM, với các khả
+                        năng phát triển từ hoàn thành mã đến giải quyết vấn đề tự trị. Tác tử đặc biệt hiệu quả vì:</p>
+                    <ul>
+                        <li>Giải pháp mã có thể kiểm chứng thông qua các bài kiểm tra tự động;</li>
+                        <li>Tác tử có thể lặp lại các giải pháp bằng cách sử dụng kết quả kiểm tra làm phản hồi;</li>
+                        <li>Không gian vấn đề được xác định rõ ràng và có cấu trúc; và</li>
+                        <li>Chất lượng đầu ra có thể được đo lường một cách khách quan.</li>
+                    </ul>
+                    <p>Trong triển khai của riêng chúng tôi, các tác tử hiện có thể giải quyết các vấn đề GitHub thực tế
+                        trong bộ tiêu chuẩn <a href="https://swebench.com/verified" target="_blank"
+                            rel="noopener noreferrer">SWE-bench Verified</a> chỉ dựa trên mô tả yêu cầu kéo. Tuy nhiên,
+                        trong khi kiểm tra tự động giúp xác minh chức năng, đánh giá của con người vẫn rất quan trọng để
+                        đảm bảo các giải pháp phù hợp với các yêu cầu hệ thống rộng hơn.</p>
+                </section>
+
+                <hr>
+
+                <section id="appendix2">
+                    <h2>Phụ lục 2: Kỹ thuật Prompt cho Công cụ của bạn</h2>
+                    <p>Bất kể bạn đang xây dựng hệ thống có tính tác tử nào, các công cụ có thể sẽ là một phần quan
+                        trọng của tác tử của bạn. <a href="https://docs.anthropic.com/claude/docs/tool-use"
+                            target="_blank" rel="noopener noreferrer">Công cụ</a> cho phép Claude tương tác với các dịch
+                        vụ và API bên ngoài bằng cách chỉ định cấu trúc và định nghĩa chính xác của chúng trong API của
+                        chúng tôi. Khi Claude phản hồi, nó sẽ bao gồm một khối sử dụng công cụ trong phản hồi API nếu nó
+                        dự định gọi một công cụ. Các định nghĩa và thông số kỹ thuật của công cụ nên được chú ý kỹ thuật
+                        prompt nhiều như các prompt tổng thể của bạn. Trong phụ lục ngắn này, chúng tôi mô tả cách kỹ
+                        thuật prompt cho các công cụ của bạn.</p>
+                    <p>Thường có một số cách để chỉ định cùng một hành động. Ví dụ: bạn có thể chỉ định chỉnh sửa tệp
+                        bằng cách viết một diff hoặc bằng cách viết lại toàn bộ tệp. Đối với đầu ra có cấu trúc, bạn có
+                        thể trả về mã bên trong markdown hoặc bên trong JSON. Trong kỹ thuật phần mềm, những khác biệt
+                        như thế này là về hình thức và có thể được chuyển đổi qua lại mà không mất dữ liệu. Tuy nhiên,
+                        một số định dạng khó hơn nhiều để LLM viết hơn những định dạng khác. Viết diff yêu cầu biết có
+                        bao nhiêu dòng đang thay đổi trong tiêu đề đoạn mã trước khi mã mới được viết. Viết mã bên trong
+                        JSON (so với markdown) yêu cầu thoát bổ sung các dòng mới và dấu ngoặc kép.</p>
+                    <p>Các đề xuất của chúng tôi để quyết định định dạng công cụ như sau:</p>
+                    <ul>
+                        <li>Cung cấp cho mô hình đủ token để "suy nghĩ" trước khi tự viết vào một góc.</li>
+                        <li>Giữ định dạng gần với những gì mô hình đã thấy tự nhiên xuất hiện trong văn bản trên
+                            internet.</li>
+                        <li>Đảm bảo không có "chi phí" định dạng như phải đếm chính xác hàng nghìn dòng mã hoặc thoát
+                            chuỗi bất kỳ mã nào nó viết.</li>
+                    </ul>
+                    <p>Một quy tắc chung là suy nghĩ về mức độ nỗ lực dành cho giao diện người-máy (HCI) và lên kế hoạch
+                        đầu tư nhiều nỗ lực tương tự vào việc tạo ra các giao diện tác tử-máy tính (ACI) tốt.</p>
+                    <p>Dưới đây là một số suy nghĩ về cách thực hiện:</p>
+                    <ul>
+                        <li><strong>Đặt mình vào vị trí của mô hình.</strong> Có rõ ràng cách sử dụng công cụ này, dựa
+                            trên mô tả và tham số, hay bạn cần suy nghĩ cẩn thận về nó? Nếu vậy, thì điều đó có lẽ cũng
+                            đúng với mô hình. Một định nghĩa công cụ tốt thường bao gồm ví dụ sử dụng, các trường hợp
+                            đặc biệt, yêu cầu định dạng đầu vào và ranh giới rõ ràng với các công cụ khác.</li>
+                        <li><strong>Làm cách nào bạn có thể thay đổi tên hoặc mô tả tham số để làm mọi thứ rõ ràng
+                                hơn?</strong> Hãy nghĩ về điều này như viết một docstring tuyệt vời cho một nhà phát
+                            triển cấp dưới trong nhóm của bạn. Điều này đặc biệt quan trọng khi sử dụng nhiều công cụ
+                            tương tự.</li>
+                        <li><strong>Kiểm tra cách mô hình sử dụng công cụ của bạn:</strong> Chạy nhiều đầu vào ví dụ
+                            trong <a href="https://console.anthropic.com/workbench" target="_blank"
+                                rel="noopener noreferrer">workbench</a> của chúng tôi để xem mô hình mắc lỗi gì và lặp
+                            lại.</li>
+                        <li><strong>Poka-yoke (chống lỗi) công cụ của bạn.</strong> Thay đổi các đối số để khó mắc lỗi
+                            hơn.</li>
+                    </ul>
+                    <p>Khi xây dựng tác tử của chúng tôi cho SWE-bench, chúng tôi thực sự đã dành nhiều thời gian hơn để
+                        tối ưu hóa các công cụ của mình hơn là prompt tổng thể. Ví dụ: chúng tôi thấy rằng mô hình sẽ
+                        mắc lỗi với các công cụ sử dụng đường dẫn tệp tương đối sau khi tác tử đã di chuyển ra khỏi thư
+                        mục gốc. Để khắc phục điều này, chúng tôi đã thay đổi công cụ để luôn yêu cầu đường dẫn tệp
+                        tuyệt đối—và chúng tôi thấy rằng mô hình đã sử dụng phương pháp này một cách hoàn hảo.</p>
+                </section>
+            </aside>
+        </article>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <!-- Cột 1: Product & Research -->
+                <div class="footer-column">
+                    <h5>Sản phẩm</h5>
+                    <ul>
+                        <li><a href="#">Tổng quan về Claude</a></li>
+                        <li><a href="#">Claude Code</a></li>
+                        <li><a href="#">Gói Claude Team</a></li>
+                        <li><a href="#">Gói Claude Enterprise</a></li>
+                        <li><a href="#">Gói Claude Education</a></li>
+                        <li><a href="#">Tải ứng dụng Claude</a></li>
+                        <li><a href="#">Gói giá Claude.ai</a></li>
+                        <li><a href="#">Đăng nhập Claude.ai</a></li>
+                    </ul>
+                    <h5>Nghiên cứu</h5>
+                    <ul>
+                        <li><a href="#">Tổng quan nghiên cứu</a></li>
+                        <li><a href="#">Chỉ số Kinh tế</a></li> <!-- Economic Index -->
+                    </ul>
+                </div>
+
+                <!-- Cột 2: API Platform & Models -->
+                <div class="footer-column">
+                    <h5>Nền tảng API</h5>
+                    <ul>
+                        <li><a href="#">Tổng quan API</a></li>
+                        <li><a href="#">Tài liệu Nhà phát triển</a></li>
+                        <li><a href="#">Claude trên Amazon Bedrock</a></li>
+                        <li><a href="#">Claude trên Google Cloud Vertex AI</a></li>
+                        <li><a href="#">Giá</a></li>
+                        <li><a href="#">Đăng nhập Console</a></li>
+                    </ul>
+                    <h5>Các mô hình Claude</h5>
+                    <ul>
+                        <li><a href="#">Claude 3.7 Sonnet</a></li> <!-- Giữ tên model -->
+                        <li><a href="#">Claude 3.5 Haiku</a></li>
+                        <li><a href="#">Claude 3 Opus</a></li>
+                    </ul>
+                </div>
+
+                <!-- Cột 3: Commitments & Solutions -->
+                <div class="footer-column">
+                    <h5>Cam kết</h5>
+                    <ul>
+                        <li><a href="#">Minh bạch</a></li>
+                        <li><a href="#">Chính sách mở rộng quy mô có trách nhiệm</a></li>
+                        <li><a href="#">Bảo mật và Tuân thủ</a></li>
+                    </ul>
+                    <h5>Giải pháp</h5>
+                    <ul>
+                        <li><a href="#">Tác tử AI</a></li>
+                        <li><a href="#">Lập trình</a></li>
+                        <li><a href="#">Hỗ trợ Khách hàng</a></li>
+                    </ul>
+                </div>
+
+                <!-- Cột 4: Learn & Explore -->
+                <div class="footer-column">
+                    <h5>Tìm hiểu</h5>
+                    <ul>
+                        <li><a href="#">Anthropic Academy</a></li>
+                        <li><a href="#">Câu chuyện Khách hàng</a></li>
+                        <li><a href="#">Kỹ thuật tại Anthropic</a></li>
+                    </ul>
+                    <h5>Khám phá</h5>
+                    <ul>
+                        <li><a href="#">Về chúng tôi</a></li>
+                        <li><a href="#">Trở thành đối tác</a></li>
+                        <li><a href="#">Tuyển dụng</a></li>
+                        <li><a href="#">Tin tức</a></li>
+                    </ul>
+                </div>
+
+                <!-- Cột 5: Help & Policies -->
+                <div class="footer-column">
+                    <h5>Trợ giúp và bảo mật</h5>
+                    <ul>
+                        <li><a href="#">Trạng thái</a></li>
+                        <li><a href="#">Khả dụng</a></li>
+                        <li><a href="#">Trung tâm Hỗ trợ</a></li>
+                    </ul>
+                    <h5>Điều khoản và chính sách</h5>
+                    <ul>
+                        <li><a href="#">Lựa chọn quyền riêng tư</a></li>
+                        <li><a href="#">Chính sách quyền riêng tư</a></li>
+                        <li><a href="#">Chính sách công bố có trách nhiệm</a></li>
+                        <li><a href="#">Điều khoản dịch vụ - người tiêu dùng</a></li>
+                        <li><a href="#">Điều khoản dịch vụ - thương mại</a></li>
+                        <li><a href="#">Chính sách sử dụng</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="copyright">
+                    <p>© <span id="year"></span> Anthropic PBC. Chuyển ngữ bởi AI & Người dùng.</p>
+                    <p><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank"
+                            rel="noopener noreferrer" class="source-link">Nguồn gốc bài viết (Tiếng Anh)</a></p>
+                </div>
+                <div class="social-icons">
+                    <!-- Thay thế '#' bằng link thật và sử dụng icon (ví dụ: Font Awesome) -->
+                    <a href="#" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
+                        <i class="fa-brands fa-youtube"></i> <!-- Icon YouTube -->
+                    </a>
+                    <a href="#" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                        <i class="fa-brands fa-linkedin-in"></i> <!-- Icon LinkedIn -->
+                    </a>
+                    <a href="#" aria-label="X (Twitter)" target="_blank" rel="noopener noreferrer">
+                        <i class="fa-brands fa-x-twitter"></i> <!-- Icon X (Twitter) -->
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

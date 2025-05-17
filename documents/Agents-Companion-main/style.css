@@ -1,0 +1,471 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Lato', sans-serif; /* Using Lato for body text */
+    line-height: 1.6;
+    color: #333; /* Dark grey for main text */
+    background-color: #f8f9fa; /* Light grey background */
+    padding: 0;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    display: flex; /* Use flexbox for main layout */
+}
+
+.container {
+    display: flex;
+    width: 100%;
+}
+
+.sidebar {
+    width: 250px; /* Fixed width for sidebar */
+    flex-shrink: 0; /* Prevent sidebar from shrinking */
+    background-color: #ffffff;
+    padding: 20px;
+    border-right: 1px solid #dadce0;
+    position: fixed; /* Make sidebar fixed */
+    top: 0;
+    left: 0;
+    height: 100vh; /* Full viewport height */
+    overflow-y: auto; /* Enable scrolling within the sidebar */
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    z-index: 100; /* Ensure sidebar is above content */
+}
+
+.sidebar h2 {
+    font-family: 'Merriweather', serif; /* Slightly different font for sidebar title */
+    font-size: 1.4em;
+    color: #1f497d; /* Deep blue for headings */
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 8px;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: #555; /* Slightly lighter color for sidebar links */
+    display: block; /* Make the entire li clickable */
+    padding: 4px 0;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+    color: #1a73e8; /* Google blue on hover */
+    background-color: #e8f0fe; /* Light blue background on hover */
+    border-radius: 4px;
+}
+
+.sidebar ul ul {
+    margin-left: 15px; /* Indent nested lists */
+    margin-top: 5px;
+    border-left: 2px solid #eee; /* Visual indicator for nesting */
+    padding-left: 10px;
+}
+
+.sidebar ul ul li {
+    margin-bottom: 5px;
+}
+
+.sidebar ul ul li a {
+    font-size: 0.95em;
+}
+
+/* Removed sidebar icon styling */
+
+
+.main-content {
+    margin-left: 250px; /* Push main content to the right of the sidebar */
+    flex-grow: 1; /* Allow main content to take remaining space */
+}
+
+.site-header {
+    background-color: #ffffff;
+    padding: 40px 20px;
+    text-align: center;
+    border-bottom: 1px solid #dadce0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.header-content {
+    max-width: 800px;
+    margin: 0 auto;
+    z-index: 1;
+    position: relative;
+}
+
+.site-header h1 {
+    font-family: 'Merriweather', serif; /* Academic font for main title */
+    font-size: 3em;
+    margin-bottom: 10px;
+    color: #1f497d; /* Deep blue */
+}
+
+.site-header p {
+    font-size: 1.2em;
+    color: #5f6368;
+}
+
+.original-link-placeholder {
+    margin-top: 15px;
+    font-size: 0.9em;
+    color: #5f6368;
+}
+
+.original-link-placeholder a {
+    color: #1a73e8; /* Google blue for the link */
+    text-decoration: none;
+}
+
+.original-link-placeholder a:hover {
+    text-decoration: underline;
+}
+
+
+.header-images {
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     overflow: hidden;
+}
+
+.google-logo {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    height: 40px;
+    z-index: 2;
+}
+
+.crystal-image {
+    position: absolute;
+    bottom: -50px;
+    right: -100px;
+    height: 300px;
+    z-index: 0;
+    opacity: 0.7;
+}
+
+
+main {
+    /* Increased max-width for wider content */
+    max-width: 1000px; /* Adjusted for wider content */
+    margin: 20px auto;
+    /* Removed padding here, sections will handle their own padding */
+    padding: 0;
+}
+
+.section {
+    background-color: #ffffff;
+    /* Padding provides inner spacing for each section */
+    padding: 40px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Specific layout for acknowledgements - keeping side-by-side */
+.acknowledgements-section {
+    display: flex;
+    align-items: flex-start; /* Align content to the top */
+    gap: 20px; /* Space between text and image */
+}
+
+.acknowledgements-section .section-content {
+    flex: 1; /* Allow content to take available space */
+}
+
+.acknowledgements-section .section-image {
+    flex-shrink: 0; /* Prevent image container from shrinking */
+    /* Adjust positioning for images within these flex sections */
+}
+
+.acknowledgements-section .crystal-image {
+     position: static; /* Override absolute positioning for flex layout */
+     bottom: auto;
+     right: auto;
+     height: 150px; /* Smaller image size in sections */
+     opacity: 0.7;
+     border-radius: 8px; /* Match section styling */
+}
+
+
+/* New style for sections where image is above text */
+.image-above-text-section {
+    /* Default block layout - image and text will stack */
+}
+
+.image-above-text-section .section-image {
+    text-align: center; /* Center the image within its container */
+    margin-bottom: 20px; /* Space between image and text */
+}
+
+.image-above-text-section img {
+     /* Image styling for stacking layout */
+     display: block; /* Ensure image is a block element */
+     max-width: 100%; /* Make image responsive */
+     height: auto; /* Maintain aspect ratio */
+     margin: 0 auto; /* Center the image itself */
+     border-radius: 8px; /* Match section styling */
+     opacity: 0.9; /* Slightly more opaque for clarity */
+}
+
+
+.mini-header {
+    font-size: 0.9em;
+    color: #5f6368;
+    margin-bottom: 5px;
+}
+
+
+.section-content h1 {
+     font-size: 2.5em;
+     margin-bottom: 20px;
+     color: #1f497d; /* Deep blue */
+      font-family: 'Merriweather', serif; /* Academic font */
+}
+
+.section-content h2 {
+    font-family: 'Merriweather', serif; /* Academic font */
+    font-size: 1.8em;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: #d93025; /* Google Red */
+}
+
+.section-content h3 {
+    font-family: 'Merriweather', serif; /* Academic font */
+    font-size: 1.4em;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #fbbc04; /* Google Yellow */
+}
+.section-content h4 {
+    font-family: 'Merriweather', serif; /* Academic font */
+    font-size: 1.2em;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    color: #4285f4; /* Google Blue */
+}
+
+
+.section-content p {
+    margin-bottom: 15px;
+    color: #333; /* Dark grey for main text */
+}
+
+.section-content ul,
+.section-content ol {
+    margin-bottom: 15px;
+    margin-left: 20px;
+    color: #333;
+}
+
+.section-content ul li,
+.section-content ol li {
+    margin-bottom: 8px;
+}
+
+/* Removed icon styling within list items */
+
+
+.design-bar {
+    display: block;
+    width: 50px;
+    height: 8px;
+    background-color: #4285f4;
+    margin-bottom: 20px;
+}
+
+.figure-caption {
+    font-size: 0.9em;
+    color: #5f6368;
+    text-align: center;
+    margin-top: 10px;
+    font-style: italic;
+}
+
+.interaction-example {
+    border-left: 4px solid #dadce0;
+    padding-left: 15px;
+    margin: 20px 0;
+    background-color: #e8f0fe; /* Light blue background for examples */
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.interaction-example p {
+    margin-bottom: 10px;
+    color: #3c4043; /* Darker text for examples */
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; /* Monospace font for examples */
+    white-space: pre-wrap; /* Preserve whitespace and wrap text */
+    word-wrap: break-word;
+    font-size: 1em; /* Reset font size for example text */
+}
+
+.interaction-example p:last-child {
+    margin-bottom: 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+th, td {
+    border: 1px solid #dadce0;
+    padding: 12px;
+    text-align: left;
+    color: #333; /* Ensure table text color is consistent */
+}
+
+th {
+    background-color: #4285f4; /* Google Blue */
+    color: white;
+    font-weight: bold;
+    font-family: 'Merriweather', serif;
+}
+
+td {
+     background-color: #ffffff;
+}
+
+/* Style for links within endnotes */
+#endnotes a {
+    color: #1a73e8;
+    text-decoration: none;
+}
+
+#endnotes a:hover {
+    text-decoration: underline;
+}
+
+
+footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    color: #5f6368;
+    font-size: 0.9em;
+    border-top: 1px solid #dadce0;
+}
+
+/* Icon styling - kept in case other icons are needed in content */
+.icon {
+    margin-right: 8px;
+    font-size: 1.1em;
+    vertical-align: middle;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        position: static; /* Sidebar becomes static on small screens */
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #dadce0;
+        box-shadow: none;
+        overflow-y: visible;
+    }
+
+    .main-content {
+        margin-left: 0; /* Remove margin when sidebar is static */
+    }
+
+    .site-header h1 {
+        font-size: 2em;
+    }
+
+    .site-header p {
+        font-size: 1em;
+    }
+
+    .section {
+        padding: 20px;
+    }
+
+    /* Adjusting layout for image-above-text on small screens */
+    .acknowledgements-section {
+         flex-direction: column; /* Stack items vertically */
+         align-items: center;
+    }
+
+    .acknowledgements-section .section-content {
+         padding-right: 0;
+         margin-bottom: 20px;
+    }
+
+     .acknowledgements-section .section-image {
+         margin-left: 0;
+         width: 100%; /* Allow image container to take full width */
+         text-align: center; /* Center image if it's smaller than container */
+     }
+
+     .acknowledgements-section .crystal-image {
+         position: static; /* Ensure static positioning on mobile */
+         width: auto; /* Auto width to maintain aspect ratio */
+         max-width: 100%; /* Prevent image overflow */
+         height: auto; /* Auto height */
+         bottom: auto;
+         right: auto;
+     }
+
+
+    .google-logo,
+    .crystal-image {
+        position: static; /* Remove absolute positioning on small screens */
+        margin-top: 20px;
+        left: auto;
+        bottom: auto;
+        right: auto;
+        height: auto;
+        max-width: 100px; /* Limit logo size */
+    }
+
+
+    .section-content h1 {
+        font-size: 2em;
+    }
+
+    .section-content h2 {
+        font-size: 1.5em;
+    }
+
+    .section-content h3 {
+        font-size: 1.2em;
+    }
+     .section-content h4 {
+        font-size: 1.1em;
+    }
+
+
+    th, td {
+        padding: 8px;
+        font-size: 0.9em;
+    }
+
+    .interaction-example p {
+        font-size: 0.9em; /* Smaller font for examples on small screens */
+    }
+}

@@ -2,7 +2,7 @@ const sampleDocuments = [
     {
         id: "doc1",
         title: "Giới thiệu về AI Agent từ OpenAI",
-        thumbnailImage: "assets/images/openai_building_agent.png", // Thay thế bằng hình ảnh thật
+        thumbnailImage: "assets/images/openai_building_agent.png",
         htmlPath: "documents/openai_building_agent/index.html",
         description: "Tài liệu giới thiệu cơ bản về AI Agent, từ OpenAI",
         uploadDate: "2025-05-09"
@@ -10,43 +10,35 @@ const sampleDocuments = [
     {
         id: "doc2",
         title: "Hướng dẫn viết Prompt từ Google",
-        thumbnailImage: "assets/images/google_prompt_engineering.png", // Thay thế bằng hình ảnh thật
-        htmlPath: "documents/google_prompt_engineering/index.html", // Giả định bạn có document2
+        thumbnailImage: "assets/images/google_prompt_engineering.png",
+        htmlPath: "documents/google_prompt_engineering/index.html",
         description: "Khám phá các kỹ thuật viết Prompt hiệu quả và cách tối ưu hóa kết quả từ Google.",
         uploadDate: "2025-05-01"
     },
-    // {
-    //     id: "doc3",
-    //     title: "JavaScript Thuần Cho Người Mới Bắt Đầu",
-    //     thumbnailImage: "assets/images/doc3_thumb.jpg", // Thay thế bằng hình ảnh thật
-    //     htmlPath: "documents/document3/index.html",
-    //     description: "Học JavaScript từ những khái niệm cơ bản nhất, DOM manipulation và xử lý sự kiện.",
-    //     uploadDate: "2024-06-01"
-    // },
-    // {
-    //     id: "doc4",
-    //     title: "Giới Thiệu Về Web Accessibility (WCAG)",
-    //     thumbnailImage: "assets/images/doc4_thumb.jpg",
-    //     htmlPath: "documents/document4/index.html",
-    //     description: "Tìm hiểu về tầm quan trọng của khả năng truy cập web và các nguyên tắc WCAG.",
-    //     uploadDate: "2024-06-10"
-    // },
-    // {
-    //     id: "doc5",
-    //     title: "Tối Ưu Hóa Hiệu Suất Website",
-    //     thumbnailImage: "assets/images/doc5_thumb.jpg",
-    //     htmlPath: "documents/document5/index.html",
-    //     description: "Các kỹ thuật giúp tăng tốc độ tải trang và cải thiện trải nghiệm người dùng.",
-    //     uploadDate: "2024-06-20"
-    // },
-    // {
-    //     id: "doc6",
-    //     title: "Làm Việc Với API trong JavaScript",
-    //     thumbnailImage: "assets/images/doc6_thumb.jpg",
-    //     htmlPath: "documents/document6/index.html",
-    //     description: "Cách gửi request, nhận và xử lý dữ liệu từ các API bên ngoài sử dụng Fetch API.",
-    //     uploadDate: "2024-07-01"
-    // }
+    {
+        id: "doc3",
+        title: "Agents Companion",
+        thumbnailImage: "assets/images/Agents-Companion-main.png",
+        htmlPath: "documents/Agents-Companion-main/index.html",
+        description: "Tương lai của AI là Agentic.",
+        uploadDate: "2025-05-18"
+    },
+    {
+        id: "doc4",
+        title: "AI Agents",
+        thumbnailImage: "assets/images/AIAgents-main.png",
+        htmlPath: "documents/AIAgents-main/index.html",
+        description: "AI Agents: Tiến Hóa, Kiến Trúc và Ứng Dụng Thực Tế",
+        uploadDate: "2025-05-18"
+    },
+    {
+        id: "doc5",
+        title: "Building effective agents",
+        thumbnailImage: "assets/images/building-effective-agents-main.png",
+        htmlPath: "documents/building-effective-agents-main/index.html",
+        description: "Xây dựng Agent (tác tử) hiệu quả",
+        uploadDate: "2025-05-18"
+    },
 ];
 
 function formatDate(dateString) {

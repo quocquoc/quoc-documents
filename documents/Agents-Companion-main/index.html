@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agents Companion</title>
+    <!-- Link Google Fonts cho font Lato và Merriweather -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <h2>Mục lục</h2>
+                <ul>
+                    <li><a href="#introduction">Giới thiệu</a></li>
+                    <li><a href="#agentops">AgentOps</a></li>
+                    <li><a href="#agent-success-metrics">Các chỉ số thành công của Agent</a></li>
+                    <li><a href="#agent-evaluation">Đánh giá Agent</a>
+                        <ul>
+                            <li><a href="#assessing-agent-capabilities">Đánh giá năng lực của Agent</a></li>
+                            <li><a href="#evaluating-trajectory-and-tool-use">Đánh giá hành trình và việc sử dụng công cụ</a></li>
+                            <li><a href="#evaluating-final-response">Đánh giá phản hồi cuối cùng</a></li>
+                            <li><a href="#human-in-the-loop-evaluation">Đánh giá có sự tham gia của con người</a></li>
+                            <li><a href="#more-about-agent-evaluation">Thêm về Đánh giá Agent</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#multiple-agents">Nhiều Agent & Đánh giá của chúng</a>
+                        <ul>
+                            <li><a href="#understanding-multi-agent-architectures">Hiểu kiến trúc đa Agent</a></li>
+                            <li><a href="#multi-agent-design-patterns">Các mẫu thiết kế đa Agent và tác động kinh doanh</a></li>
+                            <li><a href="#important-components-of-agents">Các thành phần quan trọng của Agent</a></li>
+                            <li><a href="#challenges-in-multi-agent-systems">Thách thức trong hệ thống đa Agent</a></li>
+                            <li><a href="#multi-agent-evaluation">Đánh giá đa Agent</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#agentic-rag">RAG theo hướng Agent</a>
+                        <ul>
+                            <li><a href="#agentic-rag-importance">RAG theo hướng Agent và Tầm quan trọng của nó</a></li>
+                            <li><a href="#better-search-better-rag">Tìm kiếm tốt hơn, RAG tốt hơn</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#agents-in-the-enterprise">Agent trong doanh nghiệp</a>
+                        <ul>
+                            <li><a href="#manager-of-agents">Người quản lý agent</a></li>
+                            <li><a href="#google-agentspace">Google Agentspace</a></li>
+                            <li><a href="#notebooklm-enterprise">NotebookLM Enterprise</a></li>
+                            <li><a href="#google-agentspace-enterprise">Google AgentSpace Enterprise</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#from-agents-to-contractors">Từ agent đến nhà thầu</a>
+                         <ul>
+                            <li><a href="#contracts">Hợp đồng</a></li>
+                            <li><a href="#contract-lifecycle">Vòng đời hợp đồng</a></li>
+                            <li><a href="#contract-execution">Thực thi hợp đồng</a></li>
+                            <li><a href="#contract-negotiation">Đàm phán hợp đồng</a></li>
+                            <li><a href="#contract-feedback">Phản hồi hợp đồng</a></li>
+                            <li><a href="#subcontracts">Hợp đồng phụ</a></li>
+                        </ul>
+                    </li>
+                     <li><a href="#automotive-ai">AI trong ô tô</a>
+                        <ul>
+                            <li><a href="#specialized-agents">Các Agent chuyên biệt</a>
+                                <ul>
+                                    <li><a href="#conversational-navigation-agent">Agent điều hướng đàm thoại</a></li>
+                                    <li><a href="#conversational-media-search-agent">Agent tìm kiếm truyền thông đàm thoại</a></li>
+                                    <li><a href="#message-composition-agent">Agent soạn tin nhắn</a></li>
+                                    <li><a href="#car-manual-agent">Agent sổ tay ô tô</a></li>
+                                    <li><a href="#general-knowledge-agent">Agent kiến thức tổng quát</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#patterns-in-use">Các mẫu thiết kế đang sử dụng</a>
+                                 <ul>
+                                    <li><a href="#hierarchical-pattern">Mẫu phân cấp</a></li>
+                                    <li><a href="#diamond-pattern">Mẫu kim cương</a></li>
+                                    <li><a href="#peer-to-peer">Ngang hàng (Peer-to-Peer)</a></li>
+                                    <li><a href="#collaborative-pattern">Mẫu cộng tác</a></li>
+                                    <li><a href="#response-mixer-agent">Agent trộn phản hồi</a></li>
+                                    <li><a href="#adaptive-loop-pattern">Mẫu vòng lặp thích ứng</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#advantages-automotive-ai">Ưu điểm của Kiến trúc đa Agent cho AI trong ô tô</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#agent-builder">Công cụ xây dựng Agent</a></li>
+                    <li><a href="#summary">Tóm tắt</a></li>
+                     <li><a href="#endnotes">Chú thích cuối trang</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="main-content">
+            <header class="site-header">
+                <div class="header-content">
+                    <h1>Agents Companion</h1>
+                    <p>Tác giả: Antonio Gulli, Lavi Nigam, Julia Wiesinger, Vladimir Vuskovic, Irina Sigler, Ivan Nardini, Nicolas Stroppa, Sokratis Kartakis, Narek Saribekyan, Anant Nawalgaria, and Alan Bount</p>
+                    <!-- Placeholder cho link gốc -->
+                    <div class="original-link-placeholder">
+                         <p>Link Gốc: <a href="https://drive.google.com/file/d/1GVPdwEh48bErTNdhxD0vqxPAifSx1I6Y/view" target="_blank">YOUR_ORIGINAL_LINK_HERE</a></p>
+                    </div>
+                </div>
+                <div class="header-images">
+                    <img src="images/logo.png" alt="Logo Google" class="google-logo">
+                </div>
+            </header>
+
+            <main>
+                <!-- Acknowledgements section - kept side-by-side as per original PDF look -->
+                <section class="section acknowledgements-section">
+                    <div class="section-content">
+                        <p class="mini-header">Agents Companion</p>
+                        <h2>Lời cảm ơn</h2>
+                        <h3>Biên tập viên & Người tuyển chọn</h3>
+                        <p>Anant Nawalgaria</p>
+                        <h3>Người đóng góp nội dung</h3>
+                        <p>Steven Johnson</p>
+                        <p>Hussain Chinoy</p>
+                        <h3>Nhà thiết kế</h3>
+                        <p>Michael Lanning</p>
+                    </div>
+                </section>
+
+                <!-- Table of contents is moved to sidebar -->
+
+                <section id="introduction" class="section">
+                    <div class="section-content">
+                        <h1>Tương lai của AI là agentic.</h1>
+                        <h2>Giới thiệu</h2>
+                        <p>Các agent AI tạo sinh (Generative AI agents) đánh dấu một bước nhảy vọt từ các mô hình ngôn ngữ độc lập truyền thống (traditional, standalone language models), mang đến một phương pháp tiếp cận năng động (dynamic approach) để giải quyết vấn đề và tương tác.</p>
+                        <p>Như được định nghĩa trong bài báo Agents gốc, một agent là một ứng dụng được thiết kế để đạt được các mục tiêu cụ thể (specific objectives) bằng cách nhận thức môi trường của nó (perceiving its environment) và hành động chiến lược (strategically acting) dựa trên các công cụ (tools) mà nó có sẵn. Nguyên tắc cơ bản của một agent nằm ở sự tổng hợp lý luận (reasoning), logic (logic) và truy cập thông tin bên ngoài (access to external information), cho phép nó thực hiện các nhiệm vụ (tasks) và đưa ra quyết định (decisions) vượt ra ngoài khả năng vốn có của mô hình cơ bản. Các agent này sở hữu khả năng hoạt động tự chủ (autonomous operation), độc lập theo đuổi mục tiêu (goals) của chúng và chủ động xác định các hành động tiếp theo (subsequent actions), thường không cần hướng dẫn rõ ràng (explicit instructions).</p>
+                        <p>Kiến trúc của một agent bao gồm ba yếu tố thiết yếu thúc đẩy hành vi (behavior) và việc ra quyết định (decision-making) của nó:</p>
+                        <ul>
+                            <li><strong>Model:</strong> Trong khuôn khổ của agent, thuật ngữ "model" đề cập đến mô hình ngôn ngữ (language model - LM) đóng vai trò là đơn vị ra quyết định trung tâm (central decision-making unit), sử dụng lý luận dựa trên hướng dẫn (instruction-based reasoning) và khung logic (logical frameworks). Mô hình có thể thay đổi từ mục đích chung (general-purpose) đến đa phương thức (multimodal) hoặc được tinh chỉnh (fine-tuned), tùy thuộc vào các yêu cầu cụ thể của agent.</li>
+                            <li><strong>Công cụ (Tools):</strong> Các công cụ rất quan trọng để kết nối khoảng cách giữa khả năng nội bộ của agent (internal capabilities) và thế giới bên ngoài (external world), tạo điều kiện tương tác với dữ liệu và dịch vụ bên ngoài. Các công cụ này trao quyền cho agent truy cập và xử lý thông tin thế giới thực (real-world information). Các công cụ có thể bao gồm tiện ích mở rộng (extensions), hàm (functions) và kho dữ liệu (data stores). Tiện ích mở rộng kết nối khoảng cách giữa API và agent, cho phép agent thực thi API một cách liền mạch. Hàm là các mô-đùn mã khép kín (self-contained modules of code) thực hiện các nhiệm vụ cụ thể. Kho dữ liệu cung cấp quyền truy cập vào thông tin năng động và cập nhật, đảm bảo phản hồi của mô hình luôn dựa trên tính xác thực (factuality) và mức độ liên quan (relevance).</li>
+                            <li><strong>Lớp điều phối (Orchestration layer):</strong> Lớp điều phối là một quy trình tuần hoàn (cyclical process) quy định cách agent tiếp thu thông tin (assimulates information), tham gia vào lý luận nội bộ (internal reasoning) và tận dụng lý luận đó để định hướng hành động hoặc quyết định tiếp theo của nó. Lớp này chịu trách nhiệm duy trì bộ nhớ (memory), trạng thái (state), lý luận (reasoning) và lập kế hoạch (planning). Nó sử dụng các khung kỹ thuật prompt (prompt engineering frameworks) để điều hướng lý luận và lập kế hoạch, tạo điều kiện tương tác hiệu quả hơn với môi trường và hoàn thành nhiệm vụ (task completion). Các kỹ thuật lý luận như ReAct, Chain-of-Thought (CoT) và Tree-of-Thoughts (ToT) có thể được áp dụng trong lớp này.</li>
+                        </ul>
+                        <p>Xây dựng dựa trên các khái niệm nền tảng này, whitepaper đi kèm này được thiết kế dành cho các nhà phát triển (developers) và đóng vai trò như một hướng dẫn "102" về các chủ đề nâng cao hơn. Nó cung cấp những khám phá chuyên sâu về các phương pháp đánh giá agent (agent evaluation methodologies) và các ứng dụng thực tế của các sản phẩm agent của Google để tăng cường khả năng của agent trong việc giải quyết các vấn đề phức tạp, thế giới thực (real-world problems).</p>
+                    </div>
+                </section>
+
+                <section id="agentops" class="section">
+                    <div class="section-content">
+                        <p>Trong khi khám phá các khái niệm lý thuyết này, chúng tôi sẽ xem xét cách chúng biểu hiện trong các triển khai thế giới thực (real-world implementations), với trọng tâm đặc biệt vào AI trong ô tô (automotive AI) như một trường hợp nghiên cứu hấp dẫn. Lĩnh vực ô tô minh họa những thách thức và cơ hội của kiến trúc đa agent (multi-agent architectures) trong môi trường sản xuất. Các phương tiện hiện đại đòi hỏi giao diện đàm thoại (conversational interfaces) hoạt động có hoặc không có kết nối, cân bằng giữa xử lý trên thiết bị (on-device) và xử lý trên đám mây (cloud processing) cho cả an toàn và trải nghiệm người dùng (user experience), và phối hợp liền mạch các khả năng chuyên biệt (specialized capabilities) trên điều hướng (navigation), điều khiển phương tiện (media control), nhắn tin (messaging) và hệ thống xe. Thông qua lăng kính ô tô này, chúng ta sẽ thấy các mẫu phối hợp khác nhau -- phân cấp (hierarchical), cộng tác (collaborative) và ngang hàng (peer-to-peer) -- kết hợp với nhau để tạo ra trải nghiệm người dùng mạnh mẽ (robust), phản hồi nhanh trong môi trường có những ràng buộc đáng kể. Trường hợp nghiên cứu này minh họa ứng dụng thực tế của hệ thống đa agent (multi-agent systems) mà các doanh nghiệp trên các ngành công nghiệp có thể điều chỉnh cho các lĩnh vực cụ thể của họ.</p>
+                        <p>Bất kỳ ai đã xây dựng với AI tạo sinh (gen AI) nhanh chóng nhận ra rằng việc chuyển từ ý tưởng (idea) sang proof-of-concept rất dễ dàng, nhưng đảm bảo kết quả chất lượng cao và đưa vào sản xuất (production) lại khá khó khăn - các agent AI tạo sinh (gen AI agents) cũng không ngoại lệ. Chất lượng và độ tin cậy (Quality and Reliability) là những mối quan tâm được trích dẫn nhiều nhất khi triển khai vào sản xuất, và quy trình "AgentOps" là một giải pháp để tối ưu hóa việc xây dựng agent.</p>
+
+                        <h2>AgentOps</h2>
+                        <p>Trong hai năm qua, lĩnh vực AI tạo sinh (Generative AI - GenAI) đã trải qua những thay đổi đáng kể, với khách hàng doanh nghiệp tập trung vào cách vận hành (operationalize) các giải pháp liên quan. Điều này đã dẫn đến các thuật ngữ khác nhau mô tả việc vận hành GenAI, như MLOps cho GenAI, LLMOps, FMOps và GenAIOps.</p>
+                        <p>Agent và Hoạt động (Agent and Operations - AgentOps) là một danh mục con của GenAIOps tập trung vào việc vận hành agent một cách hiệu quả. Các thành phần bổ sung chính của nó bao gồm quản lý công cụ nội bộ và bên ngoài (internal and external tool management), prompt não agent (agent brain prompt) (mục tiêu - goal, hồ sơ - profile, hướng dẫn - instructions) và điều phối (orchestration), bộ nhớ (memory) và phân rã nhiệm vụ (task decomposition).</p>
+                    </div>
+                </section>
+
+                 <section class="section image-above-text-section">
+                    <div class="section-image">
+                         <img src="images/image2.png" alt="Biểu đồ thể hiện mối quan hệ giữa DevOps, MLOps, GenAIOps và AgentOps">
+                    </div>
+                    <div class="section-content full-width">
+                        <p class="figure-caption">Hình 1. Mối quan hệ giữa DevOps, MLOps và AgentOps.13</p>
+                         <p>Mỗi 'Ops' này đòi hỏi các năng lực như kiểm soát phiên bản (version control), triển khai tự động thông qua CI/CD (automated deployments through CI/CD), kiểm thử (testing), ghi nhật ký (logging), bảo mật (security) và (quan trọng nhất là) các chỉ số (metrics). Mỗi hệ thống thường triển khai một số hình thức tối ưu hóa dựa trên các chỉ số – đo lường những gì hệ thống của bạn đang và không làm, đo lường kết quả (outcomes) và các chỉ số kinh doanh (business metrics), và tự động hóa các quy trình để có các chỉ số toàn diện hơn, và cải thiện từng bước một cách tăng dần. Thực tiễn này có thể được gọi là "thử nghiệm A/B" (“A/B experimentation”) hoặc "ML Ops" hoặc "phát triển theo hướng chỉ số" (“Metrics Driven development"), nhưng chúng xuất phát từ cùng một phương pháp tiếp cận chung và chúng ta sẽ dựa vào những nguyên tắc đó cho AgentOps.</p>
+                        <p>Hãy nhớ rằng các phương pháp mới không thay thế các phương pháp cũ. Các phương pháp hay nhất của DevOps và MLOps vẫn cần thiết cho AgentOps, vì chúng là các phụ thuộc (dependencies). Ví dụ, việc sử dụng công cụ Agent (Agent tool use), nơi các API được gọi dựa trên điều phối agent (agent orchestration), thường sử dụng cùng các API mà bạn sẽ gọi với phần mềm không theo hướng agent (non-agentic software). Xác thực (Authentication) và quản lý bí mật (secret management), bảo mật (security), quyền riêng tư (privacy), xử lý ngoại lệ (exception handling), điều tiết (throttling), hạn ngạch (quotas) và khả năng mở rộng (scalability) vẫn rất quan trọng và yêu cầu thiết kế API (API design) cẩn thận bên cạnh thiết kế Agent (Agent design).</p>
+                        <p>Hãy cùng định nghĩa các thuật ngữ "ops" này để giúp phân biệt chúng:</p>
+                        <ul>
+                            <li><strong>Phát triển và Vận hành (Development and Operations - DevOps)</strong> là thực tiễn sản xuất hiệu quả (efficiently productionizing) các ứng dụng phần mềm xác định (deterministic software applications) bằng cách tích hợp các yếu tố con người (people), quy trình (processes) và công nghệ (technology). DevOps đóng vai trò là nền tảng cho tất cả các thuật ngữ sau.</li>
+                            <li><strong>Vận hành Học máy (Machine Learning Operations - MLOps)</strong> xây dựng dựa trên khả năng của DevOps và tập trung vào việc sản xuất hiệu quả các mô hình ML (ML models). Sự khác biệt chính là đầu ra của mô hình ML là không xác định (non-deterministic) và phụ thuộc vào dữ liệu đầu vào (input data) (đầu vào rác, đầu ra rác).</li>
+                            <li><strong>Vận hành Mô hình nền tảng (Foundation Model Operations - FMOps)</strong> mở rộng dựa trên khả năng của MLOps và tập trung vào việc sản xuất hiệu quả các FM được huấn luyện trước (pre-trained) (huấn luyện từ đầu) hoặc tùy chỉnh (customized) (tinh chỉnh - fine-tuned).</li>
+                            <li><strong>Prompt và Vận hành (Prompt and Operations - PromptOps)</strong> là một danh mục con của GenAIOps tập trung vào việc vận hành prompt (operationalizing prompts) một cách hiệu quả. Các khả năng bổ sung chính của nó bao gồm lưu trữ prompt (prompt storage), nguồn gốc (lineage), quản lý siêu dữ liệu (metadata management) (bao gồm điểm đánh giá - evaluation scores), danh bạ mẫu prompt tập trung (centralized prompt template registry) và trình tối ưu hóa prompt (prompt optimizer).</li>
+                            <li><strong>RAG và Vận hành (RAG and Operations - RAGOps)</strong> là một danh mục con của GenAIOps tập trung vào việc vận hành giải pháp RAG (RAG solutions) một cách hiệu quả. Các khả năng bổ sung chính của nó bao gồm quy trình truy xuất (retrieval process) thông qua chuẩn bị dữ liệu ngoại tuyến (offline data preparation) (bao gồm làm sạch - cleaning, chia nhỏ - chunking, vector hóa - vectorization, tìm kiếm tương đồng - similarity search và xếp hạng lại - re-ranking) và quy trình tạo sinh (generation process) thông qua tăng cường prompt (prompt augmentation) và căn chỉnh (grounding).</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <div class="section-content">
+                        <ul>
+                             <li><strong>Agent và Hoạt động (Agent and Operations - AgentOps)</strong> là một danh mục con của GenAIOps tập trung vào việc vận hành agent một cách hiệu quả. Các thành phần bổ sung chính của nó bao gồm quản lý công cụ nội bộ và bên ngoài (internal and external tool management), prompt não agent (agent brain prompt) (mục tiêu - goal, hồ sơ - profile, hướng dẫn - instructions) và điều phối (orchestration), bộ nhớ (memory) và phân rã nhiệm vụ (task decomposition).</li>
+                        </ul>
+                    </div>
+                </section>
+
+                 <section class="section image-above-text-section">
+                    <div class="section-image">
+                         <img src="images/image3.png" alt="Sơ đồ Venn về Ops, bao gồm Công nghệ, Quy trình và Con người">
+                    </div>
+                    <div class="section-content full-width">
+                         <p class="figure-caption">Hình 2. Mỗi 'Ops' này đều liên quan đến công nghệ, quy trình và con người14</p>
+                        <p>Tất cả các 'Ops' này, về bản chất, là sự kết hợp hài hòa của con người (people), quy trình (processes) và công nghệ (technologies) cùng nhau làm việc để triển khai hiệu quả các giải pháp học máy (machine learning solutions) vào môi trường sản xuất trực tiếp (live production environment). Điều quan trọng là phải nhận ra rằng Ops mở rộng vượt ra ngoài chỉ công nghệ; nó không chỉ đơn giản là xây dựng và cung cấp một luồng ML (ML pipeline). Các triển khai Ops thành công đi sâu hơn, xem xét mô hình hoạt động của khách hàng (customer's operational model), các đơn vị kinh doanh hiện có của họ và cấu trúc tổ chức tổng thể của họ. Phương pháp tiếp cận toàn diện này đảm bảo rằng công nghệ được điều chỉnh phù hợp với nhu cầu cụ thể của họ, tích hợp liền mạch vào hoạt động kinh doanh và tối đa hóa giá trị.</p>
+                    </div>
+                </section>
+
+                <section id="agent-success-metrics" class="section">
+                    <div class="section-content">
+                        <p>Phần tiếp theo sẽ đề cập chi tiết về Đánh giá Agent (Agent Evaluation), đây là một phần quan trọng trong câu chuyện về AgentOps và tự động hóa để nắm bắt các chỉ số hữu ích. Trước khi đi đến đó, hãy bắt đầu với một thử nghiệm tư duy; tưởng tượng thiết lập một thử nghiệm A/B trong sản xuất (production) cho Agent mới của bạn. Nhánh thử nghiệm (treatment arm) nhận Agent mới của bạn và nhánh kiểm soát (control arm) thì không. Trong kịch bản đó, bạn đang đo lường những chỉ số (metrics) nào để xác định xem nhánh thử nghiệm có hoạt động tốt hơn không? Bạn đang đo lường những chỉ số nào để xác định ROI cho dự án? Đó có phải là một mục tiêu đang được hoàn thành, hay tổng doanh số, hay một bộ các bước quan trọng trong hành trình người dùng (user journey)? Những chỉ số đó phải được hiểu, đo lường (instrumented) và phân tích dễ dàng bên cạnh các chỉ số Đánh giá Agent chi tiết hơn.</p>
+
+                        <h2>Các chỉ số thành công của Agent</h2>
+                        <p>Các chỉ số (Metrics) rất quan trọng để xây dựng, giám sát và so sánh các bản sửa đổi của Agent. Các chỉ số kinh doanh (Business metrics), như doanh thu (revenue) hoặc tương tác người dùng (user engagement), có lẽ nằm ngoài phạm vi của bản thân agent nhưng đây nên là chỉ số kim chỉ nam (north star metric) cho các agent của bạn.</p>
+                        <p>Hầu hết Agent được thiết kế xoay quanh việc hoàn thành mục tiêu (goals), vì vậy tỷ lệ hoàn thành mục tiêu (goal completion rate) là một chỉ số quan trọng cần theo dõi. Tương tự, một mục tiêu có thể được chia nhỏ thành một vài nhiệm vụ quan trọng (critical tasks) hoặc tương tác người dùng quan trọng (critical user interactions). Mỗi nhiệm vụ và tương tác quan trọng này phải được đo lường độc lập.</p>
+                        <p>Vì vậy, trước khi đi sâu vào chi tiết về bản thân Agent, chúng ta đã xác định được một số chỉ số mà bạn sẽ có thể dễ dàng theo dõi trên một bảng điều khiển (dashboard). Mỗi chỉ số kinh doanh, mục tiêu, hoặc tương tác quan trọng, sẽ được tổng hợp theo cách quen thuộc: số lần thử (attempts), số lần thành công (successes), tỷ lệ (rates), v.v. Ngoài ra, các chỉ số bạn nên có thể lấy từ bất kỳ hệ thống đo lường ứng dụng (application telemetry system) nào cũng rất quan trọng để theo dõi cho agent, các chỉ số như độ trễ (latency), lỗi (errors), v.v.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <div class="section-content">
+                        <p>Không có chỉ số nào trong số này dành riêng cho Agent, bạn có thể theo dõi chúng cho bất kỳ phần mềm nào, nhưng chúng còn quan trọng hơn đối với những người xây dựng Agent (Agent builders). Mã xác định (Deterministic code) chỉ làm những gì bạn bảo nó làm, trong khi một agent có thể làm nhiều hơn nữa, dựa vào LLM được huấn luyện trên khối lượng lớn dữ liệu (data). Việc đo lường (Instrumentation) các chỉ số cấp cao này là một phần quan trọng của khả năng quan sát (observability).</p>
+                        <p>Bạn có thể coi chúng như Các chỉ số hiệu suất chính (Key Performance Indicators - KPI) cho agent, và chúng cho phép khả năng quan sát (observability) theo tập hợp (aggregate), một góc nhìn cấp cao hơn về các agent của bạn.</p>
+                        <p>Phản hồi của con người (Human feedback) là một trong những chỉ số quan trọng hơn cần theo dõi. Một biểu mẫu phản hồi đơn giản 👍👎 hoặc phản hồi của người dùng (user feedback form), trong ngữ cảnh (context) của một agent hoặc nhiệm vụ (task) có thể giúp hiểu được agent của bạn làm tốt ở đâu và cần cải thiện ở đâu. Phản hồi này có thể đến từ người dùng cuối (end users) của hệ thống tiêu dùng, nhưng cũng từ nhân viên, người kiểm thử QA (QA testers) và chuyên gia quy trình hoặc lĩnh vực (process or domain experts) xem xét agent.</p>
+                        <p>Khả năng quan sát chi tiết hơn (More detailed observability) cũng rất quan trọng cho việc xây dựng agent (agent building), giúp có thể nhìn và hiểu agent đang làm gì và tại sao nó lại làm vậy. Một agent có thể được đo lường (instrumented) bằng "trace" để ghi lại tất cả các hoạt động bên trong của agent, không chỉ các nhiệm vụ quan trọng (critically important tasks) và tương tác người dùng (user interactions). Bạn có thể hình dung việc đo lường mỗi bước nội bộ như các chỉ số (metrics), nhưng điều đó hiếm khi được thực hiện. Thay vì đó, các dấu vết chi tiết này (detailed traces) được sử dụng để gỡ lỗi agent khi các chỉ số hoặc kiểm thử thủ công (manual testing) cho thấy vấn đề, bạn có thể đi sâu vào chi tiết và xem điều gì đã xảy ra sai.</p>
+                    </div>
+                </section>
+
+                 <section class="section image-above-text-section">
+                    <div class="section-image">
+                         <img src="images/image4.png" alt="Ví dụ về Cloud Observability hiển thị dấu vết (traces) cho một agent sử dụng công cụ (tools) và các span OpenTelemetry của LLM">
+                    </div>
+                    <div class="section-content full-width">
+                         <p class="figure-caption">Hình 3: Một ví dụ về Cloud Observability hiển thị dấu vết (traces) cho một agent sử dụng công cụ (tools) và các span OpenTelemetry của LLM.15</p>
+                         <p>Cho đến nay, chúng ta đã nói về các chỉ số kinh doanh (business metrics), mục tiêu (goals), nhiệm vụ (tasks), phản hồi của con người (human feedback) và dấu vết (traces) – đó là tất cả các cách để hiểu hành động và tác động của agent của bạn, trong sản xuất (production). Trong khi phát triển agent, ngoài kiểm thử thủ công (manual testing), kiểm thử tự động (automated testing) sẽ hiệu quả hơn nhiều về lâu dài và cung cấp những hiểu biết sâu sắc hơn về hành vi của agent.</p>
+                    </div>
+                </section>
+
+                <section id="agent-evaluation" class="section">
+                    <div class="section-content">
+                        <h2>Đánh giá Agent</h2>
+                        <p>Để thu hẹp khoảng cách giữa một proof-of-concept và một agent AI sẵn sàng sản xuất (production-ready AI agent), một khung đánh giá mạnh mẽ và tự động (robust and automated evaluation framework) là rất cần thiết. Không giống như việc đánh giá các mô hình tạo sinh (generative models), nơi trọng tâm chủ yếu là đầu ra cuối cùng (final output), đánh giá agent (agent evaluation) đòi hỏi sự hiểu biết sâu sắc hơn về quá trình ra quyết định (decision-making process). Đánh giá agent có thể được chia nhỏ thành ba thành phần mà chúng ta thảo luận trong chương này:</p>
+                        <ol>
+                            <li><a href="#assessing-agent-capabilities">Đánh giá năng lực của Agent (Assessing Agent Capabilities)</a>: Đánh giá các khả năng cốt lõi của một agent, chẳng hạn như khả năng hiểu hướng dẫn và lý luận logic (reason).</li>
+                        </ol>
+                    </div>
+                </section>
+
+                 <section class="section">
+                    <div class="section-content">
+                        <ol start="2">
+                            <li><a href="#evaluating-trajectory-and-tool-use">Đánh giá hành trình và việc sử dụng công cụ (Evaluating Trajectory and Tool Use)</a>: Phân tích các bước một agent thực hiện để đạt được giải pháp, bao gồm lựa chọn công cụ (tools), chiến lược (strategies) và hiệu quả (efficiency) của phương pháp tiếp cận.</li>
+                            <li><a href="#evaluating-final-response">Đánh giá phản hồi cuối cùng (Evaluating the Final Response)</a>: Đánh giá chất lượng (quality), mức độ liên quan (relevance) và tính chính xác (correctness) của phản hồi cuối cùng của agent.</li>
+                        </ol>
+
+                        <h3 id="assessing-agent-capabilities">Đánh giá năng lực của Agent</h3>
+                        <p>Trước khi đánh giá các trường hợp sử dụng (use cases) agentic cụ thể của bạn, các benchmark công khai (publicly available benchmarks) và báo cáo kỹ thuật (technical reports) có thể cung cấp cái nhìn sâu sắc về các khả năng cốt lõi (core capabilities) và hạn chế cần xem xét khi xây dựng các trường hợp sử dụng agentic của bạn. Các benchmark công khai tồn tại cho hầu hết các khả năng agentic cơ bản như hiệu suất mô hình (model performance), ảo giác (hallucinations), gọi công cụ (tool calling) và lập kế hoạch (planning). Ví dụ, gọi công cụ, khả năng chọn và sử dụng công cụ thích hợp, được chứng minh bằng các benchmark như Berkeley Function-Calling Leaderboard (BFCL)16 và t-bench¹⁷ cũng phác thảo những sai lầm phổ biến. Một ví dụ khác, PlanBench¹⁸ nhằm mục đích đánh giá lập kế hoạch (planning) và lý luận (reasoning), trên nhiều lĩnh vực (domains) và khả năng cụ thể.</p>
+                        <p>Nhưng việc gọi công cụ (tool calling) và lập kế hoạch (planning) không phải là khả năng duy nhất bạn nên xem xét. Các agent thừa hưởng hành vi từ LLM của chúng và mỗi thành phần khác của chúng. Tương tự, tương tác giữa agent và người dùng (agent and user interactions) có lịch sử trong các hệ thống thiết kế hội thoại (conversational design systems) và hệ thống quy trình làm việc (workflow systems) truyền thống, và do đó có thể kế thừa tập hợp các chỉ số (metrics) và phép đo (measurements) được sử dụng để xác định hiệu quả của các hệ thống này.</p>
+                    </div>
+                </section>
+
+                 <section class="section image-above-text-section">
+                    <div class="section-image">
+                         <img src="images/image5.png" alt="Sơ đồ cấp cao của AgentBench">
+                    </div>
+                    <div class="section-content full-width">
+                        <p class="figure-caption">Hình 4: Sơ đồ cấp cao của AgentBench.19</p>
+                         <p>Các benchmark agent toàn diện (holistic agent benchmarks) như AgentBench¹º cố gắng nắm bắt hiệu suất end-to-end trên nhiều kịch bản. Điều này thực tế hơn, khi kịch bản phản ánh trường hợp sử dụng agent của bạn, nhưng không phải nếu nó đang kiểm thử các khả năng mà agent của bạn không triển khai. Rất khó để mô phỏng môi trường, công cụ (tools), hướng dẫn và yêu cầu trường hợp sử dụng (use case requirements) theo những cách vừa cụ thể vừa chung chung cùng lúc. Các công ty và tổ chức đang thiết lập các benchmark công khai (public benchmarks) cho các trường hợp sử dụng chuyên biệt (specialized use cases), như bảng xếp hạng Data Analyst của Adyen DBAStep²º, có thể cung cấp cho bạn một đánh giá mục tiêu hơn - nếu bạn hiểu cả phương pháp đánh giá (evaluation approach) và các agent đang nằm trên bảng xếp hạng.</p>
+                        <p>Các benchmark công khai (Public benchmarks) là điểm khởi đầu quý giá, để có cảm giác về những gì có thể và xác định các cạm bẫy cần chú ý. Hầu hết các đánh giá benchmark bao gồm các thảo luận về các chế độ lỗi phổ biến (common failure modes) có thể hướng dẫn bạn thiết lập khung đánh giá (evaluation framework) cụ thể theo trường hợp sử dụng của riêng bạn.</p>
+                    </div>
+                </section>
+
+                <!-- Section: Evaluating Trajectory and Tool Use -->
+<section id="evaluating-trajectory-and-tool-use" class="section">
+    <div class="section-content">
+        <h2>Đánh giá hành trình và việc sử dụng công cụ</h2>
+        <p>Beyond public evaluations, you will want to evaluate the behavior of your agent across a variety of scenarios to ensure it does what you want it to do. You are simulating interactions with your agent and evaluating how it responds. This includes the evaluating final response and also the set of steps it takes along the way (trajectory). Those are the 2 most common and practical approaches we recommend you start with. There are many other evaluation techniques you can use beyond these, either for finer details on sub-components or broader approaches.</p>
+        <p>Software engineers will compare this to automated testing of code. Investing in automated tests saves you time and gives you confidence in the software you are building. With agents, this automation pays off faster, in both time and confidence. Curating the evaluation data set will be extremely important for accurately representing the use case your agent will encounter, even more so than in software testing.</p>
+
+        <p>An agent usually does several actions before it responds back to the user. It might compare the user input with session history to disambiguate a term, or lookup a policy document, search a knowledge base or invoke an API to save a ticket. Each of those actions is a step on a path, also called a “trajectory” of actions. Every time your agent does something, there's a trajectory of actions under the hood.</p>
+        <p>Comparing the trajectory that you expect the agent to take vs the trajectory that the agent actually took, is particularly useful for developers who want to debug their application, identifying errors or inefficiencies, and ultimately improving performance.</p>
+    </div>
+</section>
+
+<!-- Section: Image 8 and list of evaluations -->
+<section class="section image-above-text-section">
+    <div class="section-image">
+        <img src="images/image6.png" alt="Sơ đồ LangSmith về đánh giá cuối cùng và hành trình (trajectory)">
+    </div>
+    <div class="section-content full-width">
+        <p class="figure-caption">Hình 5: Sơ đồ LangSmith về đánh giá cuối cùng và hành trình (trajectory).21</p>
+        <p>Sáu phương pháp đánh giá hành trình tự động (automated trajectory evaluations) dựa trên dữ liệu gốc (ground-truth-based) sau đây cung cấp các góc nhìn khác nhau để đánh giá hiệu suất của một agent:</p>
+        <ol>
+            <li><strong>Khớp chính xác (Exact match):</strong> Yêu cầu agent AI tạo ra một chuỗi hành động (một "hành trình" - "trajectory") hoàn toàn phản ánh giải pháp lý tưởng (ideal solution). Đây là chỉ số (metric) nghiêm ngặt nhất, không cho phép sai lệch so với con đường mong đợi (expected path).</li>
+            <li><strong>Khớp theo thứ tự (In-order match):</strong> Chỉ số (metric) này đánh giá khả năng của agent để hoàn thành hành trình (trajectory) mong đợi, trong khi cho phép các hành động bổ sung (extra actions) mà không bị phạt (unpenalized). Thành công được định nghĩa bằng cách hoàn thành các bước cốt lõi (core steps) theo thứ tự (order), với sự linh hoạt (flexibility) cho các hành động bổ sung.</li>
+            <li><strong>Khớp bất kỳ thứ tự nào (Any-order match):</strong> So với khớp theo thứ tự (in-order match), chỉ số (metric) này bỏ qua thứ tự. Nó hỏi liệu agent có bao gồm tất cả các hành động cần thiết (necessary actions) hay không, nhưng không xem xét thứ tự các hành động đã thực hiện và cũng cho phép các bước bổ sung (extra steps).</li>
+            <li><strong>Độ chính xác (Precision):</strong> Có bao nhiêu lệnh gọi công cụ (tool calls) trong hành trình được dự đoán thực sự phù hợp hoặc chính xác theo hành trình tham chiếu?</li>
+            <li><strong>Độ phủ (Recall):</strong> Có bao nhiêu lệnh gọi công cụ thiết yếu từ hành trình tham chiếu thực sự được nắm bắt trong hành trình được dự đoán?</li>
+            <li><strong>Sử dụng công cụ đơn lẻ (Single-tool use):</strong> Hiểu xem một hành động cụ thể có nằm trong hành trình của agent hay không. Chỉ số này hữu ích để hiểu xem agent đã học cách sử dụng một công cụ cụ thể hay chưa.</li>
+        </ol>
+    </div>
+</section>
+
+<!-- Section: Image 9 and concluding text -->
+<section class="section image-above-text-section">
+    <div class="section-image">
+        <img src="images/image7.png" alt="Biểu đồ radar thể hiện đánh giá hành trình (trajectory) đơn lẻ với một số chỉ số">
+    </div>
+    <div class="section-content full-width">
+        <p class="figure-caption">Hình 6: Một biểu đồ radar biểu diễn đánh giá hành trình (trajectory) đơn lẻ với một vài chỉ số (metrics).24</p>
+        <p>Xem xét các chỉ số (metrics) này như những góc nhìn khác nhau để phân tích và gỡ lỗi hành trình (trajectory) của agent của bạn. Mỗi chỉ số cung cấp một góc nhìn độc đáo, nhưng không phải tất cả đều phù hợp với mọi tình huống. Ví dụ, một số trường hợp sử dụng (use cases) yêu cầu tuân thủ nghiêm ngặt hành trình lý tưởng (ideal trajectory), trong khi những trường hợp khác cho phép các sai lệch sáng tạo hơn (more creative deviations). Một hạn chế rõ ràng của phương pháp đánh giá này là bạn cần có một hành trình tham chiếu (reference trajectory) sẵn có để điều này hoạt động. Mặc dù các đánh giá hành trình tự động (automated trajectory evaluations) dựa trên dữ liệu gốc (ground-truth-based) được thảo luận ở đây phổ biến trong các thư viện phổ biến. Nghiên cứu đang thúc đẩy việc sử dụng các agent tự động đánh giá (agent autoraters) để đánh giá hiệu quả hơn, ví dụ Agent as a Judge, 202422.</p>
+    </div>
+</section>
+
+                <section id="evaluating-final-response" class="section">
+                    <div class="section-content">
+                        <h3>Đánh giá phản hồi cuối cùng</h3>
+                        <p>Việc đánh giá phản hồi cuối cùng (final response evaluation) gói gọn trong một câu hỏi đơn giản: Agent của bạn có đạt được mục tiêu (goals) của nó không? Bạn có thể định nghĩa tiêu chí thành công tùy chỉnh (custom success criteria), được điều chỉnh phù hợp với nhu cầu cụ thể của bạn, để đo lường điều này. Ví dụ, bạn có thể đánh giá xem một chatbot bán lẻ (retail chatbot) có trả lời chính xác các câu hỏi về sản phẩm (product questions) hay không, hoặc liệu một agent nghiên cứu (research agent) có tóm tắt hiệu quả các phát hiện (summarizes findings) với giọng điệu (tone) và phong cách (style) thích hợp hay không. Để tự động hóa quy trình này, bạn có thể sử dụng autorater. Một autorater là một LLM đóng vai trò là một người đánh giá (judge). Với các prompt đầu vào (input prompts) và phản hồi được tạo ra (generated response), nó mô phỏng đánh giá của con người (human evaluation) bằng cách đánh giá phản hồi dựa trên một tập hợp các tiêu chí do người dùng cung cấp (user-provided criteria). Để đánh giá này hoạt động, điều quan trọng là phải xem xét rằng trong trường hợp không có dữ liệu gốc (ground-truth), bạn cần phải rất chính xác trong việc định nghĩa tiêu chí đánh giá (evaluation criteria) của mình, vì đây là cốt lõi của những gì đánh giá của bạn đang xem xét. Bạn sẽ tìm thấy một số tiêu chí được định nghĩa trước (predefined criteria) trong các thư viện khác nhau, hãy coi chúng là điểm khởi đầu và điều chỉnh chúng để đưa ra định nghĩa của bạn về "tốt".</p>
+                    </div>
+                </section>
+
+                <section id="human-in-the-loop-evaluation" class="section">
+                    <div class="section-content">
+                        <h3>Đánh giá có sự tham gia của con người (Human-in-the-Loop Evaluation)</h3>
+                        <p>Lĩnh vực phát triển agent (agent development) và đánh giá agent (agent evaluation) đang phát triển nhanh chóng. Đánh giá agent AI (AI agents) đưa ra những thách thức đáng kể, bao gồm định nghĩa mục tiêu rõ ràng (defining clear objectives), thiết kế môi trường thực tế (designing realistic environments), quản lý hành vi ngẫu nhiên (managing stochastic behavior) và đảm bảo công bằng (fairness) cũng như giảm thiểu thiên vị (bias mitigation), đặc biệt là trong các ứng dụng có tác động xã hội (socially impactful applications). Do đó, điều quan trọng là phải kết hợp phương pháp tiếp cận có sự tham gia của con người (human-in-the-loop approach) bên cạnh các đánh giá tự động (automated evaluations) đã thảo luận trước đó (liên quan đến các chỉ số được định nghĩa trước - predefined metrics và autoraters). Sự tham gia của con người (Human-in-the-loop) có giá trị đối với các nhiệm vụ (tasks) đòi hỏi đánh giá chủ quan (subjective judgment) hoặc giải quyết vấn đề sáng tạo (creative problem-solving), nó cũng có thể dùng để hiệu chỉnh (calibrate) và kiểm tra lại xem các phương pháp đánh giá tự động (automated evaluation approaches) của bạn có thực sự hoạt động và phù hợp với sở thích của bạn hay không. Các lợi ích chính bao gồm:</p>
+                        <ul>
+                            <li><strong>Tính chủ quan (Subjectivity):</strong> Con người có thể đánh giá các phẩm chất khó định lượng, như tính sáng tạo (creativity), ý thức chung (common sense) và sự tinh tế (nuance).</li>
+                            <li><strong>Hiểu biết theo ngữ cảnh (Contextual Understanding):</strong> Người đánh giá là con người (Human evaluators) có thể xem xét ngữ cảnh rộng hơn (broader context) của hành động của agent và ý nghĩa của chúng.</li>
+                            <li><strong>Cải thiện lặp đi lặp lại (Iterative Improvement):</strong> Phản hồi của con người (Human feedback) cung cấp những hiểu biết sâu sắc có giá trị để tinh chỉnh hành vi và quá trình học hỏi của agent.</li>
+                            <li><strong>Đánh giá người đánh giá (Evaluating the evaluator):</strong> Phản hồi của con người (Human feedback) có thể cung cấp tín hiệu để hiệu chỉnh (calibrate) và tinh chỉnh (refine) các autorater của bạn.</li>
+                        </ul>
+                        <p>Để triển khai đánh giá có sự tham gia của con người (human-in-the-loop evaluation), hãy xem xét các phương pháp sau:</p>
+                        <ul>
+                            <li><strong>Đánh giá trực tiếp (Direct Assessment):</strong> Các chuyên gia là con người (Human experts) trực tiếp đánh giá hoặc cho điểm hiệu suất của agent trong các nhiệm vụ cụ thể (specific tasks).</li>
+                            <li><strong>Đánh giá so sánh (Comparative Evaluation):</strong> Các chuyên gia so sánh hiệu suất của agent với các agent khác hoặc các phiên bản trước đó của bạn.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="more-about-agent-evaluation" class="section">
+                     <div class="section-content">
+                        <ul>
+                            <li><strong>Nghiên cứu người dùng (User Studies):</strong> Người tham gia tương tác với agent và cung cấp phản hồi về hành vi (behavior), khả năng sử dụng (usability) và hiệu quả tổng thể (overall effectiveness).</li>
+                        </ul>
+
+                        <h3>Thêm về Đánh giá Agent</h3>
+                        <p>Trong phần này, chúng ta xem xét đánh giá agent (agent evaluation) từ góc độ thực tế. Nhưng đây chỉ là đỉnh của tảng băng trôi. Đánh giá agent đưa ra nhiều thách thức. Dữ liệu đánh giá (Evaluation data) cho các agent của bạn có thể khó tìm. Mặc dù dữ liệu tổng hợp (synthetic data) hoặc LLM làm người đánh giá (judges) có thể được sử dụng, nhưng đánh giá vẫn có thể không đầy đủ. Ngoài ra, các chỉ số LLM-as-a-Judge (LLM-as-a-Judge metrics), ví dụ, có thể ưu tiên kết quả cuối cùng (final outcomes) hơn là lý luận (reasoning) và hành động trung gian (intermediate actions), có khả năng bỏ lỡ những hiểu biết chính (key insights). Thêm vào đó, vì đánh giá cho hệ thống agent (agent systems) có lịch sử trong hệ thống hội thoại (conversational) và quy trình làm việc (workflow systems), có rất nhiều điều để khám phá về cách kế thừa phương pháp và chỉ số để đánh giá khả năng của agent, chẳng hạn như khả năng cải thiện hiệu suất nhiệm vụ (task performance) qua nhiều tương tác. Đánh giá cho tạo sinh đa phương thức (multi-modal generations) đưa ra những phức tạp bổ sung; đánh giá hình ảnh, âm thanh và video yêu cầu phương pháp và chỉ số đánh giá riêng. Cuối cùng, môi trường thế giới thực (real-world environments) đặt ra những thách thức hơn nữa, vì chúng năng động (dynamic) và không thể đoán trước (unpredictable), gây khó khăn cho việc đánh giá agent trong môi trường được kiểm soát (controlled settings).</p>
+                        <p>Nhìn về phía trước, để giải quyết những thách thức đang tồn tại này, lĩnh vực đánh giá agent (field of agent evaluation) đang trải qua quá trình tiến hóa nhanh chóng (evolving rapidly). Các xu hướng chính bao gồm sự dịch chuyển sang đánh giá dựa trên quy trình (process-based evaluation), ưu tiên hiểu biết về lý luận agent (agent reasoning); sự gia tăng các phương pháp đánh giá có hỗ trợ AI (AI-assisted evaluation methods) để cải thiện khả năng mở rộng quy mô (scalability); và tập trung mạnh mẽ hơn vào ngữ cảnh ứng dụng thế giới thực (real-world application contexts). Việc phát triển các benchmark chuẩn hóa (standardized benchmarks) mới cũng đang được quan tâm, tạo điều kiện so sánh khách quan (objective comparisons) giữa các agent, trong khi sự nhấn mạnh gia tăng vào khả năng giải thích (explainability) và diễn giải (interpretability) nhằm mục đích cung cấp những hiểu biết sâu sắc hơn về hành vi của agent.</p>
+                    </div>
+                </section>
+
+                 <section class="section table-section">
+                    <div class="section-content full-width">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Trường (Fields)</th>
+                                    <th>Mô tả (Description)</th>
+                                    <th>Yêu cầu (Required)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Đánh giá con người (Human Evaluation)</td>
+                                    <td>Nắm bắt hành vi tinh tế (nuanced behavior), xem xét yếu tố con người (human factors)</td>
+                                    <td>Chủ quan (Subjective), tốn thời gian (time-consuming), đắt đỏ (expensive), khó mở rộng quy mô (difficult to scale)</td>
+                                </tr>
+                                 <tr>
+                                    <td>LLM-as-a-Judge</td>
+                                    <td>Có thể mở rộng quy mô (Scalable), hiệu quả (efficient), nhất quán (consistent)</td>
+                                    <td>Có thể bỏ qua các bước trung gian (intermediate steps), bị hạn chế bởi khả năng của LLM (limited by LLM capabilities)</td>
+                                </tr>
+                                <tr>
+                                    <td>Các chỉ số tự động (Automated Metrics)</td>
+                                    <td>Khách quan (Objective), có thể mở rộng quy mô (scalable), hiệu quả (efficient)</td>
+                                    <td>Có thể không nắm bắt hết khả năng (full capabilities), dễ bị thao túng (susceptible to gaming)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                         <p class="figure-caption">Bảng 1: Bảng so sánh điểm mạnh và điểm yếu của các phương pháp đánh giá tự động cho Agent.</p>
+                    </div>
+                    <div class="section-content">
+                         <p>Đến đây, rõ ràng là chỉ bằng cách liên tục tinh chỉnh các phương pháp đánh giá (evaluation methods), chúng ta sẽ đảm bảo rằng các agent AI được phát triển và triển khai một cách có trách nhiệm (responsibly), hiệu quả (effectively) và đạo đức (ethically) trong tương lai sắp tới.</p>
+                    </div>
+                </section>
+
+                <section id="multiple-agents" class="section">
+                    <div class="section-content">
+                        <h2>Nhiều Agent & Đánh giá của chúng</h2>
+                        <p>Đánh giá agent (Agent evaluation), đánh giá hiệu quả (effectiveness), độ tin cậy (reliability) và khả năng thích ứng (adaptability) của các agent AI tự chủ (autonomous AI agents), như đã thấy trong phần trước, đã nổi lên như một lĩnh vực trọng tâm chính. Chúng ta đã chứng kiến một sự tiến hóa đáng kể trong hệ thống AI, chuyển đổi sang kiến trúc đa agent (multi-agent architectures) – nơi nhiều agent chuyên biệt (specialized agents) cộng tác để đạt được các mục tiêu phức tạp (complex objectives).</p>
+                        <p>Một hệ thống đa agent (multi-agent system) giống như một đội ngũ chuyên gia, mỗi người chuyên về một lĩnh vực cụ thể, cùng làm việc để giải quyết một vấn đề phức tạp. Mỗi agent là một thực thể độc lập (independent entity), có thể sử dụng một LLM khác nhau, và có vai trò (role) và ngữ cảnh (context) độc đáo của riêng mình. Các agent giao tiếp và cộng tác (communicate and collaborate) để đạt được một mục tiêu chung (common goal). Phương pháp tiếp cận này khác với hệ thống đơn agent (single-agent systems) truyền thống, nơi một LLM duy nhất xử lý tất cả các khía cạnh của một nhiệm vụ (task).</p>
+                    </div>
+                </section>
+
+                <section id="understanding-multi-agent-architectures" class="section">
+                     <div class="section-content">
+                        <h3>Hiểu kiến trúc đa Agent</h3>
+                        <p>Không giống như các hệ thống AI nguyên khối (monolithic AI systems) truyền thống, kiến trúc đa agent (multi-agent architectures) chia nhỏ vấn đề thành các nhiệm vụ riêng biệt (distinct tasks) được xử lý bởi các agent chuyên biệt (specialized agents). Mỗi agent hoạt động với các vai trò được định nghĩa (defined roles), tương tác linh hoạt (interacting dynamically) với các agent khác để tối ưu hóa việc ra quyết định (decision-making), truy xuất kiến thức (knowledge retrieval) và thực thi (execution). Các kiến trúc này cho phép lý luận có cấu trúc hơn (more structured reasoning), giải quyết vấn đề phân tán (decentralized problem-solving) và tự động hóa nhiệm vụ có khả năng mở rộng (scalable task automation), mang đến một sự thay đổi mô hình (paradigm shift) so với quy trình làm việc đơn agent (single-agent workflows).</p>
+                        <p>Cốt lõi của chúng, các hệ thống đa agent (multi-agent systems) tận dụng các nguyên tắc mô-đùn (modularity), hợp tác (collaboration) và phân cấp (hierarchy) để tạo ra một hệ sinh thái AI mạnh mẽ (robust AI ecosystem). Các agent trong các hệ thống này có thể được phân loại dựa trên chức năng của chúng, ví dụ:</p>
+                    </div>
+                </section>
+
+                <section id="important-components-of-agents" class="section">
+                    <div class="section-content">
+                         <ul>
+                            <li><strong>Agent lập kế hoạch (Planner Agents):</strong> Chịu trách nhiệm chia nhỏ các mục tiêu cấp cao (high-level objectives) thành các nhiệm vụ con có cấu trúc (structured sub-tasks).</li>
+                            <li><strong>Agent truy xuất (Retriever Agents):</strong> Tối ưu hóa việc thu thập kiến thức (knowledge acquisition) bằng cách tìm nạp dữ liệu liên quan (relevant data) từ các nguồn bên ngoài (external sources) một cách linh hoạt (dynamically).</li>
+                            <li><strong>Agent thực thi (Execution Agents):</strong> Thực hiện các phép tính (computations), tạo phản hồi (responses), hoặc tương tác với các API.</li>
+                            <li><strong>Agent đánh giá (Evaluator Agents):</strong> Giám sát (Monitor) và xác thực phản hồi (validate responses), đảm bảo tính mạch lạc (coherence) và căn chỉnh với mục tiêu (objectives).</li>
+                        </ul>
+                        <p>Thông qua các thành phần này, kiến trúc đa agent (multi-agent architectures) mở rộng vượt ra ngoài tương tác dựa trên prompt (prompt-based interactions) đơn giản, cho phép các quy trình làm việc dựa trên AI (AI-driven workflows) thích ứng (adaptive), có thể giải thích (explainable) và hiệu quả (efficient).</p>
+
+                        <h2>Các mẫu thiết kế đa Agent và Tác động kinh doanh của chúng</h2>
+                        <p>Để thiết kế kiến trúc đa agent (multi-agent architectures) hiệu quả, các mẫu thiết kế (design patterns) cụ thể đã xuất hiện. Các mẫu thiết kế này định nghĩa các giao thức tương tác (interaction protocols), cơ chế ủy quyền (delegation mechanisms) và phân bổ vai trò (role distributions), cho phép các doanh nghiệp triển khai tự động hóa dựa trên AI (AI-driven automation) theo những cách có cấu trúc. Một số mẫu thiết kế phổ biến bao gồm:</p>
+                    </div>
+                </section>
+
+                 <section class="section table-section">
+                    <div class="section-content full-width">
+                         <table>
+                            <thead>
+                                <tr>
+                                    <th>Loại hệ thống đa Agent (Type of Multi-Agent System)</th>
+                                    <th>Mô tả (Description)</th>
+                                    <th>Ví dụ (Example)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Tuần tự (Sequential)</td>
+                                    <td>Các agent làm việc theo trình tự (sequential manner), mỗi agent hoàn thành nhiệm vụ (task) của mình trước khi chuyển kết quả đầu ra (output) cho agent tiếp theo.</td>
+                                    <td>Một dây chuyền lắp ráp (assembly line), nơi mỗi công nhân thực hiện một hoạt động cụ thể trước khi chuyển sản phẩm cho công nhân tiếp theo.</td>
+                                </tr>
+                                <tr>
+                                    <td>Phân cấp (Hierarchical)</td>
+                                    <td>Các agent được tổ chức theo cấu trúc phân cấp (hierarchical structure), với một agent "quản lý" ("manager" agent) điều phối luồng công việc (workflow) và ủy quyền nhiệm vụ (delegating tasks) cho các agent "công nhân" ("worker" agents).</td>
+                                    <td>Một hệ thống với một agent lãnh đạo (leader agent) chịu trách nhiệm đưa ra quyết định chiến lược (strategic decisions) và các agent theo dõi (follower agents) thực thi nhiệm vụ dựa trên hướng dẫn của người lãnh đạo.</td>
+                                </tr>
+                                <tr>
+                                    <td>Cộng tác (Collaborative)</td>
+                                    <td>Các agent làm việc cùng nhau một cách cộng tác (collaboratively), chia sẻ thông tin và tài nguyên để đạt được một mục tiêu chung (common goal).</td>
+                                    <td>Một nhóm các nhà nghiên cứu làm việc trên một dự án, nơi mỗi thành viên đóng góp chuyên môn (expertise) và hiểu biết sâu sắc (insights) của họ.</td>
+                                </tr>
+                                <tr>
+                                    <td>Cạnh tranh (Competitive)</td>
+                                    <td>Các agent có thể cạnh tranh với nhau để đạt được kết quả tốt nhất (best outcome).</td>
+                                    <td>LLMs hoạt động như những người chơi cá nhân trong một trò chơi như Overcooked-AI, nơi họ phải phối hợp hành động của mình để đạt được mục tiêu chung (shared goal) trong khi cạnh tranh tài nguyên (competing for resources) và tối ưu hóa hiệu suất cá nhân (optimizing individual performance).</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                         <p class="figure-caption">Bảng 2: Bảng so sánh các loại hệ thống đa agent.</p>
+                    </div>
+                </section>
+
+                <section class="section image-above-text-section">
+                    <div class="section-image">
+                         <img src="images/image10.png" alt="Hình ảnh mô tả các cấu trúc liên kết (topologies) đa agent khác nhau, từ tài liệu LangGraph">
+                    </div>
+                    <div class="section-content full-width">
+                         <p class="figure-caption">Hình 7: Hình ảnh mô tả các cấu trúc liên kết (topologies) đa agent khác nhau, từ tài liệu LangGraph.23</p>
+                        <p>Việc lựa chọn mẫu thiết kế (design pattern) phụ thuộc vào ứng dụng cụ thể (specific application) và mức độ tương tác (level of interaction) mong muốn giữa các agent.</p>
+                        <p>Các doanh nghiệp hưởng lợi từ các mẫu thiết kế này bằng cách giảm các điểm nghẽn vận hành (operational bottlenecks), cải thiện việc truy xuất kiến thức (knowledge retrieval) và tăng cường độ tin cậy tự động hóa (automation reliability). Hệ thống đa agent (Multi-agent systems) cho phép các công ty mở rộng quy mô triển khai AI (scale AI deployments) trong khi vẫn đảm bảo sự linh hoạt (agility) trong việc ra quyết định (decision-making) và thực thi quy trình làm việc (workflow execution).</p>
+                    </div>
+                </section>
+
+                <section id="important-components-of-agents-continued" class="section">
+                     <div class="section-content">
+                        <h3>Các thành phần quan trọng của Agent (Tiếp theo)</h3>
+                        <ul>
+                            <li><strong>Vòng lặp phản hồi / Học tăng cường (Feedback Loops / Reinforcement Learning):</strong> Những điều này cho phép học hỏi liên tục (continuous learning) và thích ứng (adaptation) bằng cách xử lý kết quả tương tác (interaction outcomes) và tinh chỉnh chiến lược ra quyết định (decision-making strategies). Đối với agent AI tạo sinh (gen AI agents), điều này hiếm khi diễn ra dưới dạng huấn luyện RL (RL training) truyền thống, nhưng các chỉ số hiệu suất (performance metrics) trong quá khứ có thể được tích hợp vào việc ra quyết định trong tương lai.</li>
+                            <li><strong>Giao tiếp giữa các Agent (Agent Communication):</strong> Giao tiếp hiệu quả giữa các agent là rất quan trọng cho sự thành công của hệ thống đa agent (multi-agent systems). Giao thức giao tiếp Agent với Agent (Agent to Agent communication protocol) tạo điều kiện giao tiếp có cấu trúc (structured) và hiệu quả giữa các agent, cho phép chúng đạt được sự đồng thuận (consensus) và giải quyết các vấn đề phức tạp (complex problems) một cách cộng tác.</li>
+                            <li><strong>Giao tiếp Agent từ xa (Remote Agent Communication):</strong> Giao tiếp Agent với Agent (Agent to Agent communication) trong một tổ chức rất quan trọng để cho phép agent chia sẻ tin nhắn (messages), nhiệm vụ (tasks) và kiến thức (knowledge). Khi hệ thống đa agent của bạn bao gồm một agent từ xa (remote agent), giao thức giao tiếp trở nên quan trọng hơn nữa. Các nhiệm vụ và phiên bất đồng bộ (Asynchronous tasks and sessions) cần phải bền vững (durable), và được cập nhật bằng thông báo trong khi người dùng cuối (end users) không ở trong phiên. Đàm phán giữa các Agent (Negotiations between Agents) phải cho phép đưa người dùng vào phiên và cho các khả năng UX được hỗ trợ.</li>
+                            <li><strong>Danh bạ Agent & Công cụ (mesh) (Agent & Tool Registry (mesh)):</strong> Khi bạn vượt ra ngoài một vài công cụ (tools) hoặc một vài agent, bạn cần một hệ thống mạnh mẽ (robust system) để khám phá (discover), đăng ký (register), quản lý (administer), chọn (select) và sử dụng (utilize) từ một "lưới" (“mesh”) các công cụ hoặc agent. Quan trọng là ontology và mô tả của các công cụ và agent, khả năng (capabilities) và yêu cầu của chúng, và các chỉ số hiệu suất (performance metrics) của chúng. Agent của bạn sẽ lập kế hoạch (plan) và chọn công cụ nào hoặc agent nào để sử dụng từ một hệ thống như vậy, và những lựa chọn đó được thông báo bởi dữ liệu (data) trong hệ thống.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                 <section class="section image-above-text-section">
+                    <div class="section-image">
+                         <img src="images/image11.png" alt="Sơ đồ minh họa quy trình người dùng tương tác với nhiều agent tự phối hợp (self-coordinating agents)">
+                    </div>
+                    <div class="section-content full-width">
+                         <p class="figure-caption">Hình 8: Hình ảnh minh họa quy trình người dùng tương tác với nhiều agent tự phối hợp (self-coordinating agents).24</p>
+                        <p>Những yếu tố kiến trúc này cung cấp nền tảng vững chắc (robust foundation) cho hoạt động tự chủ (autonomous operation) và khả năng cộng tác (collaborative capabilities) của các agent LLM (LLM agents) trong hệ thống đa agent (multi-agent systems).</p>
+                    </div>
+                </section>
+
+                <section id="challenges-in-multi-agent-systems" class="section">
+                    <div class="section-content">
+                        <h2>Thách thức trong hệ thống đa Agent</h2>
+                        <p>Mặc dù các hệ thống đa agent (multi-agent systems) mang lại nhiều lợi thế, chúng cũng đối mặt với một số thách thức:</p>
+                        <ul>
+                            <li><strong>Giao tiếp nhiệm vụ (Task Communication):</strong> Ngày nay, hầu hết các khung công tác agent (agent frameworks) giao tiếp bằng tin nhắn (messages), không phải nhiệm vụ bất đồng bộ (async tasks) có cấu trúc.</li>
+                            <li><strong>Phân bổ nhiệm vụ (Task Allocation):</strong> Việc phân chia hiệu quả các nhiệm vụ phức tạp (complex tasks) giữa các agent khác nhau có thể đầy thách thức, và các vòng lặp phản hồi (feedback loops) thường được để cho nhà phát triển (developer) tự triển khai.</li>
+                            <li><strong>Phối hợp lý luận (Coordinating Reasoning):</strong> Để các agent tranh luận (debate) và lý luận (reason) cùng nhau một cách hiệu quả đòi hỏi các cơ chế phối hợp phức tạp (sophisticated coordination mechanisms).</li>
+                            <li><strong>Quản lý ngữ cảnh (Managing Context):</strong> Theo dõi tất cả thông tin, nhiệm vụ (tasks) và cuộc hội thoại (conversations) giữa các agent có thể quá tải (overwhelming).</li>
+                            <li><strong>Thời gian và Chi phí (Time and Cost):</strong> Tương tác đa agent (Multi-agent interactions) có thể tốn kém về mặt tính toán (computationally expensive) và mất thời gian (time-consuming). Điều này dẫn đến giá runtime cao hơn và độ trễ người dùng (user latency) nhiều hơn.</li>
+                            <li><strong>Sự phức tạp (Complexity):</strong> Tương tự như cách kiến trúc microservice (microservice architecture) cho phép mỗi microservice linh hoạt (flexibility) và đơn giản (simplicity) hơn, hệ thống tổng thể thường trở nên phức tạp hơn.</li>
+                        </ul>
+                        <p>Giải quyết những thách thức này rất quan trọng để phát triển các hệ thống đa agent mạnh mẽ (robust) và hiệu quả.</p>
+                    </div>
+                </section>
+
+                <section id="multi-agent-evaluation" class="section">
+                    <div class="section-content">
+                        <h3>Đánh giá đa Agent</h3>
+                        <p>May mắn thay, việc đánh giá các hệ thống đa agent (multi-agent systems) là sự tiếp nối rõ ràng của việc đánh giá hệ thống đơn agent (single agent systems). Các chỉ số thành công của Agent (Agent Success Metrics) không thay đổi, các chỉ số kinh doanh (business metrics) làm kim chỉ nam (north star), các mục tiêu (goals) và chỉ số thành công nhiệm vụ quan trọng (critical task success metrics), các chỉ số đo lường ứng dụng (application telemetry metrics) như độ trễ (latency) và lỗi (errors). Instrumenting hệ thống đa agent bằng trace sẽ giúp gỡ lỗi (debug) và hiểu điều gì đang xảy ra trong các tương tác phức tạp.</p>
+                        <p>Trong phần Đánh giá Agent (Agent Evaluation), chúng ta đã thảo luận về Đánh giá hành trình (Evaluating Trajectories) và Đánh giá phản hồi cuối cùng (Evaluating the Final Response) như là hai phương pháp tốt nhất để đánh giá tự động (automated evaluation) một agent, và điều này vẫn đúng đối với hệ thống đa agent. Đối với hệ thống đa agent, hành trình các hành động (trajectory of actions) có thể bao gồm một vài hoặc thậm chí tất cả các agent của bạn. Mặc dù một số agent có thể cộng tác (collaborate) trên một nhiệm vụ (task), một phản hồi cuối cùng (single final answer) được trả về cho người dùng ở cuối và có thể được đánh giá độc lập (evaluated in isolation).</p>
+                        <p>Vì một hệ thống đa agent (multi-agent system) có lẽ có nhiều bước hơn, bạn có thể đi sâu và đánh giá ở mỗi bước. Bạn có thể đánh giá từng agent của mình độc lập (in isolation) và hệ thống tổng thể (the system as a whole). Đánh giá hành trình (Trajectory evaluations) là một phương pháp có khả năng mở rộng (scalable approach) để thực hiện chính xác điều này.</p>
+                        <p>Có một số câu hỏi bạn cần đặt ra, độc đáo đối với hệ thống đa agent (multi-agent systems), bao gồm:</p>
+                        <ul>
+                            <li><strong>Hợp tác và Phối hợp (Cooperation and Coordination):</strong> Các agent làm việc cùng nhau và phối hợp hành động của họ tốt đến mức nào để đạt được mục tiêu chung (common goals)?</li>
+                            <li><strong>Lập kế hoạch và Phân công nhiệm vụ (Planning and Task Assignment):</strong> Chúng ta đã đưa ra kế hoạch đúng chưa, và chúng ta có tuân thủ nó không? Các agent con (child agents) có đi chệch khỏi kế hoạch chính hay bị lạc vào ngõ cụt không?</li>
+                            <li><strong>Tận dụng Agent (Agent Utilization):</strong> Các agent lựa chọn agent phù hợp hiệu quả đến mức nào và chọn sử dụng agent đó như một công cụ (tool), ủy quyền một nhiệm vụ nền (background task) hoặc chuyển giao người dùng?</li>
+                        </ul>
+                    </div>
+                </section>
+
+                 <section class="section">
+                    <div class="section-content">
+                        <ul>
+                            <li><strong>Khả năng mở rộng quy mô (Scalability):</strong> Chất lượng của hệ thống có cải thiện khi thêm nhiều agent hơn không? Độ trễ (latency) có giảm không? Chúng ta có hiệu quả hơn hay kém hơn?</li>
+                        </ul>
+                        <p>Những loại câu hỏi này có thể hướng dẫn các nhà phát triển (developers) xác định các lĩnh vực cần cải thiện trong hệ thống đa agent (multi-agent system). Bạn sẽ trả lời những câu hỏi này bằng cách sử dụng cùng các công cụ bạn sử dụng cho hệ thống đơn agent (single agent systems), nhưng độ phức tạp của phân tích sẽ tăng lên.</p>
+                    </div>
+                </section>
+
+                <section id="agentic-rag" class="section">
+                     <div class="section-content">
+                        <h2>RAG theo hướng Agent: Một bước tiến hóa quan trọng trong Truy xuất tăng cường tạo sinh</h2>
+                        <p>Một tiến bộ đáng kể trong kiến trúc đa agent (multi-agent architectures) là Truy xuất tăng cường tạo sinh theo hướng Agent (Agentic Retrieval-Augmented Generation - Agentic RAG). Các pipeline RAG truyền thống (Traditional RAG pipelines) dựa vào phương pháp tĩnh – truy xuất kiến thức từ cơ sở dữ liệu vector (vector databases) và đưa nó vào LLM để tổng hợp (synthesis). Tuy nhiên, phương pháp này thường thất bại khi xử lý các truy vấn mơ hồ (ambiguous), đa bước (multi-step) hoặc đa góc nhìn (multi-perspective queries).</p>
+                        <p>Agentic RAG giới thiệu các agent truy xuất tự chủ (autonomous retrieval agents) chủ động tinh chỉnh tìm kiếm của chúng dựa trên lý luận lặp đi lặp lại (iterative reasoning). Những agent này tăng cường việc truy xuất theo các cách sau:</p>
+                        <ul>
+                            <li><strong>Mở rộng truy vấn nhận biết ngữ cảnh (Context-Aware Query Expansion):</strong> Thay vì chỉ dựa vào một lượt tìm kiếm đơn lẻ (single search pass), các agent tạo ra nhiều lần tinh chỉnh truy vấn (query refinements) để truy xuất kết quả liên quan (relevant) và toàn diện (comprehensive) hơn.</li>
+                            <li><strong>Lý luận đa bước (Multi-Step Reasoning):</strong> Các agent phân rã các truy vấn phức tạp (complex queries) thành các bước logic nhỏ hơn, truy xuất thông tin theo trình tự để xây dựng phản hồi có cấu trúc (structured responses).</li>
+                            <li><strong>Lựa chọn nguồn thích ứng (Adaptive Source Selection):</strong> Thay vì tìm nạp dữ liệu từ một cơ sở dữ liệu vector (vector database) đơn lẻ, các agent truy xuất tự động lựa chọn các nguồn kiến thức (knowledge sources) tốt nhất dựa trên ngữ cảnh (context).</li>
+                            <li><strong>Xác thực và Sửa lỗi (Validation and Correction):</strong> Các agent đánh giá (Evaluator agents) đối chiếu (cross-check) kiến thức đã truy xuất (retrieved knowledge) để phát hiện ảo giác (hallucinations) và mâu thuẫn (contradictions) trước khi tích hợp nó vào phản hồi cuối cùng (final response).</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="agentic-rag-importance" class="section">
+                    <div class="section-content">
+                        <h3>RAG theo hướng Agent và Tầm quan trọng của nó</h3>
+                        <p>Phương pháp này cải thiện đáng kể độ chính xác phản hồi (response accuracy), khả năng giải thích (explainability) và khả năng thích ứng (adaptability), biến nó thành một đổi mới quan trọng (crucial innovation) cho các doanh nghiệp (enterprises) xử lý các nhiệm vụ truy xuất kiến thức phức tạp (complex knowledge retrieval tasks) trong các lĩnh vực như nghiên cứu pháp lý (legal research), khám phá khoa học (scientific discovery) và kinh doanh thông minh (business intelligence).</p>
+
+                        <p>Agentic RAG (Truy xuất tăng cường tạo sinh - Retrieval-Augmented Generation) là một phương pháp nâng cao kết hợp sức mạnh của RAG với tính tự chủ (autonomy) của các agent AI. Hệ thống RAG truyền thống truy xuất thông tin liên quan (relevant information) từ các nguồn kiến thức bên ngoài (external knowledge sources) để tăng cường phản hồi của LLM (enhance LLM responses). Agentic RAG tiến thêm một bước bằng cách sử dụng các agent thông minh (intelligent agents) để điều phối quá trình truy xuất (orchestrate the retrieval process), đánh giá thông tin đã truy xuất (evaluate the retrieved information) và đưa ra quyết định về cách sử dụng tốt nhất.</p>
+                        <p>Agentic RAG mang lại nhiều lợi thế so với RAG truyền thống:</p>
+                        <ul>
+                            <li><strong>Độ chính xác được cải thiện (Improved Accuracy):</strong> Các agent có thể đánh giá chất lượng của thông tin đã truy xuất (retrieved information) và đưa ra quyết định về nguồn nào đáng tin cậy (sources to trust), dẫn đến phản hồi chính xác (accurate) và đáng tin cậy (reliable) hơn.</li>
+                            <li><strong>Hiểu biết ngữ cảnh nâng cao (Enhanced Contextual Understanding):</strong> Các agent có thể xem xét ngữ cảnh (context) của truy vấn người dùng và thông tin đã truy xuất (retrieved information) để tạo ra phản hồi liên quan (relevant) và ý nghĩa (meaningful) hơn.</li>
+                            <li><strong>Khả năng thích ứng tăng cường (Increased Adaptability):</strong> Các agent có thể thích ứng với nhu cầu thông tin thay đổi và linh hoạt điều chỉnh chiến lược truy xuất (retrieval strategies) của chúng để cung cấp thông tin cập nhật nhất (up-to-date) và liên quan nhất. Khả năng thích ứng này rất quan trọng trong các lĩnh vực phức tạp (complex domains) nơi thông tin liên tục phát triển, chẳng hạn như y tế (healthcare), tài chính (finance) và nghiên cứu pháp lý (legal research).</li>
+                        </ul>
+                    </div>
+                </section>
+
+                 <section class="section image-above-text-section">
+                    <div class="section-image">
+                        <img src="images/image12.png" alt="Sơ đồ quy trình Agentic RAG">
+                    </div>
+                     <div class="section-content full-width">
+                         <p class="figure-caption">Hình 9: Sơ đồ Agentic RAG từ Vectorize.io.25</p>
+                        <p>Agentic RAG đặc biệt có giá trị trong các lĩnh vực phức tạp (complex domains) nơi thông tin liên tục phát triển, chẳng hạn như y tế (healthcare), tài chính (finance) và nghiên cứu pháp lý (legal research). Ví dụ, trong y tế, Agentic RAG có thể giúp điều hướng các cơ sở dữ liệu y tế phức tạp (complicated medical databases), báo cáo nghiên cứu (research papers) và hồ sơ bệnh nhân (patient records), cung cấp cho bác sĩ thông tin toàn diện (comprehensive) và chính xác (accurate).</p>
+                    </div>
+                </section>
+
+                <section id="better-search-better-rag" class="section">
+                    <div class="section-content">
+                        <h3>Tìm kiếm tốt hơn, RAG tốt hơn</h3>
+                        <p>Hầu hết các phương pháp RAG (RAG approaches) đều yêu cầu một công cụ tìm kiếm (search engine) để lập chỉ mục (index) và truy xuất (retrieve) dữ liệu liên quan (relevant data). Việc giới thiệu các agent cho phép tinh chỉnh truy vấn (query), lọc (filtering), xếp hạng (ranking) và phản hồi cuối cùng (final answer). Các agent Agentic RAG đang thực hiện một số tìm kiếm để truy xuất thông tin.</p>
+                        <p>Đối với các nhà phát triển (developers) đang cố gắng tối ưu hóa triển khai RAG (RAG implementations) hiện có, thường có giá trị nhất là cải thiện kết quả tìm kiếm (search results) (đo bằng độ phủ - recall) trước khi giới thiệu agent. Một số kỹ thuật chính để cải thiện hiệu suất tìm kiếm bao gồm:</p>
+                        <ul>
+                            <li><strong>Phân tích tài liệu nguồn và chia nhỏ (Parse source documents and chunk them):</strong> Vertex AI Layout Parser có thể xử lý các bố cục tài liệu phức tạp (complex document layouts), bảng nhúng (embedded tables) và hình ảnh nhúng (embedded images) như biểu đồ (charts), và sử dụng trình chia nhỏ ngữ nghĩa (semantic chunker) để giữ các phần chia nhỏ (chunks) theo chủ đề với cấu trúc phân cấp của tiêu đề.</li>
+                            <li><strong>Thêm siêu dữ liệu (metadata) vào các phần chia nhỏ (chunks) của bạn:</strong> từ đồng nghĩa (synonyms), từ khóa (keywords), tác giả (authors), ngày tháng, thẻ (tags) và danh mục (categories) cho phép tìm kiếm của bạn tăng cường (boost), ẩn (bury) và lọc (filter); những điều này cho phép người dùng hoặc agent của bạn kiểm soát nhiều hơn đối với kết quả tìm kiếm.</li>
+                            <li><strong>Tinh chỉnh mô hình nhúng (embedding model) hoặc thêm bộ chuyển đổi tìm kiếm (search adaptor)</strong> thay đổi không gian nhúng (embedding space): những điều này cho phép chỉ mục có thể tìm kiếm (searchable index) của các vector (vectors) biểu diễn lĩnh vực (domain) của bạn tốt hơn so với mô hình nhúng mục đích chung (general purpose embedding model).</li>
+                            <li><strong>Một cơ sở dữ liệu vector (vector database) nhanh hơn có thể cải thiện chất lượng tìm kiếm:</strong> để tìm kiếm nhúng (embeddings), bạn phải đánh đổi giữa tốc độ (speed) và độ chính xác (accuracy), nâng cấp lên Vertex AI Vector Search cực nhanh có thể cải thiện cả độ trễ (latency) và chất lượng.</li>
+                            <li><strong>Sử dụng bộ xếp hạng (ranker):</strong> tìm kiếm vector (vector searches) nhanh nhưng xấp xỉ (approximate), chúng nên trả về hàng tá hoặc hàng trăm kết quả (results) cần được xếp hạng lại (re-ranked) bởi một hệ thống phức tạp hơn (more sophisticated system) để đảm bảo vài kết quả hàng đầu là phù hợp nhất (most relevant) hoặc câu trả lời tốt nhất (best answer).</li>
+                            <li><strong>Triển khai kiểm tra căn chỉnh (check grounding):</strong> như một biện pháp bảo vệ cho tạo sinh có căn chỉnh (grounded generation), bạn có thể đảm bảo mỗi cụm từ (phrase) thực sự có thể trích dẫn (citable) bởi các phần chia nhỏ đã truy xuất (retrieved chunks).</li>
+                        </ul>
+                    </div>
+                </section>
+
+                 <section class="section image-above-text-section">
+                    <div class="section-image">
+                         <img src="images/image13.png" alt="Sơ đồ các thành phần RAG và tìm kiếm phổ biến, hiển thị Vertex AI Search, các API search builder và RAG Engine">
+                    </div>
+                    <div class="section-content full-width">
+                        <p class="figure-caption">Hình 10: Sơ đồ các thành phần RAG và tìm kiếm phổ biến, hiển thị Vertex AI Search26, các API search builder27 và RAG Engine.28</p>
+                        <p>Vertex AI Search26 là một công cụ tìm kiếm mạnh mẽ (powerful search engine) cung cấp tìm kiếm chất lượng Google (Google quality search) cho dữ liệu của bạn và có thể được sử dụng với bất kỳ triển khai RAG hoặc Agentic RAG nào. Mỗi thành phần ở trên đều tự động có sẵn trong Vertex AI Search, mà không cần thời gian phát triển nào cả. Đối với các nhà phát triển (developers) muốn xây dựng công cụ tìm kiếm của riêng mình, mỗi thành phần ở trên đều được hiển thị dưới dạng API độc lập27, và RAG Engine28 có thể điều phối toàn bộ pipeline một cách dễ dàng, với giao diện dựa trên Python giống như LlamaIndex.</p>
+                    </div>
+                </section>
+
+                <section id="agents-in-the-enterprise" class="section">
+                    <div class="section-content">
+                        <h2>Agent trong doanh nghiệp</h2>
+
+                        <h3 id="manager-of-agents">Người quản lý agent</h3>
+                        <p>Năm 2025 là năm của các agent, và điều này đặc biệt đúng trong bối cảnh các doanh nghiệp (enterprises) sẽ phát triển và sử dụng agent để hỗ trợ nhân viên thực hiện các nhiệm vụ cụ thể hoặc chạy tự động (autonomously run) ở chế độ nền (background) thực hiện tự động hóa. Các nhà phân tích kinh doanh (Business analysts) có thể dễ dàng khám phá xu hướng ngành (industry trends) và tạo ra các bài thuyết trình hấp dẫn, dựa trên dữ liệu (data-driven presentations) được thúc đẩy bởi những hiểu biết sâu sắc do AI tạo ra (AI-generated insights). Các nhóm nhân sự (HR teams) có thể cách mạng hóa trải nghiệm nhân viên (employee experience) bằng quy trình giới thiệu hợp lý (streamlined onboarding), ngay cả đối với các nhiệm vụ phức tạp (complex tasks) như lựa chọn gói 401k. Các kỹ sư phần mềm (Software engineers) có thể chủ động xác định và giải quyết lỗi (resolve bugs), cho phép họ xây dựng và lặp lại (iterate) với hiệu quả cao hơn, và tăng tốc chu kỳ triển khai (deployment cycles). Các nhà tiếp thị (Marketers) có thể mở khóa phân tích hiệu suất sâu hơn (deeper performance analysis), tối ưu hóa đề xuất nội dung (optimize content recommendations) và tinh chỉnh các chiến dịch (fine-tune campaigns) một cách dễ dàng để đạt được kết quả tốt hơn.</p>
+                        <p>Chúng ta thấy hai loại agent đang nổi lên:</p>
+                        <ol>
+                            <li><strong>"Trợ lý" (Assistants):</strong> Agent tương tác với người dùng, nhận một nhiệm vụ (task), thực thi nó, và trả lại kết quả cho người dùng. Các agent đàm thoại (Conversational agents) được phổ biến bởi các khung công tác (frameworks) như Gems hoặc GPTs thường thuộc loại này. Trợ lý có thể là chung chung - có khả năng giúp đỡ trong nhiều nhiệm vụ khác nhau hoặc chuyên biệt cho một lĩnh vực (domain) hoặc nhiệm vụ cụ thể. Ví dụ bao gồm các agent giúp lên lịch họp (schedule meetings), phân tích dữ liệu (analyze data), viết mã (write code), viết thông cáo báo chí marketing (marketing press releases), giúp người bán với cơ hội bán hàng (sales opportunities) hoặc thậm chí các agent thực hiện nghiên cứu sâu (deep research) về một chủ đề cụ thể theo yêu cầu của người dùng. Những agent này có thể là đồng bộ (synchronous) và trả lại thông tin được yêu cầu hoặc thực hiện nhiệm vụ được yêu cầu nhanh chóng, hoặc chúng chạy trong khoảng thời gian dài hơn trước khi trả lại (như các agent nghiên cứu sâu).</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <section id="google-agentspace" class="section">
+                     <div class="section-content">
+                        <ol start="2">
+                            <li><strong>"Agent tự động hóa" (Automation agents):</strong> Agent chạy ở chế độ nền (background), lắng nghe sự kiện (events), giám sát thay đổi trong hệ thống hoặc dữ liệu, và sau đó đưa ra quyết định thông minh (smart decisions) và hành động (act). Hành động có thể bao gồm hoạt động trên hệ thống backend, thực hiện một số kiểm thử để xác thực quan sát, sửa lỗi, thông báo cho nhân viên phù hợp, v.v. Điều này thực sự có thể được xem là xương sống (backbone) của tự động hóa trong tương lai. Trong khi trước đây chúng ta phải viết mã cụ thể để chỉ định logic của tự động hóa, giờ đây chúng ta có thể bắt đầu dựa vào khả năng ra quyết định thông minh và tổng quát của agent AI.</li>
+                        </ol>
+                        <p>Thay vì chỉ đơn giản gọi các agent để thực hiện một nhiệm vụ (task) và chờ kết quả đầu ra (output), nhân viên tri thức (knowledge workers) sẽ ngày càng trở thành người quản lý agent. Họ sẽ phân công nhiệm vụ cho nhiều agent và quản lý chúng, kiểm tra xem có agent nào cần giúp đỡ hoặc yêu cầu phê duyệt để tiếp tục không, sử dụng đầu ra của các agent cụ thể để bắt đầu nhiệm vụ mới, giám sát việc thực thi các nhiệm vụ chạy dài để xem xét và điều hướng chúng theo đúng hướng. Các giao diện người dùng mới (Novel user interfaces) để cho phép loại quản lý nhóm ảo (virtual team management) này sẽ xuất hiện để cho phép điều phối (orchestration), giám sát (monitoring) và quản lý một hệ thống đa agent (multi-agent system) với các agent thực hiện nhiệm vụ, gọi (hoặc thậm chí tạo) các agent khác.</p>
+
+                        <h3>Google Agentspace</h3>
+                        <p>Google Agentspace29 cung cấp bộ công cụ dựa trên AI (AI-driven tools) được thiết kế để nâng cao năng suất doanh nghiệp (enterprise productivity) bằng cách tạo điều kiện truy cập thông tin liên quan và tự động hóa các quy trình làm việc agentic phức tạp (intricate, agentic workflows). Nó khai thác khả năng lý luận nâng cao (advanced reasoning capabilities) của Gemini, sức mạnh của cơ sở hạ sở tìm kiếm của Google (Google's search infrastructure) và truy cập an toàn vào dữ liệu doanh nghiệp (enterprise data), bất kể vị trí vật lý của nó.</p>
+                        <p>Agentspace trực tiếp giải quyết các hạn chế vốn có trong các hệ thống quản lý kiến thức truyền thống (traditional knowledge management systems), thường xuyên thiếu sót ở các lĩnh vực như cá nhân hóa (personalization), tạo câu trả lời tự động (automated answer generation), hiểu ngữ cảnh (contextual comprehension) và truy xuất thông tin toàn diện (comprehensive information retrieval). Nó trao quyền cho nhân viên truy cập thông tin hiệu quả bằng cách hợp nhất các nguồn nội dung khác nhau (disparate content sources), tạo ra phản hồi có căn chỉnh (grounded) và cá nhân hóa (personalized), và hợp lý hóa các quy trình làm việc vận hành (operational workflows). Các chức năng chính bao gồm khả năng nhập (ingest) nhiều định dạng dữ liệu khác nhau, đồng bộ dữ liệu từ các nền tảng Phần mềm như một dịch vụ (Software-as-a-Service - SaaS), cung cấp kết quả tìm kiếm được kiểm soát truy cập (access-controlled search results) và câu trả lời do AI tạo ra (AI-generated answers), và tích hợp hỗ trợ AI (AI assistance) và các agent thông minh (intelligent agents) vào các quy trình làm việc mạch lạc (cohesive workflows).</p>
+                        <p>Kiến trúc của Agentspace Enterprise được xây dựng dựa trên một số nguyên tắc cốt lõi (core principles). Quan trọng nhất trong số này là sự tin cậy được tích hợp (built-in trust), ưu tiên bảo mật (security), khả năng giải thích (explainability) và quản trị (governance) thông qua các tính năng như xác thực đăng nhập một lần (single sign-on - SSO authentication), mô hình quyền tích hợp (integrated permissions model) và kiểm soát truy cập cấp người dùng (user-level access controls). Trí tuệ nâng cao của Google (Google's advanced intelligence) được tận dụng để phân biệt hành vi người dùng (user behavior) và các mẫu nội dung thông qua học máy (machine learning), dẫn đến việc cung cấp kết quả có mức độ liên quan cao (highly relevant results) thông qua hiểu biết ngữ nghĩa (semantic understanding), đồ thị tri thức (knowledge graphs) và LLMs. Kết nối phổ quát (Universal connectivity) đạt được bằng cách kết nối với nhiều hệ thống doanh nghiệp đa dạng (diverse array of enterprise systems) với tính năng làm mới dữ liệu theo yêu cầu (on-demand) và tự động (automated data refreshes), từ đó loại bỏ các silo thông tin (information silos). Tùy chỉnh cấp doanh nghiệp (Enterprise-level customization) và cá nhân hóa cấp người dùng (user-level personalization) được hỗ trợ thông qua các kiểm soát chi tiết (granular controls) cho chức năng tìm kiếm (search functionality), đề xuất (recommendations), LLM và đồ thị tri thức (knowledge graphs), cung cấp trải nghiệm phù hợp dựa trên vai trò người dùng cá nhân (individual user roles), quyền (permissions) và lịch sử tìm kiếm.</p>
+                    </div>
+                </section>
+
+                <section id="notebooklm-enterprise" class="section">
+                    <div class="section-content">
+                         <p>lịch sử. Cơ chế phản hồi thời gian thực (Real-time feedback) và thích ứng (adaptation mechanisms) cho phép tinh chỉnh liên tục kết quả thông qua học máy (machine learning) và đầu vào người dùng (user input). Tạo sinh tăng cường truy xuất kết hợp (Blended Retrieval Augmented Generation - RAG) cho phép kết hợp dữ liệu tùy chỉnh, cung cấp sức mạnh cho các ứng dụng AI tạo sinh (generative AI applications) được căn chỉnh trên dữ liệu doanh nghiệp. Cuối cùng, khả năng mở rộng quy mô (scalability) là một cân nhắc thiết kế quan trọng, với hệ thống được thiết kế để đáp ứng tăng trưởng trên các khu vực địa lý, ngôn ngữ và nhu cầu sử dụng cao điểm.</p>
+                        <p>Bảo mật (Security) luôn là ưu tiên hàng đầu. Google Agentspace được xây dựng trên cơ sở hạ tầng bảo mật theo thiết kế của Google Cloud (Google Cloud secure-by-design infrastructure), mang lại cho bạn sự yên tâm khi triển khai agent AI (AI agents) một cách tự tin trong tổ chức của mình. Nó cung cấp các kiểm soát IT chi tiết (granular IT controls), bao gồm kiểm soát truy cập dựa trên vai trò (role-based access control - RBAC), Kiểm soát dịch vụ VPC (VPC Service Controls) và tích hợp IAM (IAM integration), đảm bảo dữ liệu của bạn luôn được bảo vệ và tuân thủ mọi lúc. Bảo mật là một nguyên tắc nền tảng của Agentspace. Được xây dựng trên cơ sở hạ tầng an toàn của Google Cloud, nó cung cấp một môi trường mạnh mẽ (robust environment) để triển khai agent AI. Các kiểm soát IT chi tiết, bao gồm kiểm soát truy cập dựa trên vai trò (RBAC), Kiểm soát dịch vụ mạng riêng ảo (Virtual Private Cloud - VPC Service Controls) và tích hợp Quản lý nhận dạng và truy cập (Identity and Access Management - IAM), đảm bảo bảo vệ dữ liệu và tuân thủ quy định. Các biện pháp bảo mật này rất cần thiết để bảo vệ thông tin nhạy cảm và mang lại sự yên tâm cho người dùng khi tự tin triển khai agent AI trong tổ chức của họ.</p>
+
+                        <h3>NotebookLM Enterprise</h3>
+                        <p>NotebookLM30 là một công cụ nghiên cứu và học tập (research and learning tool) được thiết kế để sắp xếp hợp lý quy trình hiểu và tổng hợp thông tin phức tạp (complex information). Nó trao quyền cho người dùng tải lên các tài liệu nguồn (source materials) khác nhau, bao gồm tài liệu (documents), ghi chú (notes) và các tệp liên quan khác, và tận dụng sức mạnh của trí tuệ nhân tạo (artificial intelligence) để tạo điều kiện hiểu sâu hơn (deeper comprehension). Hãy tưởng tượng nghiên cứu một chủ đề đa diện (multifaceted topic); NotebookLM cho phép bạn hợp nhất tất cả các tài nguyên phân tán của mình thành một không gian làm việc đơn lẻ, có tổ chức.</p>
+                    </div>
+                </section>
+
+                <section id="google-agentspace-enterprise" class="section image-above-text-section">
+                     <div class="section-image">
+                         <img src="images/image14.png" alt="Giao diện NotebookLM Enterprise được cấu hình với một vài báo cáo thu nhập giả định">
+                     </div>
+                     <div class="section-content full-width">
+                         <p class="figure-caption">Hình 11: NotebookLM Enterprise30 được cấu hình với một vài báo cáo thu nhập giả định (mock earning reports).</p>
+                        <p>một không gian làm việc đơn lẻ, có tổ chức. Về bản chất, NotebookLM hoạt động như một trợ lý nghiên cứu chuyên dụng (dedicated research assistant), đẩy nhanh quá trình nghiên cứu và cho phép người dùng vượt ra ngoài việc thu thập thông tin đơn thuần để hiểu thực sự.</p>
+
+                            <p>NotebookLM Plus xây dựng dựa trên nền tảng này, cung cấp gói cao cấp (premium tier) với các tính năng và khả năng nâng cao. Mặc dù chức năng cốt lõi là tải lên các nguồn (uploading sources), đặt câu hỏi (asking questions) và tạo bản tóm tắt (generating summaries) vẫn được giữ nguyên, NotebookLM Plus thường bổ sung các tính năng như tăng dung lượng lưu trữ cho tài liệu nguồn (source materials), cho phép làm việc với các dự án lớn hơn và phức tạp hơn. Nó cũng có thể bao gồm các công cụ phân tích dựa trên AI tinh vi hơn (more sophisticated AI-powered analysis tools), chẳng hạn như các tùy chọn tóm tắt chi tiết hơn (more nuanced summarization options), khả năng trả lời câu hỏi nâng cao (enhanced question-answering capabilities) hoặc khả năng xác định các kết nối và mối quan hệ (identify connections and relationships) giữa các nguồn khác nhau một cách hiệu quả hơn.</p>
+                            <p>Xây dựng dựa trên nền tảng của NotebookLM Plus, NotebookLM Enterprise30 mang đến những khả năng mạnh mẽ này cho môi trường doanh nghiệp (enterprise environment), hợp lý hóa cách nhân viên tương tác và rút ra những hiểu biết sâu sắc (derive insights) từ dữ liệu của họ. Phiên bản cấp doanh nghiệp (enterprise-grade version) này không chỉ cho phép người dùng tải lên và tổng hợp thông tin (upload and synthesize information), mà còn khám phá các mẫu ẩn (uncover hidden patterns) và tương tác với dữ liệu theo những cách sáng tạo. Một ví dụ điển hình là tính năng tóm tắt âm thanh do AI tạo ra (AI-generated audio summary feature), giúp tăng cường hiểu biết (comprehension) và tạo điều kiện hấp thụ kiến thức hiệu quả (facilitates efficient knowledge absorption) bằng cách cho phép người dùng "nghe" nghiên cứu của họ.</p>
+                            <p>Về mặt kỹ thuật, NotebookLM, ở cả dạng dành cho người tiêu dùng và doanh nghiệp, sử dụng LLM để xử lý các tài liệu đã tải lên (uploaded documents), trích xuất các khái niệm chính (key concepts) và tạo bản tóm tắt (summaries). Tính năng tóm tắt âm thanh sử dụng công nghệ chuyển văn bản thành giọng nói (text-to-speech - TTS) kết hợp kiểm soát ngữ điệu nâng cao (advanced prosody control) để đảm bảo sự rõ ràng và tự nhiên. Quan trọng là, NotebookLM Enterprise tích hợp các tính năng bảo mật và quyền riêng tư cấp doanh nghiệp (enterprise-grade security and privacy features), đảm bảo dữ liệu nhạy cảm của công ty được xử lý cẩn thận và bảo vệ theo chính sách của tổ chức.</p>
+                     </div>
+                </section>
+
+                <section id="from-agents-to-contractors" class="section image-above-text-section">
+                     <div class="section-image">
+                         <img src="images/image15.png" alt="Giao diện Agentspace tùy chỉnh cho ngân hàng Cymbal, được kết nối với nhiều kho dữ liệu">
+                     </div>
+                     <div class="section-content full-width">
+                         <p class="figure-caption">Hình 12: Agentspace29 tùy chỉnh cho ngân hàng Cymbal, được kết nối với nhiều kho dữ liệu (data stores).</p>
+                         <p>ngôn ngữ gốc của thông tin. Các trình kết nối được xây dựng sẵn (Pre-built connectors) cho các ứng dụng bên thứ ba được sử dụng rộng rãi, bao gồm Confluence, Google Drive, Jira, Microsoft SharePoint, ServiceNow và các ứng dụng khác, trao quyền cho nhân viên truy cập và truy vấn liền mạch các nguồn dữ liệu liên quan, tạo điều kiện đưa ra quyết định sáng suốt hơn (more informed decision-making).</p>
+                         <p>Không chỉ đơn thuần là truy xuất thông tin (information retrieval), agent có thể thực hiện các hành động trong thế giới thực (real world), quản lý các nhiệm vụ và quy trình làm việc bất đồng bộ (async tasks and workflows), và giúp nhân viên hoàn thành công việc. Một thư viện các agent có thể được cấu hình dựa trên nhu cầu độc đáo của tổ chức và sẽ giúp ích trong nghiên cứu sâu (deep research), tạo ý tưởng (idea generation) và tinh chỉnh dựa trên thành tích (merit based refinement), tạo tài sản sáng tạo (creative asset generation), phân tích dữ liệu (data analytics) và hơn thế nữa.</p>
+                     </div>
+                </section>
+
+                <section id="automotive-ai" class="section">
+                    <div class="section-content">
+                        <h2>AI trong ô tô: Ứng dụng thực tế của Kiến trúc đa Agent</h2>
+                        <p>Để minh họa cách các khái niệm đa agent (multi-agent concepts) thể hiện trong thực tế, hãy xem xét một hệ thống đa agent toàn diện được thiết kế cho AI đàm thoại trong ô tô (automotive conversational AI), nơi nhiều agent chuyên biệt (specialized agents) cộng tác để mang lại trải nghiệm trên xe trực quan (intuitive) và liền mạch (seamless in-car experience).</p>
+                        <p>Đầu tiên, chúng ta sẽ xem xét một số ví dụ về các agent chuyên biệt (specialized agents), sau đó là một số mẫu phổ biến (common patterns) để kết hợp chúng thành một hệ thống đa agent (multi-agent system).</p>
+
+                        <h3 id="specialized-agents">Các Agent chuyên biệt</h3>
+                        <p>Đầu tiên, hãy xem xét một số ví dụ về các agent chuyên biệt.</p>
+
+                        <h4 id="conversational-navigation-agent">Agent điều hướng đàm thoại</h4>
+                        <p>Agent điều hướng đàm thoại (Conversational Navigation Agent) chuyên giúp người dùng tìm địa điểm, đề xuất địa điểm và điều hướng bằng cách sử dụng các API (APIs) như Google Places và Maps. Agent này hiểu các ý định điều hướng (navigation intents) như "Find me a sushi restaurant nearby", truy vấn API Places (queries the Places API) để có kết quả liên quan (relevant results), xếp hạng lại (re-ranks) các kết quả này dựa trên sở thích người dùng (user preferences) và dữ liệu lịch sử (historical data), và gửi lệnh điều hướng (navigation commands) đến hệ thống tích hợp sẵn của xe.</p>
+                    </div>
+                </section>
+
+                <section id="conversational-media-search-agent" class="section">
+                    <div class="section-content">
+                        <h4>Ví dụ tương tác:</h4>
+                        <div class="interaction-example">
+                            <p><strong>User:</strong> "I need to take a break for lunch. What are good restaurants on my route to Munich?"</p>
+                            <p><strong>Navigation Agent:</strong> "I found three well-rated restaurants along your route on the A9. In 25 kilometers, there's 'Gasthaus Alte Mühle' at the Ingolstadt exit with 4.5 stars - reviewers praise their traditional Bavarian dishes and beer garden. In 45 kilometers, 'La Strada' at the service area has 4.1 stars with good reviews for quick Italian meals. Or if you can wait 70 kilometers, 'Zeitlos' near Allershausen has 4.7 stars - it's a bit fancier with farm-to-table cuisine. Which one interests you most?"</p>
+                            <p><strong>User:</strong> "The Bavarian place sounds good. Is there convenient parking there, and how far is it from the motorway?"</p>
+                            <p><strong>Navigation Agent:</strong> "Gasthaus Alte Mühle has a dedicated parking area with about 40 spaces. It's only 1.2 kilometers from the A9 exit at Ingolstadt-Nord - about a 2-minute drive. They're known for their Schweinebraten and homemade dumplings. It gets busy around noon, but it's currently showing moderate occupancy. Would you like me to set this as your destination and guide you there? You'll arrive around 12:15 if we head there now."</p>
+                        </div>
+
+                        <h4 id="conversational-media-search-agent">Agent tìm kiếm truyền thông đàm thoại</h4>
+                        <p>Agent tìm kiếm truyền thông đàm thoại (Conversational Media Search Agent) chuyên giúp người dùng tìm và phát nhạc, sách nói (audiobooks) và podcast. Agent này truy xuất phương tiện (retrieves media) từ cơ sở dữ liệu cục bộ (local databases) hoặc dịch vụ phát trực tuyến (streaming services), sử dụng tìm kiếm web (web search) để có nội dung bổ sung khi cần, đề xuất phương tiện dựa trên các yếu tố ngữ cảnh (contextual factors) như tâm trạng (mood), thời tiết, và thời gian trong ngày, và xử lý lệnh thoại (voice commands) như "Play a relaxing playlist for my drive." Nó cũng xác định các nghệ sĩ hoặc nội dung tương tự (similar artists or content) khi người dùng hỏi các câu hỏi như "Who sounds like John Coltrane?".</p>
+                    </div>
+                </section>
+
+                <section id="message-composition-agent" class="section">
+                    <div class="section-content">
+                        <h4>Ví dụ tương tác:</h4>
+                         <div class="interaction-example">
+                            <p><strong>User:</strong> "Play something upbeat to help me stay alert on this long motorway drive."</p>
+                            <p><strong>Conversational Media Search Agent:</strong> "I'll play an upbeat driving playlist to help keep you energized. Starting with 'Don't Stop Me Now' by Queen, followed by some Daft Punk and Stromae tracks. I've added some popular European radio hits that match your preferences. I've adjusted the volume for optimal road awareness. Just say 'next' if you want to skip a song."</p>
+                         </div>
+
+                        <h4 id="message-composition-agent">Agent soạn tin nhắn</h4>
+                        <p>Agent soạn tin nhắn (Message Composition Agent) chuyên giúp người dùng soạn thảo (draft), tóm tắt (summarize) và gửi tin nhắn hoặc email trong khi lái xe. Agent này phân tích lệnh thoại (parses voice commands) như "Tell Alex I'm running late," sử dụng các mô hình ngôn ngữ tự nhiên (natural language models) để soạn tin nhắn phù hợp với ngữ cảnh (compose contextually appropriate messages), đưa ra bản xem trước dự thảo (draft previews) với các tùy chọn sửa đổi của người dùng (user modification options), và tích hợp với các ứng dụng nhắn tin khác nhau bao gồm SMS, WhatsApp và email.</p>
+                         <h4>Ví dụ tương tác:</h4>
+                         <div class="interaction-example">
+                            <p><strong>User:</strong> "There's heavy traffic on the E40. Let my team know I'll be 20 minutes late to the morning standup."</p>
+                            <p><strong>Message Composition Agent:</strong> "I've prepared a message to your work team: 'Stuck in traffic on the E40. Will be about 20 minutes late to the morning standup. Please start without me.' Should I send this to your 'Work Team' chat group, or would you like to edit it first?"</p>
+                         </div>
+                    </div>
+                </section>
+
+                <section id="car-manual-agent" class="section">
+                    <div class="section-content">
+                        <h4 id="car-manual-agent">Agent sổ tay ô tô</h4>
+                        <p>Agent Sổ tay ô tô (Car Manual Agent) chuyên cung cấp câu trả lời cho các câu hỏi liên quan đến ô tô bằng cách tận dụng hệ thống Tạo sinh tăng cường truy xuất (Retrieval-Augmented Generation - RAG). Agent này truy xuất các phần liên quan từ sổ tay ô tô dựa trên truy vấn người dùng (user queries), tóm tắt và đặt vào ngữ cảnh (contextualizes) thông tin này bằng cách sử dụng LLM, và liên kết người dùng đến tài liệu chi tiết (detailed documentation) hoặc video hướng dẫn khi thích hợp.</p>
+                         <h4>Ví dụ tương tác:</h4>
+                         <div class="interaction-example">
+                            <p><strong>User:</strong> "How do I turn off the lane-keeping assist feature in this Volkswagen?"</p>
+                            <p><strong>Car Manual Agent:</strong> "To turn off lane-keeping assist in your Volkswagen, press the button with the car-and-lane icon located on the left side of your steering wheel. You'll see a confirmation in the driver display when it's deactivated. You can also disable it permanently in the infotainment system under Settings > Driver Assistance > Lane Keeping. Would you like me to walk you through the settings menu instead?"</p>
+                         </div>
+
+                        <h4 id="general-knowledge-agent">Agent kiến thức tổng quát</h4>
+                        <p>Agent kiến thức tổng quát (General Knowledge Agent) chuyên trả lời các câu hỏi thực tế (factual questions) về thế giới, lịch sử, khoa học, văn hóa và các chủ đề tổng quát khác. Agent này truy cập một cơ sở kiến thức rộng lớn (broad knowledge base) để trả lời các câu hỏi thực tế, cung cấp thông tin tiểu sử về con người, đưa ra giải thích theo ngữ cảnh về các khái niệm và hiện tượng, duy trì sự căn chỉnh (grounding) trong thông tin thực tế trong khi tránh ảo giác (avoiding hallucinations), và phản hồi các câu hỏi tiếp theo (follow-up questions) bằng cách duy trì nhận biết ngữ cảnh (contextual awareness).</p>
+                         <h4>Ví dụ tương tác:</h4>
+                         <div class="interaction-example">
+                            <p><strong>User:</strong> "Tell me an interesting fact about Salzburg."</p>
+                         </div>
+                    </div>
+                </section>
+
+                 <section class="section">
+                     <div class="section-content">
+                         <p><strong>General Knowledge Agent:</strong> "Salzburg, Austria is the birthplace of Mozart, one of history's most famous composers. Beyond that well-known fact, Salzburg's old town is a UNESCO World Heritage site, and parts of the beloved musical 'The Sound of Music' were filmed there in 1964. The Salzburg Festival, one of the world's most prestigious music and drama festivals, has been held there annually since 1920."</p>
+
+                        <h3 id="patterns-in-use">Các mẫu thiết kế đang sử dụng</h3>
+                        <p>Hãy xem xét một số cách phổ biến để kết hợp các agent này.</p>
+
+                        <h4 id="hierarchical-pattern">Mẫu phân cấp</h4>
+                        <p>Một Agent điều phối trung tâm (central Orchestrator Agent) phân loại truy vấn (classifies queries) và định tuyến chúng đến các agent chuyên biệt (specialized agents). Ví dụ, khi người dùng hỏi "Find me a sushi restaurant nearby," Agent điều phối phát hiện đây là một yêu cầu điều hướng (navigation request) và định tuyến nó đến Agent điều hướng (Navigation Agent), agent này xử lý tìm kiếm địa điểm (location searches) và tương tác với các API bản đồ.</p>
+                    </div>
+                </section>
+
+                <section class="section image-above-text-section">
+                     <div class="section-image">
+                         <img src="images/image20.png" alt="Sơ đồ minh họa mẫu phân cấp trong kiến trúc đa agent">
+                     </div>
+                     <div class="section-content full-width">
+                         <p class="figure-caption">Hình 15. Mẫu phân cấp (Hierarchical pattern).</p>
+                        <p>Agent điều phối (Orchestrator Agent) chuyên định tuyến các truy vấn (routing queries) đến các agent chuyên biệt (specialized agents) phù hợp nhất và quản lý luồng hội thoại tổng thể (overall conversation flow). Agent này phân tích truy vấn người dùng để xác định lĩnh vực (domain) và ý định (intent), chuyển yêu cầu đến agent chuyên biệt phù hợp nhất, duy trì ngữ cảnh hội thoại (conversation context) qua nhiều lượt (multiple turns), và quản lý chiến lược dự phòng (fallback strategies) khi các agent chuyên biệt không thể cung cấp phản hồi thỏa đáng.</p>
+                         <h4>Ví dụ tương tác:</h4>
+                         <p><strong>Lượt đầu tiên (First Turn):</strong></p>
+                         <div class="interaction-example">
+                            <p><strong>User:</strong> "Is there a service area ahead with clean toilets?"</p>
+                            <p><strong>Orchestrator Agent:</strong> [internally routes to Navigation Agent]</p>
+                            <p><strong>Navigation Agent:</strong> "There's a service area 20 kilometers ahead on the E19. It's Aire de Waremme, which was renovated last year and has good ratings for facilities and cleanliness. It also has a Paul bakery and a quick-service restaurant."</p>
+                         </div>
+                         <p><strong>Lượt thứ hai (Second Turn):</strong></p>
+                         <div class="interaction-example">
+                             <p><strong>User:</strong> "Will it rain at my destination this evening?"</p>
+                            <p><strong>Orchestrator Agent:</strong> [recognizes weather query and routes to Weather Information Agent]</p>
+                            <p><strong>Weather Information Agent:</strong> "At your destination in Brussels, the forecast shows a 60% chance of light rain in the evening, starting around 19:00. Temperatures will be around 14°C. I'd recommend bringing an umbrella if you plan to be outdoors."</p>
+                         </div>
+                    </div>
+                </section>
+
+                <section id="diamond-pattern" class="section image-above-text-section">
+                     <div class="section-image">
+                         <img src="images/image21.png" alt="Sơ đồ minh họa mẫu kim cương trong kiến trúc đa agent">
+                     </div>
+                     <div class="section-content full-width">
+                         <p class="figure-caption">Hình 16. Mẫu kim cương (Diamond pattern).</p>
+                        <h3>Mẫu kim cương</h3>
+                        <p>Trong biến thể này của mẫu phân cấp (hierarchical pattern), phản hồi từ các agent chuyên biệt (specialized agents) đi qua một agent điều phối trung tâm (central moderation agent) trước khi đến người dùng. Ví dụ, Agent điều hướng (Navigation Agent) tạo ra phản hồi thực tế về một nhà hàng gần đó, sau đó phản hồi này đi qua một Agent điều chỉnh ngữ điệu (Rephraser Agent) điều chỉnh giọng điệu (tone) và phong cách (style) dựa trên sở thích người dùng trước khi tổng hợp văn bản thành giọng nói (text-to-speech synthesis).</p>
+                        <p>Agent điều chỉnh ngữ điệu (Rephraser Agent) chuyên điều chỉnh giọng điệu (tone), phong cách (style) và cách trình bày (presentation) của phản hồi để phù hợp với sở thích người dùng (user preferences) và ngữ cảnh (context). Agent này chuyển đổi thông tin kỹ thuật (technical information) thành ngôn ngữ đàm thoại (conversational language), điều chỉnh độ dài phản hồi (response length) dựa trên điều kiện lái xe (driving conditions) và mức độ khẩn cấp (urgency), cá nhân hóa phong cách giao tiếp (communication style) để phù hợp với sở thích người dùng và định dạng thông tin phức tạp để dễ hiểu hơn khi lái xe.</p>
+                         <h4>Ví dụ tương tác:</h4>
+                         <div class="interaction-example">
+                             <p><strong>[Raw response from Car Manual Agent before rephrasing]:</strong> "In the event of a tire pressure monitoring system alert, the vehicle has detected that one or more tires have fallen below the recommended inflation pressure of 2.2 bar. The affected tire's pressure is approximately 1.8 bar, which is 18.75% below recommended levels. This does not constitute an immediate safety hazard, but prolonged driving with underinflated tires can lead to decreased fuel efficiency, reduced tire longevity, and potentially compromised handling characteristics. It is advisable to proceed to a service station at your earliest convenience to reinflate the tire to proper specifications."</p>
+                             <p><strong>Rephraser Agent:</strong> [Adapts for driving context, adjusts information density and urgency]</p>
+                             <p><strong>Final Response to User:</strong> "Your front right tire is a bit low - down to 1.8 bar. It's safe to keep driving, but you'll want to add some air at the next petrol station. Low tire pressure can affect your fuel economy and make the tire wear out faster. I can help you find a nearby place to fill up if you'd like."</p>
+                         </div>
+                     </div>
+                </section>
+
+                <section id="peer-to-peer" class="section image-above-text-section">
+                     <div class="section-image">
+                         <img src="images/image22.png" alt="Sơ đồ minh họa mẫu ngang hàng trong kiến trúc đa agent">
+                     </div>
+                     <div class="section-content full-width">
+                         <p class="figure-caption">Hình 17. Ngang hàng (Peer-to-peer).</p>
+                        <h3>Ngang hàng (Peer-to-Peer)</h3>
+                        <p>Các agent có thể chuyển giao (hand off) truy vấn cho nhau khi phát hiện ra rằng quá trình điều phối (orchestration) đã mắc lỗi định tuyến (routing mistake). Điều này tạo ra một hệ thống linh hoạt hơn (more resilient system) có thể phục hồi sau những phân loại sai ban đầu (initial misclassifications).</p>
+                    </div>
+                </section>
+
+                <section id="collaborative-pattern" class="section image-above-text-section">
+                     <div class="section-image">
+                         <img src="images/image23.png" alt="Sơ đồ minh họa mẫu cộng tác trong kiến trúc đa agent, hiển thị Agent trộn phản hồi">
+                     </div>
+                     <div class="section-content full-width">
+                         <p class="figure-caption">Hình 18. Mẫu cộng tác (Collaborative pattern).</p>
+                         <h4>Ví dụ kịch bản:</h4>
+                         <ol>
+                             <li>User asks: "Find a place to eat sushi nearby"</li>
+                             <li>The Orchestrator correctly routes this to the Conversational Navigation Agent, which provides information about nearby sushi restaurants.</li>
+                             <li>User follows up: "How big is New York's Central Park?"</li>
+                             <li>The Orchestrator might initially route this to the Conversational Navigation Agent again (based on the previous navigation-related conversation).</li>
+                             <li>However, the Conversational Navigation Agent recognizes this as a general knowledge question rather than a navigation request, and hands it off to the General Knowledge Agent, which can provide factual information about Central Park's size.</li>
+                         </ol>
+                         <h4>Ưu điểm của việc chuyển giao ngang hàng (peer-to-peer hand-off) so với điều phối tập trung (centralized orchestration):</h4>
+                         <ol>
+                             <li><strong>Khả năng phục hồi trước phân loại sai (Resilience to misclassification):</strong> Ngay cả khi agent điều phối trung tâm mắc lỗi trong định tuyến, các agent chuyên biệt có thể nhận ra khi một truy vấn nằm ngoài lĩnh vực của chúng và chuyển hướng phù hợp.</li>
+                             <li><strong>Chuyên môn lĩnh vực trong định tuyến (Domain expertise in routing):</strong> Các agent chuyên biệt thường hiểu rõ hơn ranh giới lĩnh vực của chính chúng. Agent tìm kiếm truyền thông biết chính xác những loại truy vấn liên quan đến âm nhạc nào nó có thể xử lý tốt hơn agent điều phối chung.</li>
+                             <li><strong>Giảm độ phức tạp điều phối (Reduced orchestration complexity):</strong> Agent điều phối trung tâm không cần độ chính xác hoàn hảo trong định tuyến ban đầu, giảm độ phức tạp của logic ra quyết định của nó.</li>
+                         </ol>
+
+                         <h3>Mẫu cộng tác</h3>
+                        <p>Mẫu cộng tác (Collaborative Pattern) liên quan đến nhiều agent cùng làm việc trên các khía cạnh bổ sung (complementary aspects) của cùng một nhiệm vụ, với một Agent trộn phản hồi (Response Mixer Agent) kết hợp các yếu tố từ phản hồi của các agent khác nhau để tạo ra một câu trả lời toàn diện. Phương pháp này nhận ra rằng các agent khác nhau đóng góp những phần có giá trị vào một giải pháp hoàn chỉnh dựa trên chuyên môn chuyên biệt của chúng. Mẫu này đặc biệt có giá trị khi:</p>
+                        <ol>
+                            <li>Các khía cạnh khác nhau của một truy vấn yêu cầu các loại chuyên môn khác nhau (ví dụ: đặc tả kỹ thuật, lời khuyên thực tế và giải thích khái niệm).</li>
+                            <li>Không có agent nào có thông tin đầy đủ để giải quyết hoàn toàn nhu cầu của người dùng.</li>
+                            <li>Người dùng sẽ hưởng lợi từ nhiều góc nhìn về cùng một câu hỏi.</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <section id="response-mixer-agent" class="section">
+                     <div class="section-content">
+                        <ol start="4">
+                             <li>Các agent chuyên biệt khác nhau có quyền truy cập vào các cơ sở kiến thức (knowledge bases) hoặc khả năng lý luận (reasoning capabilities) riêng biệt.</li>
+                        </ol>
+                        <p>Không giống như phương pháp cạnh tranh (competitive approach), nơi các phản hồi cạnh tranh, mẫu cộng tác (collaborative pattern) giả định rằng các phản hồi từ các agent khác nhau là bổ sung (complementary) chứ không phải dư thừa (redundant). Agent trộn phản hồi (Response Mixer Agent) xác định thông tin có giá trị nhất từ ​​mỗi nguồn và tổng hợp nó thành một câu trả lời mạch lạc (cohesive answer) tận dụng sức mạnh độc đáo của từng chuyên gia.</p>
+                        <p>Ví dụ, khi được hỏi về cách xử lý hiện tượng trượt nước (hydroplaning), Agent Sổ tay ô tô (Car Manual Agent) đóng góp thông tin hệ thống an toàn cụ thể của xe, Agent Mẹo lái xe (Driving Tips Agent) cung cấp các kỹ thuật lái xe thực tế, và Agent kiến thức tổng quát (General Knowledge Agent) giải thích vật lý đằng sau hiện tượng này. Cùng nhau, chúng tạo ra một phản hồi đầy đủ và hữu ích hơn bất kỳ agent nào có thể cung cấp một mình.</p>
+                    </div>
+                </section>
+
+                <section id="adaptive-loop-pattern" class="section">
+                     <div class="section-content">
+                        <h4>Agent trộn phản hồi</h4>
+                        <p>Agent trộn phản hồi (Response Mixer Agent) chuyên chọn ra phản hồi tốt nhất từ ​​nhiều agent và hợp nhất chúng khi cần thiết. Agent này đánh giá câu trả lời dựa trên độ chính xác (accuracy) và mức độ liên quan (relevance), loại bỏ thông tin không chính xác và kết hợp các phần hữu ích từ các phản hồi khác nhau để tạo ra câu trả lời hữu ích nhất cho người dùng.</p>
+                        <h4>Ví dụ tương tác:</h4>
+                         <div class="interaction-example">
+                            <p><strong>User:</strong> "How do I handle aquaplaning?"</p>
+                            <p><strong>[Behind the scenes, multiple agents generate responses:]</strong></p>
+                            <p><strong>Car Manual Agent Response:</strong> "Your Audi is equipped with Electronic Stability Control (ESC) and Anti-lock Braking System (ABS) which help prevent aquaplaning by maintaining traction control." [Confidence score: 71%]</p>
+                            <p><strong>General Knowledge Agent Response:</strong> "Aquaplaning occurs when your tires lose contact with the road surface due to water buildup between the tires and the road." [Confidence score: 65%]</p>
+                            <p><strong>Safety Tips Agent Response:</strong> "If you experience aquaplaning, ease off the accelerator, avoid sudden braking or steering, and gently steer in the direction you want to go until you regain traction." [Confidence score: 94%]</p>
+                            <p><strong>Response Mixer Agent:</strong> [Picks the most relevant parts and merges them into one complete answer]</p>
+                            <p><strong>Final Response to User:</strong> "If you experience aquaplaning, which happens when your tires lose contact with the road due to water buildup, ease off the accelerator, avoid sudden braking or steering, and gently steer in the direction you want to go until you regain traction. Your Audi's Electronic Stability Control and ABS systems will help maintain control, but proper driving technique is still essential."</p>
+                         </div>
+                     </div>
+                </section>
+
+                <section id="advantages-automotive-ai" class="section">
+                     <div class="section-content">
+                         <p>Phương pháp cạnh tranh này đảm bảo rằng thông tin an toàn quan trọng không bị bỏ sót do định tuyến sai, và người dùng nhận được phản hồi hữu ích nhất có thể ngay cả khi truy vấn của họ có nhiều cách hiểu hợp lệ.</p>
+
+                        <h3>Mẫu vòng lặp thích ứng</h3>
+                        <p>Mẫu vòng lặp thích ứng (Adaptive Loop Pattern) liên quan đến việc tinh chỉnh lặp đi lặp lại (iterative refinement) thông qua các lần thử lặp đi lặp lại (repeated attempts), dần dần cải thiện kết quả cho đến khi chúng đáp ứng các tiêu chí mong muốn.</p>
+                        <p>Agent điều hướng đàm thoại (Conversational Navigation Agent) có thể triển khai mẫu vòng lặp để lặp đi lặp lại cải thiện kết quả tìm kiếm khi truy vấn ban đầu không mang lại kết quả thỏa đáng.</p>
+                         <h4>Ví dụ tương tác:</h4>
+                         <ol>
+                             <li>User asks: "Find a nice Italian restaurant that serves vegan options"</li>
+                             <li>The Navigation Agent queries Places API with these parameters</li>
+                             <li>The agent evaluates the results and finds no restaurants meeting all criteria</li>
+                             <li>Instead of returning "no results," the agent automatically reformulates the query:</li>
+                             <ul>
+                                 <li>First loop: Searches for "Italian restaurants with vegetarian options"</li>
+                                 <li>Second loop: Broadens to "Italian restaurants" and then filters for those mentioning plant-based options</li>
+                                 <li>Third loop: If still unsuccessful, searches for "vegan restaurants" and filters for Italian-influenced cuisine</li>
+                             </ul>
+                             <li>The agent presents the best matches from these progressive searches, explaining how they relate to the original request</li>
+                         </ol>
+                     </div>
+                </section>
+
+                <section class="section">
+                     <div class="section-content">
+                        <p>Hành vi lặp lại này cho phép khả năng tìm kiếm mạnh mẽ hơn (more robust search capabilities) thích ứng với tính khả dụng (availability) và ngữ cảnh (context), cung cấp kết quả hữu ích ngay cả khi không có kết quả khớp chính xác.</p>
+
+                        <h3 id="advantages-automotive-ai">Ưu điểm của Kiến trúc đa Agent cho AI trong ô tô</h3>
+                        <p>Hệ thống đa agent (Multi-agent systems) mang lại những lợi thế mạnh mẽ cho AI trong ô tô bằng cách chia nhỏ các nhiệm vụ phức tạp thành các vai trò chuyên biệt (specialized roles). Hãy nghĩ về nó như việc tập hợp một đội ngũ chuyên gia thay vì chỉ dựa vào một người tổng quát.</p>
+                        <p>Trong phương pháp này, mỗi agent chuyên về những gì nó làm tốt nhất. Agent điều hướng (Navigation Agent) chỉ tập trung vào việc tìm địa điểm và lên kế hoạch tuyến đường (planning routes). Agent tìm kiếm truyền thông (Media Search Agent) trở thành chuyên gia về âm nhạc và podcast. Agent sổ tay ô tô (Car Manual Agent) chuyên về các tính năng của xe và khắc phục sự cố. Bằng cách tập trung vào các lĩnh vực cụ thể, mỗi agent phát triển khả năng sâu hơn trong lĩnh vực của mình.</p>
+                        <p>Sự chuyên biệt này làm cho toàn bộ hệ thống hiệu quả hơn. Khi một agent xử lý một tập hợp nhiệm vụ hẹp hơn (narrower set of tasks), việc tối ưu hóa hiệu suất của nó trở nên đơn giản hơn. Kết quả là phản hồi chất lượng cao hơn được cung cấp nhanh hơn và với chi phí tính toán thấp hơn. Hiệu suất được cải thiện vì hệ thống có thể khớp đúng tài nguyên (right resources) với mỗi nhiệm vụ. Các yêu cầu đơn giản sử dụng công suất xử lý tối thiểu (minimal processing power), trong khi các câu hỏi phức tạp cần đến tài nguyên mạnh hơn chỉ khi cần thiết.</p>
+                        <p>Tốc độ quan trọng trong một chiếc xe, và hệ thống đa agent (multi-agent systems) hoạt động hiệu quả. Các chức năng quan trọng (Critical functions) như điều chỉnh điều hòa (adjusting climate controls) hoặc mở cửa sổ chạy trên các agent trên thiết bị (on-device agents) nhanh chóng để phản hồi ngay lập tức. Trong đó, các nhiệm vụ ít khẩn cấp hơn (less urgent tasks) như tìm nhà hàng có thể sử dụng các agent dựa trên đám mây (cloud-based agents) với kiến thức sâu rộng hơn. Sự phân tách này đảm bảo rằng các điều khiển xe thiết yếu vẫn phản hồi nhanh bất kể hệ thống đang làm gì khác.</p>
+                    </div>
+                </section>
+
+                <section id="agent-builder" class="section">
+                    <div class="section-content">
+                        <p>Thiết kế này cũng tạo ra khả năng phục hồi tự nhiên (natural resilience). Nếu kết nối internet bị mất, các chức năng thiết yếu chạy trên các agent trên thiết bị (on-device agents) vẫn tiếp tục hoạt động. Bạn có thể tạm thời mất đề xuất nhà hàng, nhưng điều hòa không khí và phát lại phương tiện cơ bản vẫn hoạt động hoàn hảo.</p>
+
+                        <h2>Công cụ xây dựng Agent</h2>
+                        <p>Vertex AI Agent Builder là bộ sưu tập các sản phẩm và dịch vụ dành cho nhà phát triển (developers). Chúng tôi đã xây dựng một nền tảng toàn diện để bạn xây dựng và kết nối agent. Sự xuất sắc về kỹ thuật và bảo mật từ Google Cloud, nghiên cứu AI từ Google Deepmind và các phương pháp hay nhất của AgentOps. Google Cloud đang xây dựng các agent của riêng mình trên nền tảng này, và bây giờ bạn cũng có thể. Hãy chờ đợi nhiều thông báo thú vị hơn nữa vào năm 2025 nhắm đến các nhà phát triển agent.</p>
+                        <p>Vertex AI Agent Engine hợp lý hóa việc phát triển (streamlines development), dựa vào các tích hợp được quản lý bởi kỹ thuật của Google (Google engineering managed integrations) với các thư viện agent mã nguồn mở phổ biến. Nó cung cấp môi trường chạy tự động mở rộng quy mô (managed autoscaling runtime) và nhiều dịch vụ mà agent sẽ cần (ví dụ: session, examples, trace, evals). Đây là cách có nỗ lực rất thấp (very low effort) và giá trị cao (high value) để triển khai an toàn (safely deploy) các agent mà bạn đã viết trong bất kỳ khung công tác nào (framework).</p>
+                        <p>Vertex AI Eval Service cung cấp tất cả các công cụ đánh giá (evaluation tools) được thảo luận trong whitepaper này, và hơn thế nữa. LLM, RAG và đánh giá Agent (Agent evals) ổn định và có khả năng mở rộng (stable and scalable) thông qua Vertex AI Eval Service, với các tích hợp tiện lợi vào các dịch vụ giám sát (monitoring) và thử nghiệm (experimentation offerings).</p>
+                        <p>Một danh mục lớn các công cụ agent (agent tools), với nhiều điều cần chú ý:</p>
+                        <ul>
+                            <li>Truy xuất thông qua Vertex AI Search26 hoặc RAG Engine28.</li>
+                            <li>Truy xuất không dựa trên tìm kiếm từ DB thông qua Gen AI Toolbox for Databases32.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="summary" class="section">
+                     <div class="section-content">
+                        <ul>
+                            <li>Tích hợp ứng dụng (Application integrations)33 với hàng trăm API hỗ trợ đầy đủ ACL.</li>
+                            <li>Biến bất kỳ API nào thành công cụ sẵn sàng cho doanh nghiệp, được quản lý với Apigee Hub34.</li>
+                        </ul>
+                        <p>Và tất nhiên, các LLM tốt nhất cho agent, với quyền truy cập vào Vertex AI Model Garden35 và cả gia đình mô hình Gemini36 sẽ thúc đẩy kỷ nguyên agentic.</p>
+
+                        <h2>Tóm tắt</h2>
+                        <p>Whitepaper này (một tài liệu đi kèm với whitepaper trước đó của chúng tôi về Agent) đã khám phá bối cảnh phát triển nhanh chóng của các agent AI tạo sinh (generative AI agents), từ kiến trúc cơ bản của chúng đến các kỹ thuật đánh giá nâng cao (advanced evaluation techniques) và tiềm năng biến đổi (transformative potential) của hệ thống đa agent (multi-agent systems).</p>
+                        <p>Những điểm chính dành cho nhà phát triển:</p>
+                        <ol>
+                            <li><strong>AgentOps là yếu tố cần thiết:</strong> Xây dựng các agent thành công vượt xa khỏi proof-of-concept ban đầu. Nắm vững các nguyên tắc của AgentOps, tích hợp các phương pháp hay nhất từ DevOps và MLOps, nhưng cũng tập trung vào các yếu tố đặc thù của agent như quản lý công cụ (tool management), điều phối (orchestration), bộ nhớ (memory) và phân rã nhiệm vụ (task decomposition).</li>
+                            <li><strong>Các chỉ số thúc đẩy cải tiến:</strong> Bắt đầu với các KPI cấp doanh nghiệp (business-level KPIs) (như tỷ lệ hoàn thành mục tiêu - goal completion, tương tác người dùng - user engagement, hoặc doanh thu - revenue) làm "kim chỉ nam" (“north star”) của bạn. Sau đó, đo lường (instrument) các agent của bạn để theo dõi các chỉ số chi tiết liên quan đến các nhiệm vụ quan trọng (critical tasks), tương tác người dùng (user interactions) và hành động của agent (dấu vết - traces). Phản hồi của con người (human feedback) (👍👎, khảo sát người dùng) là vô giá.</li>
+                            <li><strong>Đánh giá tự động là chìa khóa:</strong> Đừng chỉ dựa vào kiểm thử thủ công. Triển khai các khung đánh giá tự động (automated evaluation frameworks) đánh giá khả năng của agent (agent capabilities), hành trình (trajectory) (các bước đã thực hiện) và phản hồi cuối cùng (final response). Tận dụng các kỹ thuật như khớp chính xác (exact match), khớp theo thứ tự (in-order match), độ chính xác/độ phủ (precision/recall) để đánh giá hành trình (trajectory evaluation), và autorater (LLM làm người đánh giá) cho chất lượng phản hồi cuối cùng.</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <section class="section">
+                     <div class="section-content">
+                         <ol start="4">
+                            <li><strong>Sự tham gia của con người là rất quan trọng:</strong> Các chỉ số tự động mạnh mẽ, nhưng đánh giá của con người cung cấp ngữ cảnh thiết yếu, đặc biệt đối với các khía cạnh chủ quan như tính sáng tạo, ý thức chung và sự tinh tế. Sử dụng phản hồi của con người để hiệu chỉnh và xác thực các phương pháp đánh giá tự động của bạn. Đừng thuê ngoài kiến thức lĩnh vực.</li>
+                            <li><strong>Hệ thống đa Agent mang lại lợi thế:</strong> Xem xét các kiến trúc đa agent cho các nhiệm vụ phức tạp. Chúng có thể cải thiện độ chính xác, hiệu quả, khả năng mở rộng và khả năng chịu lỗi. Hiểu các mẫu thiết kế khác nhau (tuần tự, phân cấp, cộng tác, cạnh tranh) và chọn mẫu phù hợp cho ứng dụng của bạn.</li>
+                            <li><strong>Agentic RAG cải thiện mức độ liên quan:</strong> Vượt ra ngoài RAG truyền thống bằng cách kết hợp các agent chủ động tinh chỉnh truy vấn tìm kiếm, đánh giá thông tin đã truy xuất và thích ứng với kiến thức đang phát triển. Điều này dẫn đến phản hồi chính xác và phù hợp theo ngữ cảnh hơn.</li>
+                            <li><strong>Tối ưu hóa tìm kiếm là nền tảng cho RAG:</strong> Trước khi đi sâu vào Agentic RAG phức tạp, hãy tối ưu hóa công cụ tìm kiếm cơ bản của bạn. Các kỹ thuật như phân chia ngữ nghĩa, làm giàu siêu dữ liệu, tinh chỉnh mô hình nhúng và sử dụng bộ xếp hạng có thể cải thiện đáng kể chất lượng truy xuất.</li>
+                            <li><strong>Danh bạ Agent và Công cụ rất quan trọng:</strong> Khi số lượng Agent hoặc Công cụ bạn đang sử dụng tăng lên, một danh bạ để quản lý khả năng, ontology và hiệu suất trở nên cần thiết.</li>
+                            <li><strong>Bảo mật là tối quan trọng:</strong> Khi triển khai agent, đặc biệt trong doanh nghiệp, hãy ưu tiên bảo mật. Tận dụng các nền tảng như Google Agentspace cung cấp các tính năng bảo mật tích hợp như RBAC, VPC Service Controls và tích hợp IAM.</li>
+                            <li><strong>Sử dụng hiệu quả chu kỳ nhà phát triển:</strong> Các lựa chọn thiết kế kinh điển "xây dựng hay mua" vẫn được quan tâm hàng đầu, vì ngành công nghiệp agent AI tạo sinh đang phát triển nhanh chóng. Xem xét các nền tảng và sản phẩm như các giải pháp thay thế cho việc xây dựng mọi thứ từ đầu. Điều này sẽ giảm bớt sự biến động của một ngành công nghiệp thay đổi nhanh chóng và cho phép bạn tập trung vào dữ liệu, lĩnh vực và người dùng của mình.</li>
+                         </ol>
+                     </div>
+                </section>
+
+                <section class="section">
+                    <div class="section-content">
+                        <ol start="11">
+                             <li><strong>Agent trong doanh nghiệp:</strong> Agent đang thay đổi cách chúng ta làm việc bằng cách làm cho chúng ta năng suất hơn nhiều, và cách tự động hóa có thể được hoàn thành. Nhân viên tri thức ngày càng sẽ quản lý nhiều agent và trải nghiệm người dùng mới sẽ xuất hiện. Google Agentspace là một công cụ mạnh mẽ cho phép đặt Enterprise Search, AI và Agent AI lên trên dữ liệu và quy trình làm việc của công ty.</li>
+                        </ol>
+                        <h2>Hướng đi tương lai cho Nghiên cứu và Phát triển Agent:</h2>
+                        <p>Lĩnh vực agent AI đang trải qua quá trình tiến hóa nhanh chóng. Các lĩnh vực nghiên cứu và phát triển đang tiếp diễn bao gồm:</p>
+                        <ul>
+                            <li><strong>Các phương pháp đánh giá nâng cao:</strong> Phát triển các kỹ thuật đánh giá mạnh mẽ và có khả năng mở rộng hơn, bao gồm đánh giá dựa trên quy trình (tập trung vào lý luận), đánh giá có hỗ trợ AI và các benchmark chuẩn hóa.</li>
+                            <li><strong>Phối hợp đa Agent:</strong> Cải thiện cơ chế phối hợp và giao tiếp trong hệ thống đa agent để cho phép cộng tác, xử lý nhiệm vụ và lý luận hiệu quả hơn.</li>
+                            <li><strong>Thích ứng với thế giới thực:</strong> Tạo ra các agent có thể thích ứng và học hỏi trong môi trường thế giới thực năng động, không thể đoán trước. Các hệ thống sản xuất như AI trong ô tô minh họa cách các agent phải cân bằng giữa hiệu suất trên thiết bị cho các chức năng quan trọng và khả năng dựa trên đám mây cho các nhiệm vụ phức tạp, thường thích ứng với điều kiện kết nối thay đổi.</li>
+                            <li><strong>Khả năng giải thích và diễn giải:</strong> Làm cho hành vi của agent minh bạch và dễ hiểu hơn, cho phép nhà phát triển và người dùng hiểu sâu hơn về quá trình ra quyết định của họ.</li>
+                            <li><strong>Bộ nhớ dài hạn và học tập:</strong> Phát triển các cơ chế bộ nhớ tinh vi hơn cho phép agent giữ lại và sử dụng thông tin trong thời gian dài, cho phép học tập và thích ứng liên tục.</li>
+                         </ul>
+                    </div>
+                </section>
+
+                 <section id="endnotes" class="section">
+                     <div class="section-content">
+                         <ul>
+                            <li><strong>Giao thức giao tiếp Agent:</strong> Xác định rõ hơn cách agent chia sẻ nhiệm vụ, kiến thức và tin nhắn, đặc biệt là trên các hệ thống từ xa mà không rõ ràng.</li>
+                            <li><strong>Từ Agent đến nhà thầu:</strong> Để agent đạt được mức độ đáng tin cậy và hữu ích tiếp theo, chúng ta sẽ cần tăng cường định nghĩa nhiệm vụ, biến chúng thành hợp đồng với các kết quả bàn giao rõ ràng, cơ chế xác thực và khả năng đàm phán sự mơ hồ, tương tự như cách chúng ta ký hợp đồng làm việc từ các công ty khác.</li>
+                         </ul>
+
+                        <h2>Kêu gọi hành động:</h2>
+                        <p>Tương lai của AI là agentic. Chúng tôi khuyến khích các nhà phát triển nắm vững những khái niệm này và bắt đầu xây dựng thế hệ ứng dụng thông minh tiếp theo. Bắt đầu thử nghiệm với các công cụ và kỹ thuật được thảo luận trong whitepaper này. Khám phá các tài nguyên có sẵn, chẳng hạn như Google Agentspace, NotebookLM Enterprise, Vertex Eval Service, Cloud Observability và Vertex AI Search, để tăng tốc quá trình phát triển của bạn. Đi sâu vào các ví dụ mã, hướng dẫn và tài liệu được cung cấp để có được kinh nghiệm thực hành. Xây dựng, đánh giá, lặp lại và đóng góp vào cộng đồng nhà phát triển agent đang phát triển. Khả năng là vô hạn, và bây giờ là lúc để xây dựng! Cụ thể, hãy bắt đầu với mã và sổ ghi chép Colab trong các tài liệu tham khảo.</p>
+
+                        <h1>Chú thích cuối trang</h1>
+                         <ol>
+                             <li>Shafran, I., Cao, Y. et al., 2022, 'ReAct: Synergizing Reasoning and Acting in Language Models'. Available at: <a href="https://arxiv.org/abs/2210.03629" target="_blank">https://arxiv.org/abs/2210.03629</a>.</li>
+                             <li>Wei, J., Wang, X. et al., 2023, 'Chain-of-Thought Prompting Elicits Reasoning in Large Language Models'. Available at: <a href="https://arxiv.org/pdf/2201.11903.pdf" target="_blank">https://arxiv.org/pdf/2201.11903.pdf</a>.</li>
+                             <li>Wang, X. et al., 2022, 'Self-Consistency Improves Chain of Thought Reasoning in Language Models'. Available at: <a href="https://arxiv.org/abs/2203.11171" target="_blank">https://arxiv.org/abs/2203.11171</a>.</li>
+                             <li>Diao, S. et al., 2023, 'Active Prompting with Chain-of-Thought for Large Language Models'. Available at: <a href="https://arxiv.org/pdf/2302.12246.pdf" target="_blank">https://arxiv.org/pdf/2302.12246.pdf</a>.</li>
+                             <li>Zhang, H. et al., 2023, 'Multimodal Chain-of-Thought Reasoning in Language Models'. Available at: <a href="https://arxiv.org/abs/2302.00923" target="_blank">https://arxiv.org/abs/2302.00923</a>.</li>
+                             <li>Yao, S. et al., 2023, 'Tree of Thoughts: Deliberate Problem Solving with Large Language Models'. Available at: <a href="https://arxiv.org/abs/2305.10601" target="_blank">https://arxiv.org/abs/2305.10601</a>.</li>
+                             <li>Long, X., 2023, 'Large Language Model Guided Tree-of-Thought'. Available at: <a href="https://arxiv.org/abs/2305.08291" target="_blank">https://arxiv.org/abs/2305.08291</a>.</li>
+                             <li>Google. 'Google Gemini Application'. Available at: <a href="http://gemini.google.com" target="_blank">http://gemini.google.com</a>.</li>
+                             <li>Swagger. 'OpenAPI Specification'. Available at: <a href="https://swagger.io/specification/" target="_blank">https://swagger.io/specification/</a>.</li>
+                             <li>Xie, M., 2022, 'How does in-context learning work? A framework for understanding the differences fromtraditional supervised learning'. Available at: <a href="https://ai.stanford.edu/blog/understanding-incontext/" target="_blank">https://ai.stanford.edu/blog/understanding-incontext/</a>.</li>
+                             <li>Google Research. 'ScaNN (Scalable Nearest Neighbors)'. Available at: <a href="https://github.com/google-research/google-research/tree/master/scann" target="_blank">https://github.com/google-research/google-research/tree/master/scann</a>.</li>
+                             <li>LangChain. 'LangChain'. Available at: <a href="https://python.langchain.com/v0.2/docs/introduction/" target="_blank">https://python.langchain.com/v0.2/docs/introduction/</a>.</li>
+                             <li>Sokratis Kartakis, 2024, 'GenAl in Production: MLOps or GenAIOps?'. Available at: <a href="https://medium.com/google-cloud/genai-in-production-mlops-or-genaiops-25691c9becd0" target="_blank">https://medium.com/google-cloud/genai-in-production-mlops-or-genaiops-25691c9becd0</a>.</li>
+                             <li>Sokratis Kartakis, 2024 'Gen Al Ops, Operationalize Generative Al, A practical Guide'. Available at: <a href="https://medium.com/google-cloud/genaiops-operationalize-generative-ai-a-practical-guide-d5bedaa59d78" target="_blank">https://medium.com/google-cloud/genaiops-operationalize-generative-ai-a-practical-guide-d5bedaa59d78</a>.</li>
+                             <li>Cloud Trace overview. Available at: <a href="https://cloud.google.com/trace/docs/overview" target="_blank">https://cloud.google.com/trace/docs/overview</a>.</li>
+                             <li>Berkeley Function-Calling Leaderboard (BFCL). Available at: <a href="https://gorilla.cs.berkeley.edu/blogs/8 berkeley function calling leaderboard.html" target="_blank">https://gorilla.cs.berkeley.edu/blogs/8 berkeley function calling leaderboard.html</a>.</li>
+                             <li>Karthik Narasimhan, et al. 2024, 'τ-bench'. Available at <a href="https://arxiv.org/abs/2406.12045" target="_blank">https://arxiv.org/abs/2406.12045</a>.</li>
+                             <li>Karthik Valmeekam, et al., 2023, 'PlanBench'. Available at: <a href="https://arxiv.org/abs/2206.10498" target="_blank">https://arxiv.org/abs/2206.10498</a>.</li>
+                             <li>Xiao Liu, et al., 2023, 'AgentBench'. Available at: <a href="https://arxiv.org/abs/2308.03688" target="_blank">https://arxiv.org/abs/2308.03688</a>.</li>
+                             <li>Martin Iglesias, et al., 2025, 'DABStep' Available at: <a href="https://huggingface.co/spaces/adyen/DABstep" target="_blank">https://huggingface.co/spaces/adyen/DABstep</a>.</li>
+                             <li>LangSmith platform for agent observability. Available at: <a href="https://docs.smith.langchain.com/evaluation/concepts#agents" target="_blank">https://docs.smith.langchain.com/evaluation/concepts#agents</a>.</li>
+                             <li>Mingchen Zhuge, et al., 2024, 'Agent-as-a-Judge: Evaluate Agents with Agents'. Available at: <a href="https://arxiv.org/abs/2410.10934" target="_blank">https://arxiv.org/abs/2410.10934</a>.</li>
+                             <li>Multi-agent documentation from LangGraph. Available at: <a href="https://langchain-ai.github.io/langgraph/concepts/multi agent/" target="_blank">https://langchain-ai.github.io/langgraph/concepts/multi agent/</a>.</li>
+                             <li>LangChain blog 2024, 'Multi-agent workflows'. Available at: <a href="https://blog.langchain.dev/langgraph-multi-agent-workflows/" target="_blank">https://blog.langchain.dev/langgraph-multi-agent-workflows/</a>.</li>
+                             <li>Vectorize blog 2024, 'How I finally got agentic RAG to work right'. Available at: <a href="https://vectorize.io/how-i-finally-got-agentic-rag-to-work-right/" target="_blank">https://vectorize.io/how-i-finally-got-agentic-rag-to-work-right/</a>.</li>
+                             <li>Vertex AI Search, product documentation. Available at: <a href="https://cloud.google.com/enterprise-search" target="_blank">https://cloud.google.com/enterprise-search</a>.</li>
+                             <li>Vertex AI Search Builder APIs, product documentation. Available at: <a href="https://cloud.google.com/generative-ai-app-builder/docs/builder-apis" target="_blank">https://cloud.google.com/generative-ai-app-builder/docs/builder-apis</a>.</li>
+                             <li>Vertex AI RAG Engine, product documentation. Available at: <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/rag-overview" target="_blank">https://cloud.google.com/vertex-ai/generative-ai/docs/rag-overview</a>.</li>
+                             <li>Agentspace product documentation. Available at: <a href="https://cloud.google.com/agentspace/agentspace-enterprise/docs/overview" target="_blank">https://cloud.google.com/agentspace/agentspace-enterprise/docs/overview</a>.</li>
+                             <li>NotebookLM Enterprise product documentation. Available at: <a href="https://cloud.google.com/agentspace/notebooklm-enterprise/docs/overview" target="_blank">https://cloud.google.com/agentspace/notebooklm-enterprise/docs/overview</a>.</li>
+                             <li>Juraj Gottweis, et al., 2025, 'Accelerating scientific breakthroughs with an Al co-scientist'. Available at: <a href="https://research.google/blog/accelerating-scientific-breakthroughs-with-an-ai-co-scientist/" target="_blank">https://research.google/blog/accelerating-scientific-breakthroughs-with-an-ai-co-scientist/</a>.</li>
+                             <li>Hamsa Buvaraghan, et al. 2025, 'Announcing public beta of Gen Al Toolbox for Databases'. Available at: <a href="https://cloud.google.com/blog/products/ai-machine-learning/announcing-gen-ai-toolbox-for-databases-get-started-today?e=48754805" target="_blank">https://cloud.google.com/blog/products/ai-machine-learning/announcing-gen-ai-toolbox-for-databases-get-started-today?e=48754805</a>.</li>
+                             <li>Google Cloud Integration Connectors, product documentation. Available at: <a href="https://cloud.google.com/integration-connectors/docs" target="_blank">https://cloud.google.com/integration-connectors/docs</a>.</li>
+                             <li>Apigee API Hub, product documentation. Available at: <a href="https://cloud.google.com/apigee/docs/apihub/what-is-api-hub" target="_blank">https://cloud.google.com/apigee/docs/apihub/what-is-api-hub</a>.</li>
+                             <li>Vertex AI Model Garden, product documentation. Available at: <a href="https://cloud.google.com/model-garden" target="_blank">https://cloud.google.com/model-garden</a>.</li>
+                             <li>Gemini family of LLMs, product documentation. Available at: <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models#gemini-models" target="_blank">https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models#gemini-models</a>.</li>
+                             <li>Get Started Evaluating Agents with the Vertex Eval Service. Available at: <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/models/evaluation-agents" target="_blank">https://cloud.google.com/vertex-ai/generative-ai/docs/models/evaluation-agents</a>.</li>
+                             <li>Irina Sigler, Ivan Nardini. Jan 2025 'Introducing Agent Evaluation in Vertex Al'. Available at: <a href="https://cloud.google.com/blog/products/ai-machine-learning/introducing-agent-evaluation-in-vertex-ai-gen-ai-evaluation-service?e=48754805" target="_blank">https://cloud.google.com/blog/products/ai-machine-learning/introducing-agent-evaluation-in-vertex-ai-gen-ai-evaluation-service?e=48754805</a>.</li>
+                             <li>Review sample agent evaluation notebooks for LangGraph, CrewAl, and LangChain. Available at: <a href="https://github.com/GoogleCloudPlatform/generative-ai/blob/main/gemini/evaluation/" target="_blank">https://github.com/GoogleCloudPlatform/generative-ai/blob/main/gemini/evaluation/</a>.</li>
+                             <li>Review many sample agents, primarily beginner and intermediate level. Available at: <a href="https://github.com/GoogleCloudPlatform/generative-ai/" target="_blank">https://github.com/GoogleCloudPlatform/generative-ai/</a>.</li>
+                             <li>Review many sample agents, intermediate and advanced levels. Available at: <a href="https://github.com/GoogleCloudPlatform/applied-ai-engineering-samples" target="_blank">https://github.com/GoogleCloudPlatform/applied-ai-engineering-samples</a>.</li>
+                         </ol>
+                     </div>
+                </section>
+
+            </main>
+
+            <footer>
+                <div class="footer-content">
+                    <p>&copy; February 2025. All rights reserved.</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

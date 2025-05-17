@@ -1,0 +1,647 @@
+:root {
+    --color-bg-main: #f4f7f6; /* Light background */
+    --color-bg-secondary: #eef2f1; /* Slightly darker background for sidebar/elements */
+    --color-text-dark: #333; /* Dark text for readability */
+    --color-text-medium: #555; /* Medium text for less emphasis */
+    --color-heading: #004080; /* Deep technical blue for headings */
+    --color-link: #0066cc; /* Standard blue for links */
+    --color-link-hover: #0099e6; /* Brighter blue on hover */
+
+    --color-accent-border: #ddd; /* Light border color */
+    --color-highlight-1: #007bff; /* Primary accent blue */
+    --color-highlight-2: #28a745; /* Accent green */
+    --color-highlight-3: #ffc107; /* Accent yellow/orange */
+
+    --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 5px 15px rgba(0, 0, 0, 0.15);
+    --shadow-strong: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+    /* Tech specific elements */
+    --tech-border: 1px solid var(--color-accent-border);
+    --tech-divider: 1px dashed var(--color-accent-border);
+}
+
+
+/* General Body and Layout */
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.7; /* Adjusted line height for light theme */
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-bg-main);
+    color: var(--color-text-dark);
+    overflow-x: hidden;
+    transition: background-color 0.5s ease;
+}
+
+/* Header (Cover Page - Clean & Modern) */
+header {
+    text-align: center;
+    padding: 80px 20px 60px;
+    background: linear-gradient(135deg, var(--color-bg-main) 0%, var(--color-bg-secondary) 100%); /* Light gradient */
+    color: var(--color-text-dark);
+    margin-bottom: 50px;
+    box-shadow: var(--shadow-medium); /* Lighter shadow */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Remove or significantly tone down the background effect from dark theme */
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 100% 100%, rgba(0, 123, 255, 0.05) 0%, rgba(0,0,0,0) 30%); /* Subtle radial gradient */
+    z-index: 1;
+    pointer-events: none; /* Allow clicks to pass through */
+}
+
+
+header h1 {
+    font-family: 'Playfair Display', serif;
+    color: var(--color-heading); /* Tech blue title */
+    font-size: 3.5em; /* Slightly adjusted size */
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+    text-shadow: var(--shadow-light); /* Subtle text shadow */
+    position: relative;
+    z-index: 2;
+}
+
+header p {
+    font-size: 1.1em;
+    color: var(--color-text-medium); /* Muted subtitle text */
+    margin-top: 0;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    z-index: 2;
+}
+
+header img {
+    max-width: 250px; /* Slightly larger image */
+    margin-top: 50px;
+    border: var(--tech-border); /* Subtle border */
+    box-shadow: var(--shadow-medium);
+    border-radius: 8px; /* Rounded corners */
+    filter: none; /* Remove dark theme filter */
+    position: relative;
+    z-index: 2;
+    transition: transform 0.3s ease-in-out; /* Add hover effect */
+}
+header img:hover {
+     transform: scale(1.05);
+}
+
+
+.document-info {
+    text-align: center;
+    font-size: 0.95em;
+    color: var(--color-text-medium);
+    margin-top: 40px;
+    position: relative;
+    z-index: 2;
+}
+
+/* Main Layout with Sidebar and Content */
+.main-layout {
+    display: flex;
+    min-height: 100vh;
+    position: relative; /* Needed for sidebar positioning */
+}
+
+#sidebar {
+    width: 280px;
+    background-color: var(--color-bg-secondary); /* Secondary background for sidebar */
+    color: var(--color-text-dark);
+    padding: 25px 20px; /* Adjusted padding */
+    box-shadow: var(--shadow-strong); /* Strong shadow facing right */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s ease-in-out, width 0.3s ease-in-out; /* Added width transition */
+    border-right: 3px solid var(--color-highlight-1); /* Clean accent border */
+}
+
+
+#main-content {
+    flex-grow: 1;
+    margin-left: 280px; /* Needs to match sidebar width */
+    padding: 30px 50px; /* Increased horizontal padding */
+    max-width: 1100px; /* Allow main content to be wider */
+    width: 100%; /* Ensure it takes available width */
+    box-sizing: border-box;
+    background-color: var(--color-bg-main); /* Match body background */
+    /* box-shadow: var(--shadow-medium); */ /* Remove box shadow on main content for cleaner look */
+}
+
+/* Section Styling */
+section {
+    margin-bottom: 60px; /* More space between sections */
+    padding-bottom: 40px;
+    border-bottom: var(--tech-divider); /* Dashed tech border */
+    opacity: 0; /* Start invisible for fade-in */
+    transform: translateY(20px); /* Start slightly below */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* Fade-in and slide-up transition */
+}
+
+/* State when section is visible in viewport (handled by JS) */
+section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+section:last-child {
+    border-bottom: none;
+}
+
+/* Headings */
+h2 {
+    font-family: 'Playfair Display', serif;
+    color: var(--color-heading);
+    border-bottom: 3px solid var(--color-highlight-3); /* Yellow underline */
+    padding-bottom: 12px; /* More padding */
+    margin-top: 40px;
+    margin-bottom: 30px; /* More space below titles */
+    font-size: 2.5em; /* Larger section titles */
+    text-shadow: var(--shadow-light); /* Subtle shadow */
+    transition: color 0.3s ease;
+}
+
+h2:hover {
+    color: var(--color-highlight-1); /* Blue on hover */
+}
+
+h2 i.fas {
+    margin-right: 15px;
+    color: var(--color-highlight-2); /* Icon color (Green) */
+    transition: transform 0.3s ease;
+}
+
+h2:hover i.fas {
+    transform: scale(1.1); /* Subtle icon scale on hover */
+}
+
+h3 {
+    font-family: 'Roboto', sans-serif;
+    color: var(--color-heading);
+    margin-top: 35px;
+    margin-bottom: 20px;
+    font-size: 1.6em; /* Adjusted subheadings size */
+    border-bottom: var(--tech-border); /* Solid border for subheadings */
+    padding-bottom: 10px; /* More padding */
+    transition: color 0.3s ease;
+}
+
+h3:hover {
+    color: var(--color-highlight-1); /* Blue on hover */
+}
+
+/* Paragraphs */
+p {
+    margin-bottom: 1.2em; /* More space between paragraphs */
+    color: var(--color-text-dark);
+}
+
+/* Lists */
+ul, ol {
+    margin-bottom: 25px;
+    padding-left: 30px;
+}
+
+ul li, ol li {
+    margin-bottom: 10px; /* Adjusted space */
+    position: relative;
+    padding-left: 15px; /* Space for custom marker */
+}
+
+/* Custom list markers - Use accent colors */
+ul li::before {
+    content: '\2022';
+    color: var(--color-highlight-2); /* Green bullet */
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+    position: absolute;
+    left: 0;
+    top: 0.1em; /* Align vertically */
+}
+
+ol li::before {
+    content: counter(list-item) ".";
+    color: var(--color-highlight-3); /* Yellow number */
+    font-weight: bold;
+    display: inline-block;
+    width: 1.5em;
+    margin-left: -1.5em;
+    position: absolute;
+    left: 0;
+    text-align: right;
+    top: 0.1em; /* Align vertically */
+}
+
+/* Figure Captions */
+.figure-caption {
+    text-align: center;
+    font-style: italic;
+    color: var(--color-text-medium);
+    margin-top: 15px;
+    font-size: 0.9em;
+}
+
+/* Table Captions */
+.table-caption {
+    text-align: left;
+    font-style: italic;
+    color: var(--color-text-medium);
+    margin-bottom: 10px;
+    font-size: 0.9em;
+}
+
+
+/* Links */
+a {
+    color: var(--color-link); /* Blue links */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--color-link-hover); /* Brighter blue on hover */
+    text-decoration: underline; /* Add subtle underline on hover for clarity */
+}
+
+/* Tables (Data Grids) */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 30px 0;
+    box-shadow: var(--shadow-light); /* Lighter shadow */
+    border-radius: 6px; /* Slightly less rounded */
+    overflow: hidden;
+    background-color: var(--color-bg-main); /* Match main BG */
+    border: var(--tech-border); /* Add border to table */
+}
+
+th, td {
+    border: 1px solid var(--color-accent-border); /* Lighter border */
+    padding: 12px 15px; /* Adjusted padding */
+    text-align: left;
+}
+
+th {
+    background-color: var(--color-bg-secondary); /* Match sidebar/secondary BG */
+    color: var(--color-heading); /* Dark heading color */
+    font-weight: 700; /* Make header bold */
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--color-highlight-1); /* Accent border below header */
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9; /* Very light alternate row color */
+}
+
+td {
+    color: var(--color-text-dark);
+}
+
+/* Example Boxes (Code Blocks/Interaction Demos) */
+.example {
+    background-color: #f0f4f3; /* Light background for example */
+    border: var(--tech-border);
+    border-left: 4px solid var(--color-highlight-1); /* Blue accent border */
+    padding: 20px; /* More padding */
+    margin: 30px 0;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    border-radius: 5px;
+    overflow-x: auto;
+    box-shadow: var(--shadow-light); /* Subtle shadow */
+    color: var(--color-text-dark); /* Dark text for readability */
+    font-size: 0.9em;
+    line-height: 1.6;
+}
+
+.example p {
+    margin: 8px 0; /* More space between lines in example */
+}
+
+.example .fas {
+    margin-right: 8px; /* Space for icons */
+    color: var(--color-highlight-2); /* Icon color in example */
+}
+
+.example-note {
+    font-style: italic;
+    color: var(--color-text-medium); /* Muted text for notes */
+    font-size: 0.85em;
+    margin-top: 15px;
+    display: block; /* Ensure notes are on new line */
+}
+
+.confidence {
+    color: var(--color-highlight-3); /* Highlight confidence score */
+    font-weight: bold;
+    font-size: 0.85em;
+}
+
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 30px auto;
+    border: var(--tech-border);
+    box-shadow: var(--shadow-medium);
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+img:hover {
+    transform: scale(1.01); /* Slightly less zoom on light theme */
+    box-shadow: var(--shadow-strong);
+}
+
+
+/* Back to Top Button */
+#backToTopBtn {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 999;
+    border: none;
+    outline: none;
+    background-color: var(--color-highlight-1); /* Blue button */
+    color: white; /* White text */
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 50%;
+    font-size: 20px;
+    opacity: 0.9;
+    transition: opacity 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    width: 50px;
+    height: 50px;
+    line-height: 20px;
+    text-align: center;
+    box-shadow: var(--shadow-medium); /* Subtle shadow */
+}
+
+#backToTopBtn:hover {
+    background-color: var(--color-highlight-2); /* Green on hover */
+    opacity: 1;
+    box-shadow: var(--shadow-strong);
+}
+
+/* Table of Contents Specific Styles */
+#table-of-contents h2 {
+    font-family: 'Roboto', sans-serif;
+    border-bottom: var(--tech-border);
+    color: var(--color-heading);
+    font-size: 1.5em; /* Adjusted size */
+    margin-bottom: 15px; /* Adjusted space */
+    padding-bottom: 8px;
+    margin-top: 0;
+    border-left: none;
+    text-shadow: none;
+}
+
+#table-of-contents ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 0;
+}
+
+#table-of-contents li {
+    margin-bottom: 8px; /* Adjusted space between list items */
+    font-size: 0.95em; /* Slightly smaller font */
+    padding-left: 0; /* Remove padding as marker is handled by border */
+}
+#table-of-contents li::before {
+    content: none; /* Remove custom list marker */
+}
+
+
+#table-of-contents a {
+    display: block;
+    padding: 6px 0; /* Adjusted padding */
+    color: var(--color-text-dark); /* Dark link color */
+    transition: color 0.2s ease, border-left-color 0.2s ease, padding-left 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    border-left: 3px solid transparent; /* Initial transparent border */
+}
+
+#table-of-contents a:hover {
+    color: var(--color-link-hover); /* Blue on hover */
+    text-decoration: none;
+    border-left-color: var(--color-highlight-1); /* Blue border on hover */
+    padding-left: 10px; /* Indent on hover */
+}
+
+
+/* Style for active Table of Contents link */
+#table-of-contents a.active {
+    font-weight: bold;
+    color: var(--color-heading); /* Heading color for active link */
+    border-left: 3px solid var(--color-highlight-3); /* Yellow border */
+    padding-left: 10px; /* Match hover indent */
+    text-shadow: none;
+}
+
+
+/* Call to Action Section Styling */
+.call-to-action {
+    background-color: var(--color-bg-secondary); /* Secondary background */
+    border: var(--tech-border);
+    border-left: 6px solid var(--color-highlight-2); /* Green accent border */
+    padding: 30px;
+    margin-top: 60px; /* Space from previous section */
+    margin-bottom: 60px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-medium);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.call-to-action:hover {
+    transform: translateY(-5px); /* Lift slightly on hover */
+    box-shadow: var(--shadow-strong);
+}
+
+.call-to-action h2 {
+     border-bottom: none; /* Remove border for CTA heading */
+     margin-top: 0;
+     padding-bottom: 0;
+     margin-bottom: 15px;
+     color: var(--color-heading);
+     text-shadow: none;
+     font-size: 2em;
+}
+
+.call-to-action h2 i.fas {
+    color: var(--color-highlight-2); /* Green icon */
+}
+
+.call-to-action p {
+    color: var(--color-text-dark);
+    font-size: 1.1em;
+    line-height: 1.6;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .main-layout {
+        flex-direction: column;
+    }
+
+    #sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        max-height: 300px; /* Limit height on mobile */
+        overflow-y: auto;
+        margin-bottom: 30px;
+        box-shadow: var(--shadow-medium);
+        background: var(--color-bg-secondary); /* Solid secondary BG for mobile sidebar */
+        padding: 15px;
+        border-right: none;
+        border-bottom: 3px solid var(--color-highlight-1); /* Blue bottom border */
+        transform: none; /* Remove any potential transform state */
+    }
+
+     #table-of-contents h2 {
+         color: var(--color-heading);
+         border-bottom-color: var(--color-accent-border);
+         font-size: 1.3em;
+     }
+
+     #table-of-contents a {
+         color: var(--color-text-dark);
+         padding: 5px 0;
+         border-left: none; /* Remove left border on mobile */
+     }
+     #table-of-contents a:hover {
+         border-left-color: transparent; /* Keep transparent border on hover */
+         padding-left: 0; /* Remove indent on hover */
+         text-decoration: underline; /* Keep underline on hover */
+     }
+
+      #table-of-contents a.active {
+        border-left-color: transparent; /* Remove left border on active */
+        color: var(--color-highlight-1); /* Primary accent color for active */
+         font-weight: bold;
+         padding-left: 0; /* Remove indent */
+         text-decoration: underline; /* Add underline for active */
+    }
+
+
+    #main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    header {
+         padding: 60px 20px 40px;
+         margin-bottom: 30px;
+    }
+
+    header h1 {
+        font-size: 3em;
+        letter-spacing: 1px;
+    }
+
+    header p {
+        font-size: 1em;
+    }
+
+    h2 {
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+
+    h3 {
+        font-size: 1.4em;
+        margin-top: 25px;
+        margin-bottom: 15px;
+    }
+
+    section {
+        margin-bottom: 40px;
+        padding-bottom: 30px;
+         /* Remove transform for initial state on mobile if it causes issues */
+         opacity: 1;
+         transform: translateY(0);
+    }
+    /* Ensure sections are visible immediately on smaller screens */
+    section.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+
+    img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 25px auto;
+        border: var(--tech-border);
+        box-shadow: var(--shadow-medium);
+        border-radius: 8px;
+    }
+
+    img:hover {
+         transform: none; /* Remove zoom on mobile hover */
+         box-shadow: var(--shadow-medium); /* Keep medium shadow */
+    }
+
+
+    table {
+         margin: 25px 0;
+    }
+    th, td {
+        padding: 10px;
+        font-size: 0.9em;
+    }
+
+    .example {
+        padding: 15px;
+        margin: 25px 0;
+    }
+
+    #backToTopBtn {
+         bottom: 20px;
+         right: 20px;
+         padding: 10px;
+         font-size: 16px;
+         width: 40px;
+         height: 40px;
+         line-height: 20px;
+         box-shadow: var(--shadow-light);
+    }
+     #backToTopBtn:hover {
+        box-shadow: var(--shadow-medium);
+     }
+
+     .call-to-action {
+         padding: 20px;
+         margin-top: 40px;
+         margin-bottom: 40px;
+     }
+     .call-to-action h2 {
+         font-size: 1.8em;
+     }
+}

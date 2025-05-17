@@ -1,0 +1,393 @@
+/* Reset/Base Styles */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth; /* Cuộn mượt */
+    font-size: 16px; /* Cơ sở font-size */
+}
+
+body {
+    font-family: 'Noto Sans', sans-serif; /* Giữ font này hoặc đổi sang font giống ảnh hơn nếu muốn */
+    line-height: 1.6; /* Điều chỉnh line-height chung */
+    color: #333;
+    background-color: #f8f9fa; /* Màu nền hơi ngà giống ảnh */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 1200px; /* Giữ max-width nhất quán */
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* --- Header & Navbar --- */
+header {
+    background-color: #f8f9fa; /* Màu nền giống body */
+    border-bottom: 1px solid #dee2e6; /* Viền dưới nhẹ nhàng */
+    width: 100%;
+    padding-bottom: 0; /* Xóa padding-bottom cũ */
+    /* margin-bottom: 2rem; /* Bỏ margin-bottom để hero control */
+}
+/* --- Hero Section (Sau khi xóa images) --- */
+.hero {
+    text-align: center;
+    padding: 3rem 20px 4rem 20px; /* Tăng padding dọc cho hero */
+    max-width: 900px; /* Giữ hero content không quá rộng */
+    margin: 0 auto; /* Căn giữa hero */
+    background-color: #f8f9fa; /* Nền giống header */
+}
+
+/* XÓA BỎ HOÀN TOÀN CSS CHO .hero-images */
+
+h1 {
+    font-size: 2.8rem;
+    margin-bottom: 1rem; /* Tăng margin dưới h1 */
+    color: #212529;
+    line-height: 1.2;
+}
+
+.subtitle {
+    font-size: 1.2rem; /* Tăng nhẹ cỡ chữ phụ đề */
+    color: #495057; /* Màu xám đậm hơn */
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.publish-date {
+    font-size: 0.9rem;
+    color: #6c757d; /* Màu xám nhạt hơn */
+    margin-bottom: 1rem;
+}
+
+/* --- Main Content --- */
+main.container { /* Thêm container vào main trong HTML */
+    padding-top: 3rem; /* Tăng khoảng cách trên của main */
+    padding-bottom: 3rem;
+    flex-grow: 1;
+    background-color: #ffffff; /* Nền trắng cho phần nội dung chính */
+    border-radius: 8px; /* Bo góc nhẹ cho vùng nội dung */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Bóng đổ nhẹ */
+    margin-top: -2rem; /* Kéo main content lên trên một chút để chồng nhẹ lên hero */
+    position: relative; /* Để đảm bảo shadow hiển thị đúng */
+    z-index: 10; /* Đảm bảo main content ở trên */
+    max-width: 900px; /* Giới hạn chiều rộng main content */
+}
+
+article section {
+    margin-bottom: 2.5rem;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    /* Đổi màu gạch chân hoặc bỏ đi tùy ý */
+    border-bottom: 2px solid #dee2e6;
+    color: #343a40;
+    line-height: 1.3;
+}
+
+h3 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: #495057;
+}
+
+p, ul, ol {
+    margin-bottom: 1.2rem;
+}
+
+/* Keep original ul, ol padding */
+ul, ol {
+    padding-left: 25px;
+}
+/* Remove default list padding when inside footer */
+.footer-column ul {
+    padding-left: 0;
+    list-style: none;
+}
+
+
+li {
+    margin-bottom: 0.6rem;
+}
+/* Adjust list item margin in footer */
+.footer-column li {
+    margin-bottom: 0.7rem;
+}
+
+a {
+    color: #0d6efd; /* Màu link Bootstrap mặc định */
+    text-decoration: none;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+a:hover, a:focus {
+    color: #0a58ca;
+    text-decoration: underline;
+}
+
+/* Style links inside footer is handled below */
+
+
+strong {
+    font-weight: 700;
+    color: #212529;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-color: #dee2e6;
+    margin: 3rem 0;
+}
+
+/* Figures and Images */
+figure {
+    margin: 2rem 0;
+    text-align: center;
+}
+
+figure img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto 0.8rem auto;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border-radius: 4px; /* Bo góc nhẹ ảnh */
+}
+
+figcaption {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Aside (Appendices) */
+aside {
+    background-color: #e9ecef; /* Nền khác cho phụ lục */
+    padding: 2rem;
+    margin: 2rem -20px -2rem -20px; /* Mở rộng ra ngoài padding của main */
+    border-radius: 0 0 8px 8px; /* Chỉ bo góc dưới */
+    border-top: 1px solid #dee2e6;
+}
+
+aside h2 {
+    border-bottom-color: #ced4da; /* Màu khác cho gạch chân H2 trong phụ lục */
+    font-size: 1.8rem;
+}
+
+aside h3 {
+    font-size: 1.4rem;
+}
+
+/* --- Footer --- */
+footer {
+    background-color: #141413; /* Nền footer tối */
+    padding: 3rem 0 2rem 0;
+    margin-top: 3rem;
+    color: #B0AEB5; /* Màu chữ mặc định cho footer */
+    width: 100%;
+    position: relative;
+    z-index: 5; /* Đảm bảo footer ở dưới main */
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2rem 1.5rem;
+    margin-bottom: 2.5rem;
+    /* Footer grid uses .container for width/padding */
+}
+
+.footer-column h5 {
+    font-size: 0.9rem; /* Nhỏ hơn */
+    font-weight: 600; /* Ít đậm hơn */
+    color: #FFFFFF; /* Tiêu đề cột màu trắng */
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Style links inside footer (ghi đè style chung của 'a') */
+.footer-column a {
+    color: #B0AEB5; /* Link trong footer màu xám sáng */
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.2s ease; /* Chỉ transition màu cho footer links */
+}
+.footer-column a:hover,
+.footer-column a:focus {
+    color: #FFFFFF; /* Link hover thành màu trắng */
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-top: 1.5rem;
+    border-top: 1px solid #333333; /* Border màu tối hơn, nhưng vẫn sáng hơn nền */
+    margin-top: 1rem;
+}
+
+.copyright {
+    font-size: 0.85rem;
+    color: #8A8890; /* Copyright màu xám nhạt hơn */
+    text-align: left;
+    margin-right: 1rem;
+}
+
+.copyright p {
+    margin-bottom: 0.3rem;
+}
+
+.source-link {
+    font-size: 0.8rem;
+    color: #8A8890; /* Source link cùng màu với copyright */
+}
+.source-link:hover {
+     color: #FFFFFF; /* Source link hover thành trắng */
+}
+
+.social-icons {
+    display: flex;
+    align-items: center;
+}
+
+.social-icons a {
+    display: inline-block;
+    margin-left: 1rem;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+.social-icons a:hover,
+.social-icons a:focus {
+    opacity: 1;
+    text-decoration: none;
+}
+
+/* --- Responsive Design --- */
+
+@media (max-width: 992px) {
+    .main-nav {
+        display: none; /* **Ẩn nav chính trên tablet trở xuống** */
+        /* Thêm style để hiện nav khi toggle ở đây nếu cần */
+    }
+    .cta-button {
+        display: none; /* **Ẩn nút CTA trên tablet trở xuống** */
+        /* Có thể hiện nút này trong menu mobile nếu muốn */
+    }
+    .menu-toggle {
+        display: block; /* **Hiện nút toggle menu** */
+    }
+    .header-content {
+        min-height: 60px; /* Giảm chiều cao header */
+    }
+    .footer-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 1.5rem;
+    }
+    main.container {
+        margin-top: -1.5rem; /* Điều chỉnh lại vị trí kéo lên */
+    }
+
+}
+
+
+@media (max-width: 768px) {
+    html {
+        font-size: 15px;
+    }
+    h1 {
+        font-size: 2.2rem;
+    }
+    h2 {
+        font-size: 1.7rem;
+    }
+    h3 {
+        font-size: 1.3rem;
+    }
+
+    .footer-grid {
+         grid-template-columns: repeat(2, 1fr); /* 2 cột trên tablet nhỏ */
+    }
+    .footer-bottom {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .copyright {
+        margin-right: 0;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    .social-icons {
+        justify-content: center;
+    }
+     .social-icons a {
+         margin: 0 0.7rem;
+     }
+     main.container {
+        margin-top: -1rem;
+        border-radius: 0; /* Bỏ bo góc trên mobile nhỏ */
+     }
+     aside {
+         margin-left: -20px;
+         margin-right: -20px;
+         border-radius: 0;
+     }
+}
+
+@media (max-width: 480px) {
+     html {
+        font-size: 14px;
+    }
+    h1 {
+        font-size: 1.9rem;
+    }
+    .subtitle {
+        font-size: 1.1rem; /* Điều chỉnh lại */
+    }
+
+    .footer-grid {
+         grid-template-columns: 1fr; /* 1 cột trên mobile nhỏ */
+         gap: 1rem;
+    }
+     .footer-column h5 {
+         margin-bottom: 0.7rem;
+     }
+     .footer-column ul {
+         margin-bottom: 1rem;
+     }
+     .footer-column li {
+         margin-bottom: 0.5rem;
+     }
+     .hero {
+         padding: 2rem 20px 3rem 20px;
+     }
+     main.container {
+         padding-top: 2rem;
+         padding-bottom: 2rem;
+         margin-top: 0; /* Không kéo main lên nữa */
+     }
+     aside {
+         padding: 1.5rem;
+     }
+
+}

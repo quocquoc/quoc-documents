@@ -1,0 +1,317 @@
+/* Reset CSS and Base Styles */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.7;
+    color: #333;
+    background-color: #f8f9fa; /* Light gray background */
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+    display: flex;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 280px; /* Fixed width for sidebar */
+    background-color: #ffffff; /* White background for sidebar */
+    padding: 25px 15px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    overflow-y: auto;
+    border-right: 1px solid #e0e0e0; /* Subtle border */
+    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+    transition: width 0.3s ease;
+}
+
+.sidebar-header {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.sidebar-header h3 {
+    color: #2c3e50; /* Darker blue for heading */
+    font-size: 1.3em;
+    font-weight: 700;
+}
+
+.table-of-contents ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.table-of-contents li {
+    margin-bottom: 8px;
+}
+
+.table-of-contents a {
+    text-decoration: none;
+    color: #555;
+    font-size: 0.95em;
+    padding: 5px 10px;
+    display: block;
+    border-radius: 4px;
+    transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+}
+
+.table-of-contents a:hover,
+.table-of-contents a.active {
+    background-color: #e9ecef; /* Light highlight on hover/active */
+    color: #007bff; /* Blue for active/hover link */
+    padding-left: 15px;
+}
+
+/* Sub-levels in ToC */
+.table-of-contents .toc-level-1 > a {
+    font-weight: 700;
+    color: #333;
+}
+.table-of-contents .toc-level-2 > a {
+    padding-left: 25px;
+    font-size: 0.9em;
+}
+.table-of-contents .toc-level-3 > a {
+    padding-left: 40px;
+    font-size: 0.85em;
+    color: #666;
+}
+
+
+/* Content Area Styles */
+.content {
+    flex-grow: 1;
+    padding: 30px 40px;
+    background-color: #ffffff;
+    max-width: calc(100% - 280px); /* Adjust based on sidebar width */
+    overflow-y: auto; /* Allows content to scroll independently if needed */
+}
+
+.main-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #007bff; /* Blue accent for header */
+}
+
+.main-header .arxiv-id {
+    font-size: 0.9em;
+    color: #6c757d; /* Muted color for arXiv ID */
+    margin-bottom: 5px;
+}
+
+.main-header h1 {
+    font-family: 'Source Serif Pro', serif;
+    font-size: 2.5em;
+    color: #2c3e50; /* Dark blue for title */
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.main-header .author,
+.main-header .date {
+    font-size: 1.1em;
+    color: #495057;
+    margin-bottom: 5px;
+}
+
+section {
+    margin-bottom: 40px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+section:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+
+h2, h3 {
+    font-family: 'Source Serif Pro', serif;
+    color: #343a40;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 1.8em;
+    margin-top: 30px; /* Add space above H2 */
+}
+
+h3 {
+    font-size: 1.4em;
+    margin-top: 25px; /* Add space above H3 */
+}
+
+.icon {
+    margin-right: 10px;
+    font-size: 1.1em; /* Slightly larger icon */
+    color: #007bff; /* Blue for icons */
+}
+
+p {
+    margin-bottom: 1.2em;
+    color: #454545; /* Slightly softer black for text */
+    text-align: justify;
+}
+
+ol, ul {
+    margin-bottom: 1.2em;
+    padding-left: 25px; /* Indent lists */
+}
+
+li {
+    margin-bottom: 0.5em;
+}
+
+/* Figure and Image Placeholder Styles */
+.figure-placeholder {
+    margin: 30px auto;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    background-color: #f9f9f9;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    max-width: 80%; /* Control max width of figure */
+}
+
+.figure-placeholder img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    background-color: #e9ecef; /* Placeholder background */
+    display: block; /* Center image if it's smaller than container */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.figure-placeholder figcaption {
+    font-size: 0.9em;
+    color: #555;
+    font-style: italic;
+}
+
+/* Example Block Styles */
+.example-block {
+    background-color: #2d2d2d; /* Dark background for code */
+    color: #f0f0f0; /* Light text for code */
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 6px;
+    border-left: 5px solid #007bff; /* Blue accent */
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.95em;
+    overflow-x: auto; /* Allow horizontal scrolling for long lines */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* References List */
+.references-list {
+    padding-left: 20px;
+}
+.references-list li {
+    margin-bottom: 10px;
+    font-size: 0.9em;
+    color: #444;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .container {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        margin-bottom: 20px;
+    }
+    .content {
+        max-width: 100%;
+        padding: 20px;
+    }
+    .main-header h1 {
+        font-size: 2em;
+    }
+    h2 {
+        font-size: 1.6em;
+    }
+    h3 {
+        font-size: 1.3em;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 15px;
+    }
+    .main-header h1 {
+        font-size: 1.8em;
+    }
+    h2 {
+        font-size: 1.5em;
+    }
+    h3 {
+        font-size: 1.2em;
+    }
+    .figure-placeholder {
+        max-width: 95%;
+    }
+}
+
+/* Scrollbar styling (optional, for a more modern look) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: #007bff; /* Blue scrollbar thumb */
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #0056b3; /* Darker blue on hover */
+}
+.sidebar::-webkit-scrollbar-thumb {
+    background: #adb5bd;
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: #868e96;
+}
+
+/* Simple fade-in animation for sections */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+section {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Ensure all sections are initially transparent if using staggered animation */
+/* section { opacity: 0; } */
